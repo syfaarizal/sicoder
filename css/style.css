@@ -997,9 +997,13 @@ body {
 
 @media (max-width: 768px) {
     .logo-wrapper {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
         gap: 1rem;
+    }
+
+    .dimension-container {
+        padding: 0 1.5rem;
     }
     
     .logo-text {
@@ -1059,7 +1063,7 @@ body {
     }
     
     .hero-section {
-        padding: 4rem 0 3rem;
+        padding: 1rem 0 3rem;
     }
     
     .logo-text {
