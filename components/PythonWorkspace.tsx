@@ -345,7 +345,7 @@ export default function PythonWorkspace() {
           onSubmit={submitInput}
           boxRef={termBox}
           style={font}
-          empty="Tekan Run untuk menjalankan main.py. File lain bisa dipakai lewat import, misalnya import alat. input() didukung: ketik langsung di terminal."
+          empty="Tekan Run untuk menjalankan main.py."
         />
       ) : (
         <ProblemList

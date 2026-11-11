@@ -4,6 +4,13 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'SICODER',
   description: 'Pahami kode dengan mencobanya. Belajar dan eksperimen coding langsung di browser.',
+  icons: {
+    icon: [
+      { url: '/favicon-light.png', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon-dark.png', media: '(prefers-color-scheme: dark)' },
+    ],
+    apple: '/favicon-light.png',
+  },
 };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' };
 

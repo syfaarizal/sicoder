@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import BrandLogo from './BrandLogo';
 
 export default function Header({ children }: { children?: React.ReactNode }) {
   return (
@@ -7,7 +8,7 @@ export default function Header({ children }: { children?: React.ReactNode }) {
       style={{ borderColor: 'var(--line)' }}
     >
       <Link href="/" className="logo" aria-label="SICODER, ke beranda">
-        <span>SI</span>CODER
+        <BrandLogo />
       </Link>
       <div className="flex-1" />
       <Link href="/materi" className="btn">
