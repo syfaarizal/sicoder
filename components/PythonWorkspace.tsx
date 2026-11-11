@@ -5,21 +5,27 @@ import { kindOf } from './FileIcon';
 import FileTabs from './FileTabs';
 import ProblemList, { type Problem } from './ProblemList';
 import SplitView from './SplitView';
+import TerminalView from './TerminalView';
 import WorkspaceFrame from './WorkspaceFrame';
 import { DEFAULT_PY, getLesson, toPyCode, type Snippet } from '@/lib/content';
+import { Terminal, type Style } from '@/lib/ansi';
+import { inputReady, sendInput } from '@/lib/pyInput';
 import type { Extra } from '@/lib/runner';
 import { FONTS, TERMINAL_DEFAULT, getTheme, themeVars } from '@/lib/themes';
 import { usePersistent, useSettings } from '@/lib/usePersistent';
 
-type Seg = { text: string; kind: '' | 'e' | 'd' };
-const TIMEOUT_MS = 15000;
+const TIMEOUT_MS = 60000; // waktu menunggu input user tidak dihitung
+const ERR: Style = { fg: '#ff6b6b' };
+const DIM: Style = { dim: true };
 const INITIAL = { ...DEFAULT_PY, extra: [] as Extra[] };
 
 export default function PythonWorkspace() {
   const [code, setCode] = usePersistent('sicoder:python', INITIAL);
   const [settings, setSettings] = useSettings();
   const [tab, setTab] = useState('main');
-  const [out, setOut] = useState<Seg[]>([]);
+  const term = useRef(new Terminal());
+  const [ver, setVer] = useState(0);
+  const [waiting, setWaiting] = useState<string | null>(null); // id input yang sedang ditunggu
   const [problems, setProblems] = useState<Problem[]>([]);
   const [runProblems, setRunProblems] = useState<Problem[]>([]);
   const [bottom, setBottom] = useState<'term' | 'prob'>('term');
@@ -29,7 +35,9 @@ export default function PythonWorkspace() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const worker = useRef<Worker | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const term = useRef<HTMLPreElement>(null);
+  const termBox = useRef<HTMLPreElement>(null);
+  const pending = useRef<{ text: string; base?: Style }[]>([]);
+  const raf = useRef(0);
   const lintId = useRef(0);
   const lintWaiters = useRef(new Map<string, (ps: Problem[]) => void>());
 
@@ -54,9 +62,10 @@ export default function PythonWorkspace() {
     }
   }, [setCode]);
   useEffect(() => () => worker.current?.terminate(), []);
+  useEffect(() => () => cancelAnimationFrame(raf.current), []);
   useEffect(() => {
-    term.current?.scrollTo(0, 1e9);
-  }, [out]);
+    inputReady(); // daftarkan service worker untuk input() lebih awal
+  }, []);
 
   // Linting berjalan langsung saat kode berubah: semua baris bermasalah
   // ditampilkan sekaligus, dan menghilang begitu baris itu diperbaiki.
@@ -80,13 +89,61 @@ export default function PythonWorkspace() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code.py, code.extra]);
 
-  const add = (text: string, kind: Seg['kind'] = '') => setOut((o) => [...o, { text, kind }]);
+  // Output ditulis lewat antrean dan digabung per frame, supaya program yang mencetak
+  // banyak potongan kecil (mis. animasi huruf per huruf) tetap lancar.
+  const flushNow = () => {
+    cancelAnimationFrame(raf.current);
+    raf.current = 0;
+    for (const p of pending.current.splice(0)) term.current.write(p.text, p.base);
+    setVer((v) => v + 1);
+  };
+  const write = (text: string, base?: Style) => {
+    pending.current.push({ text, base });
+    if (!raf.current) raf.current = requestAnimationFrame(flushNow);
+  };
+  const startTimer = () => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(
+      () => stop('\nDihentikan: program berjalan lebih dari ' + TIMEOUT_MS / 1000 + ' detik.\n'),
+      TIMEOUT_MS,
+    );
+  };
+  const waitingRef = useRef<string | null>(null);
+  waitingRef.current = waiting;
   const stop = (msg?: string) => {
     clearTimeout(timer.current);
     worker.current?.terminate();
     worker.current = null;
     setRunning(false);
-    if (msg) add(msg, 'e');
+    if (waitingRef.current) sendInput(waitingRef.current, ''); // lepaskan permintaan yang masih menunggu
+    setWaiting(null);
+    if (msg) write(msg, ERR);
+  };
+  const submitInput = (value: string) => {
+    const id = waitingRef.current;
+    if (!id) return;
+    flushNow();
+    write(value + '\n');
+    flushNow();
+    setWaiting(null);
+    sendInput(id, value);
+    startTimer();
+  };
+  // Ukuran terminal (kolom x baris) dikirim ke Python supaya shutil.get_terminal_size() akurat.
+  const measure = () => {
+    const el = termBox.current;
+    const fs = settings.fontSize;
+    if (!el || !el.clientWidth) return { cols: 80, rows: 24 };
+    let cw = fs * 0.6;
+    const ctx = document.createElement('canvas').getContext('2d');
+    if (ctx) {
+      ctx.font = fs + 'px ' + FONTS[settings.fontFamily];
+      cw = ctx.measureText('M').width || cw;
+    }
+    return {
+      cols: Math.max(20, Math.floor((el.clientWidth - 24) / cw)),
+      rows: Math.max(5, Math.floor((el.clientHeight - 20) / (fs * 1.6))),
+    };
   };
 
   // Satu worker dipakai untuk Run sekaligus linting, jadi Pyodide hanya
@@ -97,10 +154,14 @@ export default function PythonWorkspace() {
     worker.current = w;
     w.onmessage = (e) => {
       const m = e.data;
-      if (m.type === 'out') add(m.text);
-      else if (m.type === 'err') add(m.text, 'e');
-      else if (m.type === 'status') add(m.text, 'd');
-      else if (m.type === 'problem')
+      if (m.type === 'out') write(m.text);
+      else if (m.type === 'err') write(m.text, ERR);
+      else if (m.type === 'status') write(m.text, DIM);
+      else if (m.type === 'input') {
+        clearTimeout(timer.current); // menunggu user mengetik tidak dihitung sebagai waktu berjalan
+        flushNow();
+        setWaiting(m.id);
+      } else if (m.type === 'problem')
         setRunProblems((p) => [
           ...p,
           { id: Date.now(), file: m.file, line: m.line, message: m.message },
@@ -122,24 +183,24 @@ export default function PythonWorkspace() {
       } else if (m.type === 'done') {
         clearTimeout(timer.current);
         setRunning(false);
-        add('\n** Process exited - Return Code: ' + m.code + ' **\n', 'd');
+        write('\n** Process exited - Return Code: ' + m.code + ' **\n', DIM);
       }
     };
     w.onerror = () => stop('Runtime Python gagal dimuat. Cek koneksi internet lalu coba lagi.\n');
     return w;
   };
-  const run = () => {
+  const run = async () => {
     if (running) return;
-    setOut([]);
     setRunProblems([]); // error runtime Run sebelumnya dihapus, diganti hasil yang baru
+    term.current.clear();
+    pending.current = [];
+    setVer((v) => v + 1);
     setBottom('term');
     setRunning(true);
+    await inputReady(); // service worker untuk input() harus aktif sebelum worker dibuat
     const w = ensureWorker();
-    timer.current = setTimeout(
-      () => stop('\nDihentikan: program berjalan lebih dari ' + TIMEOUT_MS / 1000 + ' detik.\n'),
-      TIMEOUT_MS,
-    );
-    w.postMessage({ type: 'run', code: code.py, files: code.extra });
+    startTimer();
+    w.postMessage({ type: 'run', code: code.py, files: code.extra, ...measure() });
   };
   const goProblem = (p: Problem) => {
     setTab(p.file === 'main.py' ? 'main' : 'x:' + p.file);
@@ -170,6 +231,12 @@ export default function PythonWorkspace() {
     if (innerWidth < 768) setPanel(false);
   };
 
+  const source = (p: Problem) => {
+    if (!p.line) return undefined;
+    const text =
+      p.file === 'main.py' ? code.py : code.extra.find((f) => f.name === p.file)?.content;
+    return text?.split('\n')[p.line - 1];
+  };
   const edTheme = getTheme(settings.theme);
   const tvars = themeVars(settings.matchTerminal ? edTheme : TERMINAL_DEFAULT);
   // Error sintaks (dari linting) dan error runtime (dari Run) digabung, lalu
@@ -249,7 +316,8 @@ export default function PythonWorkspace() {
         <button
           className="btn"
           onClick={() => {
-            setOut([]);
+            term.current.clear();
+            setVer((v) => v + 1);
             setRunProblems([]);
           }}
         >
@@ -270,21 +338,23 @@ export default function PythonWorkspace() {
         )}
       </div>
       {bottom === 'term' ? (
-        <pre ref={term} className="term" role="log" aria-live="polite" style={font}>
-          {out.length === 0 && (
-            <span className="d">
-              Tekan Run untuk menjalankan main.py. File lain bisa dipakai lewat import, misalnya
-              import alat.
-            </span>
-          )}
-          {out.map((s, i) => (
-            <span key={i} className={s.kind}>
-              {s.text}
-            </span>
-          ))}
-        </pre>
+        <TerminalView
+          term={term.current}
+          version={ver}
+          waiting={!!waiting}
+          onSubmit={submitInput}
+          boxRef={termBox}
+          style={font}
+          empty="Tekan Run untuk menjalankan main.py. File lain bisa dipakai lewat import, misalnya import alat. input() didukung: ketik langsung di terminal."
+        />
       ) : (
-        <ProblemList problems={allProblems} onGo={goProblem} style={font} />
+        <ProblemList
+          problems={allProblems}
+          onGo={goProblem}
+          style={font}
+          lang="python"
+          source={source}
+        />
       )}
     </section>
   );

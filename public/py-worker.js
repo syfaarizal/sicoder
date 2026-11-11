@@ -4,11 +4,93 @@ let written = [];
 let lintMod = null;
 let busy = false; // sedang menjalankan kode user
 const lintQueue = [];
+// ---- I/O terminal: stdout/stderr langsung (tanpa menunggu baris penuh), input(), dan time.sleep() ----
+const decOut = new TextDecoder();
+const decErr = new TextDecoder();
+let seq = 0;
+// XMLHttpRequest sinkron ke service worker (public/sw-input.js): permintaan ditahan sampai jawaban datang.
+function syncGet(url) {
+  const x = new XMLHttpRequest();
+  x.open('GET', url, false);
+  x.send();
+  if (x.getResponseHeader('x-sicoder') !== '1')
+    throw new Error('Layanan input belum aktif. Muat ulang halaman (Ctrl+Shift+R) lalu coba lagi.');
+  return x.responseText;
+}
+function spin(ms) {
+  const end = performance.now() + ms;
+  while (performance.now() < end) {}
+}
+function sleep(sec) {
+  let ms = Math.max(0, Number(sec) * 1000) || 0;
+  while (ms > 0) {
+    const c = Math.min(ms, 4000);
+    if (c <= 40) spin(c);
+    else {
+      try {
+        syncGet('/__sicoder_sleep?ms=' + Math.floor(c));
+      } catch (e) {
+        spin(c); // service worker belum aktif: tunggu manual
+      }
+    }
+    ms -= c;
+  }
+}
+function readLine() {
+  const id = 'i' + ++seq;
+  postMessage({ type: 'input', id });
+  return syncGet('/__sicoder_input?id=' + id);
+}
+const PRELUDE = String.raw`
+import sys, os, time, builtins
+import sicoder_io
+try:
+    sys.stdout.reconfigure(write_through=True)
+    sys.stderr.reconfigure(write_through=True)
+except Exception:
+    pass
+def _input(prompt=""):
+    sys.stdout.write(str(prompt))
+    sys.stdout.flush()
+    return sicoder_io.read_line()
+builtins.input = _input
+def _sleep(seconds):
+    sicoder_io.sleep(float(seconds))
+time.sleep = _sleep
+def _system(command):
+    cmd = str(command).strip().lower()
+    if cmd in ("clear", "cls"):
+        sys.stdout.write("\x1b[2J\x1b[H")
+        sys.stdout.flush()
+        return 0
+    return 127
+os.system = _system
+os.environ.setdefault("TERM", "xterm-256color")
+`;
 async function init() {
   importScripts('https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js');
   py = await loadPyodide();
-  py.setStdout({ batched: (t) => postMessage({ type: 'out', text: t + '\n' }) });
-  py.setStderr({ batched: (t) => postMessage({ type: 'err', text: t + '\n' }) });
+  py.setStdout({
+    write: (buf) => {
+      postMessage({ type: 'out', text: decOut.decode(buf, { stream: true }) });
+      return buf.length;
+    },
+  });
+  py.setStderr({
+    write: (buf) => {
+      postMessage({ type: 'err', text: decErr.decode(buf, { stream: true }) });
+      return buf.length;
+    },
+  });
+  py.setStdin({ stdin: () => readLine() });
+  py.registerJsModule('sicoder_io', { read_line: readLine, sleep });
+  py.runPython(PRELUDE);
+}
+// Ukuran terminal supaya shutil.get_terminal_size() mengembalikan ukuran terminal yang sebenarnya.
+function setTerm(cols, rows) {
+  const c = Math.max(20, Math.min(400, Math.floor(Number(cols)) || 80));
+  const r = Math.max(5, Math.min(200, Math.floor(Number(rows)) || 24));
+  py.runPython("import os\nos.environ['COLUMNS']='" + c + "'\nos.environ['LINES']='" + r + "'");
 }
 // Modul linter sintaks: mengumpulkan semua error, bukan hanya yang pertama.
 async function loadLint() {
@@ -113,10 +195,15 @@ onmessage = async (e) => {
       await init();
     }
     syncFiles(msg.files || []);
+    setTerm(msg.cols, msg.rows);
     // Namespace baru tiap Run: variabel dari Run sebelumnya tidak ikut terbawa
     const ns = py.globals.get('dict')();
+    // Seperti menjalankan `python main.py`: tanpa ini blok `if __name__ == "__main__":` tidak akan jalan.
+    ns.set('__name__', '__main__');
+    ns.set('__file__', 'main.py');
     try {
       await py.runPythonAsync(msg.code, { globals: ns });
+      py.runPython('import sys\nsys.stdout.flush()');
     } finally {
       ns.destroy();
     }

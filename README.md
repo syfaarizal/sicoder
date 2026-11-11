@@ -13,29 +13,33 @@ npm run format   # Prettier untuk seluruh project
 
 ## Struktur
 
-| Path                                                     | Isi                                                                                                     |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `app/page.tsx`                                           | Landing: pilih Web / Python, lalu Code editor atau Materi                                               |
-| `app/materi/page.tsx`                                    | Halaman materi (daftar + isi, tombol buka di editor)                                                    |
-| `app/workspace/{web,python}`                             | Workspace per bahasa                                                                                    |
-| `components/WebWorkspace.tsx`                            | Tab HTML/CSS/JS, iframe sandbox, toggle Hasil/Console                                                   |
-| `components/PythonWorkspace.tsx`                         | Editor + terminal, Pyodide di Web Worker (timeout 15 detik, tombol Stop)                                |
-| `components/LearningPanel.tsx`                           | Sidebar materi (hybrid: ikut konteks lesson, bisa dicari, bisa ditutup)                                 |
-| `components/CodeEditor.tsx`                              | Wrapper CodeMirror 6: tema, key bindings (Default/Vim/Emacs), autocomplete, auto-close, nomor baris     |
-| `components/WorkspaceFrame.tsx`                          | Cangkang workspace: header, sidebar materi dengan splitter, dialog pengaturan                           |
-| `components/SplitView.tsx`                               | Editor + hasil/terminal: tata letak Tabbed / Stacked / Side by side dengan splitter                     |
-| `components/Splitter.tsx`                                | Pembatas yang bisa digeser (mouse, sentuh, keyboard)                                                    |
-| `components/SettingsDialog.tsx`                          | Settings ringkas + Advanced editor settings (tema, font, behavior, indentasi)                           |
-| `lib/themes.ts`                                          | Daftar tema editor (gelap dan terang), warna toolbar/terminal, pilihan font                             |
-| `components/FileTabs.tsx`                                | Header editor: tab file dengan ikon, dropdown daftar file, tombol +, menu ⋮                             |
-| `components/Menu.tsx`, `FileIcon.tsx`, `ProblemList.tsx` | Menu popover, ikon file, dan daftar Problems                                                            |
-| `components/MiniPlayground.tsx`                          | Contoh kode yang bisa diedit dan dijalankan di dalam materi (state lokal, tidak menyentuh editor utama) |
-| `components/LessonView.tsx`                              | Tampilan satu materi: penjelasan, tip, dan contoh-contoh runnable                                       |
-| `lib/content.ts`                                         | Semua materi (36 topik). Tambah materi dengan `mk(...)`, lihat bagian "Menambah materi"                 |
-| `lib/pyRunner.ts`                                        | Runner Python bersama untuk contoh di materi (Web Worker terpisah dari workspace)                       |
-| `lib/format.ts`                                          | Prettier di browser (HTML, CSS, JS)                                                                     |
-| `public/py-worker.js`                                    | Web Worker Pyodide (runtime dimuat dari CDN saat Run pertama)                                           |
-| `public/py-lint.py`                                      | Pengumpul error sintaks Python: menemukan semua baris bermasalah sekaligus                              |
+| Path                                                     | Isi                                                                                                                                                      |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/page.tsx`                                           | Landing: pilih Web / Python, lalu Code editor atau Materi                                                                                                |
+| `app/materi/page.tsx`                                    | Halaman materi (daftar + isi, tombol buka di editor)                                                                                                     |
+| `app/workspace/{web,python}`                             | Workspace per bahasa                                                                                                                                     |
+| `components/WebWorkspace.tsx`                            | Tab HTML/CSS/JS, iframe sandbox, toggle Hasil/Console                                                                                                    |
+| `components/PythonWorkspace.tsx`                         | Editor + terminal, Pyodide di Web Worker (timeout 15 detik, tombol Stop)                                                                                 |
+| `components/LearningPanel.tsx`                           | Sidebar materi (hybrid: ikut konteks lesson, bisa dicari, bisa ditutup)                                                                                  |
+| `components/CodeEditor.tsx`                              | Wrapper CodeMirror 6: tema, key bindings (Default/Vim/Emacs), autocomplete, auto-close, nomor baris                                                      |
+| `components/WorkspaceFrame.tsx`                          | Cangkang workspace: header, sidebar materi dengan splitter, dialog pengaturan                                                                            |
+| `components/SplitView.tsx`                               | Editor + hasil/terminal: tata letak Tabbed / Stacked / Side by side dengan splitter                                                                      |
+| `components/Splitter.tsx`                                | Pembatas yang bisa digeser (mouse, sentuh, keyboard)                                                                                                     |
+| `components/SettingsDialog.tsx`                          | Settings ringkas + Advanced editor settings (tema, font, behavior, indentasi)                                                                            |
+| `lib/themes.ts`                                          | Daftar tema editor (gelap dan terang), warna toolbar/terminal, pilihan font                                                                              |
+| `components/FileTabs.tsx`                                | Header editor: tab file dengan ikon, dropdown daftar file, tombol +, menu ⋮                                                                              |
+| `components/Menu.tsx`, `FileIcon.tsx`, `ProblemList.tsx` | Menu popover, ikon file, dan daftar Problems                                                                                                             |
+| `components/MiniPlayground.tsx`                          | Contoh kode yang bisa diedit dan dijalankan di dalam materi (state lokal, tidak menyentuh editor utama)                                                  |
+| `components/LessonView.tsx`                              | Tampilan satu materi: penjelasan, tip, dan contoh-contoh runnable                                                                                        |
+| `lib/content.ts`                                         | Semua materi (36 topik). Tambah materi dengan `mk(...)`, lihat bagian "Menambah materi"                                                                  |
+| `lib/pyRunner.ts`                                        | Runner Python bersama untuk contoh di materi (Web Worker terpisah dari workspace)                                                                        |
+| `lib/format.ts`                                          | Prettier di browser (HTML, CSS, JS)                                                                                                                      |
+| `public/py-worker.js`                                    | Web Worker Pyodide (runtime dimuat dari CDN saat Run pertama)                                                                                            |
+| `public/sw-input.js`                                     | Service worker kecil yang membuat `input()` dan `time.sleep()` Python bisa menunggu di dalam Web Worker (jalan di semua browser, tanpa header COOP/COEP) |
+| `lib/pyInput.ts`                                         | Mendaftarkan service worker dan mengirim jawaban `input()` ke worker                                                                                     |
+| `lib/ansi.ts`, `components/TerminalView.tsx`             | Terminal Python: warna ANSI, clear screen, `\r`, dan kolom input inline                                                                                  |
+| `lib/errors.ts`                                          | Penjelasan error (Python dan JavaScript) dalam bahasa Indonesia sederhana untuk tab Problems                                                             |
+| `public/py-lint.py`                                      | Pengumpul error sintaks Python: menemukan semua baris bermasalah sekaligus                                                                               |
 
 ## Materi
 
@@ -93,7 +97,8 @@ Font, ukuran huruf, layout (per workspace), tema editor, tema terminal, key bind
 
 - Persistence memakai localStorage. PRD merekomendasikan IndexedDB untuk dokumen kode; ganti isi `lib/usePersistent.ts` bila perlu.
 - Prettier tidak mendukung Python, jadi tombol Format hanya ada di Web workspace.
-- `input()` di Python belum didukung (butuh SharedArrayBuffer atau UI input terminal).
+- `input()` di Python didukung lewat service worker. Posisi kursor lanjutan ANSI (mis. `\033[5;10H`) belum didukung; yang dikenali: warna/gaya, clear screen, dan `\r`.
+- `os.system()` hanya mengenali `clear` dan `cls`; perintah shell lain mengembalikan kode 127.
 - Konten masih TypeScript biasa; migrasi ke MDX sesuai PRD saat materi bertambah.
 - Belum ada: challenge, Library `/library/[language]/[topic]`, learning paths `/paths`.
 
@@ -110,7 +115,28 @@ Font, ukuran huruf, layout (per workspace), tema editor, tema terminal, key bind
 - **Problems (Python):** error sintaks terdeteksi langsung saat kode diketik, tanpa perlu Run. Semua baris yang bermasalah ditampilkan sekaligus, bukan hanya error pertama. Kalau sebuah baris diperbaiki, errornya hilang dan yang tersisa tinggal masalah yang belum diperbaiki. Error runtime dari Run juga ikut ditampilkan di sini. Klik item untuk melompat ke barisnya di editor. Traceback di terminal diringkas ke file milik kamu saja.
 - **Problems (Web):** menampilkan error JavaScript dari preview (tanpa lompat baris, karena JS utama dan file tambahan digabung).
 
+## Python interaktif (terminal)
+
+- **`input()`** bekerja: saat program meminta masukan, kolom ketik muncul langsung di terminal, di ujung baris prompt. Tekan Enter untuk mengirim. Waktu menunggu ketikan tidak dihitung ke batas waktu program.
+- **Warna dan clear screen ANSI** (`\033[1m`, `\033[38;5;203m`, `os.system("clear")`) dirender di terminal. `\r` menimpa baris yang sama (cocok untuk progress bar).
+- **`shutil.get_terminal_size()`** mengembalikan ukuran terminal yang sebenarnya (kolom dan baris dihitung dari panel terminal).
+- **`time.sleep()`** benar-benar menunggu tanpa membakar CPU, jadi animasi teks huruf demi huruf berjalan semestinya.
+- Kode dijalankan seperti `python main.py`: `__name__` bernilai `"__main__"`, jadi blok `if __name__ == "__main__":` jalan.
+- Batas waktu program 60 detik (tombol Stop selalu tersedia).
+- Service worker perlu aktif. Kalau `input()` menampilkan pesan "Layanan input belum aktif", muat ulang halaman dengan Ctrl+Shift+R.
+
+## Problems yang lebih jelas
+
+Tiap masalah menampilkan: lokasi (`file:baris`), pesan asli, baris kode yang bermasalah, dan penjelasan singkat dalam bahasa Indonesia tentang apa yang harus dicek. Berlaku untuk Python (error sintaks dan runtime) dan JavaScript. Di Web, error JavaScript dipetakan ke file dan baris aslinya (termasuk file `.js` tambahan), dan klik item akan melompat ke barisnya. `console.error()` yang ditulis sendiri tetap hanya muncul di Console, bukan di Problems.
+
 ## Changelog
+
+### v0.7
+
+- **Python:** `input()` didukung; terminal memahami warna dan clear screen ANSI, `\r`, dan ukuran terminal; `time.sleep()` dan `os.system("clear")` bekerja; `__name__ == "__main__"` kini jalan; batas waktu 60 detik dan tidak dihitung saat menunggu input.
+- **Web:** perbaikan bug Run kedua yang tidak menampilkan output setelah Clear (kode yang sama tidak dimuat ulang oleh iframe). Sekarang tiap Run membuat iframe baru. Berlaku juga untuk contoh di materi.
+- **Problems:** penjelasan error berbahasa Indonesia, tampilan baris kode yang bermasalah, dan pemetaan error JavaScript ke file dan baris (klik untuk melompat).
+- Contoh Python di materi ikut mendukung `input()` (lewat dialog) dan membuang kode warna ANSI dari output.
 
 ### v0.6
 

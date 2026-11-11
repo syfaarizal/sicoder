@@ -44,12 +44,14 @@ export default function MiniPlayground({
   const [lines, setLines] = useState<{ level: string; text: string }[]>([]);
   const [out, setOut] = useState<Seg[]>([]);
   const [running, setRunning] = useState(false);
+  const [runId, setRunId] = useState(0); // iframe dibuat ulang tiap Run, jadi kode yang sama tetap dijalankan lagi
   const frame = useRef<HTMLIFrameElement>(null);
   const first = useRef(true);
   const hasView = snippet.html !== undefined;
 
   const runWeb = () => {
     setLines([]);
+    setRunId((n) => n + 1);
     setSrcDoc(build(code));
   };
   const run = () => {
@@ -125,7 +127,10 @@ export default function MiniPlayground({
             setCode(initial());
             setLines([]);
             setOut([]);
-            if (web) setSrcDoc(build(initial()));
+            if (web) {
+              setSrcDoc(build(initial()));
+              setRunId((n) => n + 1);
+            }
           }}
         >
           Reset
@@ -157,6 +162,7 @@ export default function MiniPlayground({
       {web ? (
         <>
           <iframe
+            key={runId}
             ref={frame}
             title="Hasil contoh"
             sandbox="allow-scripts"

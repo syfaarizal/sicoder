@@ -3,12 +3,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import CodeEditor, { type EditorLang } from './CodeEditor';
 import { kindOf } from './FileIcon';
 import FileTabs from './FileTabs';
-import ProblemList from './ProblemList';
+import ProblemList, { type Problem } from './ProblemList';
 import SplitView from './SplitView';
 import WorkspaceFrame from './WorkspaceFrame';
 import { DEFAULT_WEB, getLesson, toWebCode, type Snippet } from '@/lib/content';
 import { formatCode } from '@/lib/format';
-import { buildSrcDoc, composeWeb, type Extra } from '@/lib/runner';
+import { buildSrcDoc, composeWeb, locateJs, type Extra, type JsPart } from '@/lib/runner';
 import { FONTS, TERMINAL_DEFAULT, getTheme, themeVars } from '@/lib/themes';
 import { usePersistent, useSettings } from '@/lib/usePersistent';
 
@@ -25,6 +25,10 @@ export default function WebWorkspace() {
   const [view, setView] = useState<'out' | 'con' | 'prob'>('out');
   const [lines, setLines] = useState<Line[]>([]);
   const [srcDoc, setSrcDoc] = useState('');
+  const [runId, setRunId] = useState(0); // iframe dibuat ulang tiap Run, jadi kode yang sama tetap dijalankan lagi
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [goto, setGoto] = useState<{ line: number; n: number } | null>(null);
+  const mapRef = useRef<JsPart[]>([]);
   const [panel, setPanel] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [note, setNote] = useState('');
@@ -45,8 +49,12 @@ export default function WebWorkspace() {
         }));
 
   const run = useCallback(() => {
+    const c = composeWeb(code);
+    mapRef.current = c.map;
     setLines([]);
-    setSrcDoc(buildSrcDoc(composeWeb(code)));
+    setProblems([]);
+    setRunId((n) => n + 1);
+    setSrcDoc(buildSrcDoc(c));
   }, [code]);
 
   // Buka dari materi: ?lesson=id memuat snippet dan membuka panel yang terkait
@@ -68,9 +76,19 @@ export default function WebWorkspace() {
   }, [code, settings.autoRun, ready, run]);
   useEffect(() => {
     const h = (e: MessageEvent) => {
-      if (e.source !== frame.current?.contentWindow || !e.data?.sl) return;
-      const [level, text] = e.data.sl as [string, string];
-      setLines((p) => [...p, { level, text }]);
+      if (e.source !== frame.current?.contentWindow || !e.data) return;
+      if (e.data.sl) {
+        const [level, text] = e.data.sl as [string, string];
+        setLines((p) => [...p, { level, text }]);
+      } else if (e.data.sp) {
+        // Error yang tidak tertangkap: dipetakan ke file dan baris aslinya
+        const { m, l } = e.data.sp as { m: string; l: number };
+        const loc = l ? locateJs(mapRef.current, l) : undefined;
+        setProblems((p) => [
+          ...p,
+          { id: p.length, file: loc?.file ?? 'JavaScript', line: loc?.line, message: m },
+        ]);
+      }
     };
     addEventListener('message', h);
     return () => removeEventListener('message', h);
@@ -111,7 +129,18 @@ export default function WebWorkspace() {
     setTimeout(() => setLines([]), 0);
     if (innerWidth < 768) setPanel(false);
   };
-  const errors = lines.filter((l) => l.level === 'error');
+  const goProblem = (p: Problem) => {
+    if (p.file === 'script.js') setTab('js');
+    else if (code.extra.some((f) => f.name === p.file)) setTab('x:' + p.file);
+    else return;
+    if (p.line) setGoto({ line: p.line, n: Date.now() });
+  };
+  const source = (p: Problem) => {
+    if (!p.line) return undefined;
+    const text =
+      p.file === 'script.js' ? code.js : code.extra.find((f) => f.name === p.file)?.content;
+    return text?.split('\n')[p.line - 1];
+  };
   const edTheme = getTheme(settings.theme);
   const termStyle = themeVars(settings.matchTerminal ? edTheme : TERMINAL_DEFAULT);
   const termFont = { fontSize: settings.fontSize, fontFamily: FONTS[settings.fontFamily] };
@@ -159,6 +188,7 @@ export default function WebWorkspace() {
         value={curValue}
         label={'Kode ' + cur.replace('x:', '')}
         settings={settings}
+        goto={goto}
         onChange={setValue}
         onRun={run}
         onFormat={format}
@@ -199,10 +229,16 @@ export default function WebWorkspace() {
           aria-selected={view === 'prob'}
           onClick={() => setView('prob')}
         >
-          Problems{errors.length > 0 && <span className="badge">{errors.length}</span>}
+          Problems{problems.length > 0 && <span className="badge">{problems.length}</span>}
         </button>
         <div className="flex-1" />
-        <button className="btn" onClick={() => setLines([])}>
+        <button
+          className="btn"
+          onClick={() => {
+            setLines([]);
+            setProblems([]);
+          }}
+        >
           Clear
         </button>
         <button className="btn btn-run" onClick={run} title="Ctrl/Cmd+Enter">
@@ -210,6 +246,7 @@ export default function WebWorkspace() {
         </button>
       </div>
       <iframe
+        key={runId}
         ref={frame}
         title="Hasil kode"
         sandbox="allow-scripts"
@@ -229,7 +266,10 @@ export default function WebWorkspace() {
       {view === 'prob' && (
         <ProblemList
           style={termFont}
-          problems={errors.map((l, i) => ({ id: i, file: 'JavaScript', message: l.text }))}
+          problems={problems}
+          onGo={goProblem}
+          lang="js"
+          source={source}
         />
       )}
     </section>

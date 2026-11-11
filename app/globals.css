@@ -458,3 +458,32 @@ dialog::backdrop {
 .btn-sm {
   padding: 3px 10px;
 }
+/* terminal interaktif dan detail problem */
+.term-in {
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  width: 28ch;
+  max-width: 100%;
+  padding: 0;
+  caret-color: currentColor;
+  border-bottom: 1px dashed color-mix(in srgb, var(--cfg) 40%, transparent);
+}
+.problem {
+  padding: 6px 0;
+}
+.psrc {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  opacity: 0.85;
+  margin: 2px 0 0 18px;
+  white-space: pre-wrap;
+}
+.phint {
+  margin: 2px 0 0 18px;
+  color: color-mix(in srgb, var(--cfg) 75%, var(--cbg));
+  font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+  font-size: 0.95em;
+}
