@@ -26,9 +26,9 @@ export default function MateriPage() {
   const list = searchLessons(lang, q);
   const all = lessons.filter((l) => l.lang === lang);
   const picked = getLesson(id);
-  // Tanpa topik terpilih dan tanpa pencarian: tampilkan daftar isi per kategori
-  const current: Lesson | null =
-    picked && picked.lang === lang ? picked : q.trim() ? (list[0] ?? null) : null;
+  // Tanpa topik terpilih: tampilkan daftar isi per kategori.
+  // Saat searching, daftar hasil ditampilkan (tidak auto-lompat ke lesson pertama).
+  const current: Lesson | null = picked && picked.lang === lang ? picked : null;
   const pos = current ? all.indexOf(current) : -1;
   const prev = pos > 0 ? all[pos - 1] : null;
   const next = pos >= 0 && pos < all.length - 1 ? all[pos + 1] : null;
@@ -36,22 +36,33 @@ export default function MateriPage() {
     setId(l.id);
   };
   const item = (l: Lesson) => (
-    <button key={l.id} className="li" aria-current={current?.id === l.id} onClick={() => open(l)}>
-      <span className="no">{lessonNo(l)}.</span>
-      {l.title}
+    <button
+      key={l.id}
+      className="materi-card"
+      aria-current={current?.id === l.id}
+      onClick={() => open(l)}
+    >
+      <b>
+        <span className="no">{lessonNo(l)}.</span> {l.title}
+      </b>
       <small>{l.desc}</small>
     </button>
   );
 
+  const groups = groupsOf(lang);
+  const searching = q.trim().length > 0;
+
   return (
-    <div className="flex h-dvh flex-col">
-      <Header />
+    <div className="materi-shell flex min-h-dvh flex-col md:h-dvh">
+      <div className="header-sticky">
+        <Header />
+      </div>
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         <aside
-          className="max-h-[40vh] overflow-auto border-b p-3 md:max-h-none md:w-72 md:flex-none md:border-b-0 md:border-r"
+          className="w-full flex-none border-b p-3 md:w-72 md:overflow-y-auto md:border-b-0 md:border-r md:p-4"
           style={{ background: 'var(--sf)', borderColor: 'var(--line)' }}
         >
-          <div className="mb-2 flex gap-1.5">
+          <div className="materi-bar">
             {(['web', 'python'] as Lang[]).map((l) => (
               <button
                 key={l}
@@ -66,27 +77,33 @@ export default function MateriPage() {
               </button>
             ))}
           </div>
-          <input
-            className="inp"
-            type="search"
-            placeholder="Cari materi, mis. padding"
-            aria-label="Cari materi"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-          {q.trim()
-            ? list.map(item)
-            : groupsOf(lang).map((g) => (
-                <div key={g}>
-                  <div className="sec">{g}</div>
-                  {all.filter((l) => l.group === g).map(item)}
-                </div>
-              ))}
-          {list.length === 0 && (
-            <p style={{ color: 'var(--mute)' }}>Belum ada materi untuk kata itu.</p>
-          )}
-        </aside>
-        <article className="min-w-0 flex-1 overflow-auto px-5 py-6">
+          <div className="materi-bar">
+            <input
+              className="inp"
+              type="search"
+              placeholder="Cari materi, mis. padding"
+              aria-label="Cari materi"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </div>
+          <nav className="materi-nav" aria-label="Kategori materi">
+            {groups.map((g) => (
+              <button
+                key={g}
+                className="materi-nav-item"
+                aria-current={current?.group === g}
+                onClick={() => {
+                  const first = all.find((l) => l.group === g);
+                  if (first) open(first);
+                }}
+              >
+                <span>{g}</span>
+                <small>{all.filter((l) => l.group === g).length}</small>
+              </button>
+            ))}
+          </nav>        </aside>
+        <article className="min-w-0 flex-1 px-4 py-6 md:overflow-y-auto md:px-8 md:py-10">
           {current ? (
             <div className="mx-auto max-w-[70ch]">
               <button
@@ -127,23 +144,36 @@ export default function MateriPage() {
             </div>
           ) : (
             <div className="mx-auto max-w-5xl">
-              <h1 className="m-0 mb-1 text-3xl font-bold tracking-tight">
+              <p className="kicker">// PILIH MATERI YANG PENGEN LO BACA</p>
+              <h1 className="home-title" style={{ fontSize: 'clamp(28px, 5vw, 44px)' }}>
                 Materi {lang === 'web' ? 'Web Development' : 'Python'}
               </h1>
-              <p className="mb-6" style={{ color: 'var(--mute)' }}>
+              <p className="home-intro" style={{ marginBottom: 32 }}>
                 Pilih topik. Tiap topik ada penjelasan singkat dan contoh yang bisa langsung kamu
                 ubah dan jalankan.
               </p>
-              <div className="grid gap-x-8 gap-y-5 sm:grid-cols-2 xl:grid-cols-3">
-                {groupsOf(lang).map((g) => (
-                  <div key={g}>
-                    <div className="sec" style={{ color: 'var(--ac)' }}>
-                      {g}
-                    </div>
-                    {all.filter((l) => l.group === g).map(item)}
+              {searching ? (
+                list.length === 0 ? (
+                  <p className="materi-empty">
+                    Belum ada materi untuk &quot;{q}&quot;. Coba kata lain.
+                  </p>
+                ) : (
+                  <div className="materi-grid">
+                    {list.map(item)}
                   </div>
-                ))}
-              </div>
+                )
+              ) : (
+                groups.map((g) => (
+                  <section key={g}>
+                    <h2 className="materi-cat">
+                      <b>{g}</b>
+                    </h2>
+                    <div className="materi-grid">
+                      {all.filter((l) => l.group === g).map(item)}
+                    </div>
+                  </section>
+                ))
+              )}
             </div>
           )}
         </article>

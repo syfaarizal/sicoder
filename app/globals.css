@@ -8,7 +8,7 @@
   --ink: #16202e;
   --mute: #5d6878;
   --line: #d9ddd5;
-  --ac: #2347e8;
+  --ac: #d91f2c;
   --acink: #fff;
   --mark: #ffe14d;
   --ok: #2fa84f;
@@ -24,8 +24,8 @@
     --ink: #e8ecf2;
     --mute: #9aa6b6;
     --line: #2a3442;
-    --ac: #7b97ff;
-    --acink: #0c1220;
+    --ac: #ff6069;
+    --acink: #26070a;
     --mark: #d9b800;
   }
 }
@@ -37,6 +37,8 @@ body {
     16px/1.55 'Bricolage Grotesque',
     system-ui,
     sans-serif;
+  /* Pola dekoratif di home melebar melebihi viewport; clip mencegah scroll horizontal. */
+  overflow-x: clip;
 }
 :focus-visible {
   outline: 3px solid var(--ac);
@@ -96,8 +98,15 @@ button {
 .home-shell {
   position: relative;
   isolation: isolate;
+  overflow-x: clip;
 }
-.home-shell::before {
+.materi-shell {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+.home-shell::before,
+.materi-shell::before {
   position: absolute;
   z-index: -1;
   inset: 0 -10vw auto;
@@ -144,11 +153,16 @@ button {
   box-shadow: 0 0 10px #31c87999;
   animation: status-pulse 2s ease-in-out infinite;
 }
-.home-kicker {
+.home-kicker,
+.kicker {
   margin: 0 0 12px;
   color: #f21d2b;
   font: 600 11px/1.5 var(--font-mono);
   letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.home-kicker {
+  margin-bottom: 12px;
 }
 .home-title {
   max-width: 690px;
@@ -340,26 +354,7 @@ button {
   background: var(--bg);
   color: inherit;
 }
-.li {
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: 0;
-  background: none;
-  padding: 8px 10px;
-  border-radius: 8px;
-  margin-top: 4px;
-}
-.li small {
-  display: block;
-  color: var(--mute);
-}
-.li[aria-current='true'] {
-  background: var(--bg);
-  box-shadow: inset 3px 0 var(--ac);
-}
-/* workspace: warna mengikuti tema editor lewat --cbg / --cfg */
-.pane {
+/* workspace: warna mengikuti tema editor lewat --cbg / --cfg */.pane {
   display: flex;
   flex-direction: column;
   flex: 1 1 0;
@@ -544,11 +539,10 @@ dialog::backdrop {
   color: var(--acink);
 }
 .sec {
-  font-size: 12px;
-  letter-spacing: 0.04em;
+  margin: 18px 0 4px;
   color: var(--mute);
-  margin: 16px 0 2px;
-  font-weight: 700;
+  font: 700 11px/1.4 var(--font-mono);
+  letter-spacing: 0.11em;
   text-transform: uppercase;
 }
 .toggle {
@@ -593,6 +587,177 @@ dialog::backdrop {
   padding: 3px 0;
 }
 
+.materi-shell {
+  position: relative;
+  isolation: isolate;
+}
+.header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(10px);
+}
+.materi-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.materi-bar .inp {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.materi-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 0 12px;
+  scrollbar-width: none;
+}
+.materi-nav::-webkit-scrollbar {
+  display: none;
+}
+@media (min-width: 768px) {
+  .materi-nav {
+    flex-direction: column;
+    align-self: flex-start;
+    padding: 20px 0 24px;
+  }
+}
+.materi-nav-item {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--sf);
+  padding: 6px 12px;
+  color: var(--mute);
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+.materi-nav-item:hover {
+  border-color: color-mix(in srgb, #f21d2b 45%, var(--line));
+  color: var(--ink);
+}
+.materi-nav-item[aria-current='true'] {
+  border-color: #f21d2b;
+  color: #f21d2b;
+}
+.materi-nav-item small {
+  color: var(--mute);
+  font-size: 11px;
+}
+@media (min-width: 768px) {
+  .materi-nav-item {
+    width: 100%;
+    border-color: transparent;
+    border-radius: 8px;
+    background: none;
+    padding: 7px 10px;
+  }
+  .materi-nav-item[aria-current='true'] {
+    border-color: transparent;
+    background: color-mix(in srgb, #f21d2b 10%, transparent);
+  }
+}
+.materi-cat {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 30px 0 12px;
+  color: var(--mute);
+  font: 700 11px/1.4 var(--font-mono);
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.materi-cat::after {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  content: '';
+}
+.materi-cat:first-child {
+  margin-top: 0;
+}
+.materi-cat b {
+  color: #f21d2b;
+}
+.materi-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 620px) {
+  .materi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .materi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* Sidebar workspace sempit: tetap satu kolom. */
+.materi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.materi-card {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--sf);
+  padding: 12px 14px;
+  text-align: left;
+  transition:
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.materi-card:hover {
+  border-color: color-mix(in srgb, #f21d2b 45%, var(--line));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px #080b1210;
+}
+.materi-card[aria-current='true'] {
+  border-color: #f21d2b;
+  box-shadow: inset 3px 0 #f21d2b;
+}
+.materi-card b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.materi-card small {
+  display: block;
+  margin-top: 3px;
+  color: var(--mute);
+  font-size: 13px;
+}
+.materi-empty {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 28px 18px;
+  color: var(--mute);
+  text-align: center;
+}
+.materi-article {
+  scroll-margin-top: 76px;
+}
 /* contoh kode di materi */
 .mini {
   border: 1px solid var(--line);

@@ -68,34 +68,38 @@ export default function LearningPanel({
         />
       ) : q.trim() ? (
         <>
-          {results.map((l) => (
-            <button key={l.id} className="li" onClick={() => onActive(l.id)}>
-              <span className="no">{lessonNo(l)}.</span>
-              {l.title}
-              <small>
-                {l.group} · {l.desc}
-              </small>
-            </button>
-          ))}
+          <div className="materi-list">
+            {results.map((l) => (
+              <button key={l.id} className="materi-card" onClick={() => onActive(l.id)}>
+                <b>
+                  <span className="no">{lessonNo(l)}.</span> {l.title}
+                </b>
+                <small>{l.desc}</small>
+              </button>
+            ))}
+          </div>
           {results.length === 0 && (
-            <p style={{ color: 'var(--mute)' }}>
-              Belum ada materi untuk &quot;{q}&quot;. Coba kata lain.
-            </p>
+            <p className="materi-empty">Belum ada materi untuk &quot;{q}&quot;. Coba kata lain.</p>
           )}
         </>
       ) : (
         groupsOf(lang).map((g) => (
           <div key={g}>
-            <div className="sec">{g}</div>
-            {results
-              .filter((l) => l.group === g)
-              .map((l) => (
-                <button key={l.id} className="li" onClick={() => onActive(l.id)}>
-                  <span className="no">{lessonNo(l)}.</span>
-                  {l.title}
-                  <small>{l.desc}</small>
-                </button>
-              ))}
+            <h2 className="materi-cat">
+              <b>{g}</b>
+            </h2>
+            <div className="materi-list">
+              {results
+                .filter((l) => l.group === g)
+                .map((l) => (
+                  <button key={l.id} className="materi-card" onClick={() => onActive(l.id)}>
+                    <b>
+                      <span className="no">{lessonNo(l)}.</span> {l.title}
+                    </b>
+                    <small>{l.desc}</small>
+                  </button>
+                ))}
+            </div>
           </div>
         ))
       )}

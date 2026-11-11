@@ -43,10 +43,14 @@ export default function WorkspaceFrame({
     >
       <Header>
         <button className="btn" aria-pressed={panel} onClick={() => onPanel(!panel)}>
-          Materi di sisi
+          <span aria-hidden="true">☰</span>
+          <span className="hidden sm:inline">Materi di sisi</span>
+          <span className="sr-only sm:hidden">Materi di sisi</span>
         </button>
         <button className="btn" onClick={() => setShowSettings(true)}>
-          Pengaturan
+          <span aria-hidden="true">⚙</span>
+          <span className="hidden sm:inline">Pengaturan</span>
+          <span className="sr-only sm:hidden">Pengaturan</span>
         </button>
       </Header>
       <div
