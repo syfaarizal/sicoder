@@ -697,6 +697,7 @@ dialog::backdrop {
   display: grid;
   gap: 10px;
   grid-template-columns: 1fr;
+  margin-bottom: 25px;
 }
 @media (min-width: 620px) {
   .materi-grid {
@@ -782,6 +783,23 @@ dialog::backdrop {
   border-top: 1px solid var(--cline);
   flex: none;
   display: block;
+}
+.mini-prob {
+  max-height: 220px;
+  border-top: 1px solid var(--cline);
+  flex: none;
+  overflow: auto;
+}
+.mini-prob-head {
+  padding: 7px 12px 3px;
+  color: var(--mute);
+  font: 700 11px/1.4 var(--font-mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.mini-prob .term {
+  flex: none;
+  min-height: 0;
 }
 .lesson h3.ex {
   font-size: 16px;

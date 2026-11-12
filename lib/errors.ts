@@ -101,6 +101,11 @@ const JS: Rule[] = [
       `Kamu memakai sesuatu yang ${m[1]} (kosong). Biasanya elemennya tidak ketemu: cek id-nya, atau pastikan elemen sudah ada sebelum JS berjalan.`,
   ],
   [
+    /TypeError: Cannot set propert(?:y|ies) of (null|undefined)/,
+    (m) =>
+      `Elemen yang kamu tuju tidak ada (nilainya ${m[1]}), jadi isinya tidak bisa diubah. Cek id atau class-nya, dan pastikan elemennya ada di HTML sebelum JS berjalan.`,
+  ],
+  [
     /TypeError: (.+?) is not a function/,
     (m) => `${m[1]} bukan fungsi. Cek ejaan namanya dan cara memanggilnya.`,
   ],

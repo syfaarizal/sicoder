@@ -1,5 +1,6 @@
 // Script yang disisipkan ke iframe: menangkap console.* dan error (termasuk promise yang ditolak).
 // Error dikirim terstruktur ({sp}) dengan nomor baris relatif ke awal JS, supaya bisa dipetakan ke file.
+// Isi halaman yang digambar JS juga dilaporkan ({bd}), supaya preview bisa dimunculkan saat dibutuhkan.
 const capture = (jsLine: number) =>
   'var JSL=' +
   jsLine +
@@ -7,7 +8,9 @@ const capture = (jsLine: number) =>
   'var f=function(l){return function(){parent.postMessage({sl:[l,[].map.call(arguments,function(a){try{return typeof a==="object"?JSON.stringify(a):String(a)}catch(e){return String(a)}}).join(" ")]},"*")}};' +
   'console.log=f("log");console.error=f("error");console.warn=f("warn");' +
   'window.onerror=function(m,u,l){var n=l?l-JSL+1:0;if(n<1)n=0;f("error")(m+(n?" (baris "+n+")":""));parent.postMessage({sp:{m:String(m),l:n}},"*");return true};' +
-  'addEventListener("unhandledrejection",function(e){var r=e.reason,m="Uncaught (in promise) "+(r&&r.message?(r.name||"Error")+": "+r.message:String(r));f("error")(m);parent.postMessage({sp:{m:m,l:0}},"*")});';
+  'addEventListener("unhandledrejection",function(e){var r=e.reason,m="Uncaught (in promise) "+(r&&r.message?(r.name||"Error")+": "+r.message:String(r));f("error")(m);parent.postMessage({sp:{m:m,l:0}},"*")});' +
+  'var bd=null;function rep(){var b=document.body;if(!b)return;var c=b.cloneNode(true),q=c.querySelectorAll("script,style");for(var i=0;i<q.length;i++)q[i].remove();var t=(c.textContent||"").replace(/\\s+/g," ").trim();if(t!==bd){bd=t;parent.postMessage({bd:t},"*");}};' +
+  'addEventListener("load",function(){rep();try{new MutationObserver(rep).observe(document.body,{childList:true,subtree:true,characterData:true});}catch(e){}});';
 
 /** Bangun dokumen untuk iframe sandbox. Satu workspace: HTML, CSS, JS otomatis tersambung. */
 export function buildSrcDoc({ html, css, js }: { html: string; css: string; js: string }) {

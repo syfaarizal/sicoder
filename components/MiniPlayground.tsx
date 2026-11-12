@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import CodeEditor from './CodeEditor';
+import ProblemList, { type Problem } from './ProblemList';
 import type { Lang, Snippet } from '@/lib/content';
 import { runPython } from '@/lib/pyRunner';
 import { buildSrcDoc } from '@/lib/runner';
@@ -42,6 +43,9 @@ export default function MiniPlayground({
     buildSrcDoc({ html: c.html, css: BASE_CSS + c.css, js: c.js });
   const [srcDoc, setSrcDoc] = useState(() => (web ? build(initial()) : ''));
   const [lines, setLines] = useState<{ level: string; text: string }[]>([]);
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [body, setBody] = useState(''); // isi halaman yang digambar JS (dipakai untuk preview)
+  const [goto, setGoto] = useState<{ line: number; n: number } | null>(null);
   const [out, setOut] = useState<Seg[]>([]);
   const [running, setRunning] = useState(false);
   const [runId, setRunId] = useState(0); // iframe dibuat ulang tiap Run, jadi kode yang sama tetap dijalankan lagi
@@ -51,6 +55,8 @@ export default function MiniPlayground({
 
   const runWeb = () => {
     setLines([]);
+    setProblems([]);
+    setBody('');
     setRunId((n) => n + 1);
     setSrcDoc(build(code));
   };
@@ -84,9 +90,17 @@ export default function MiniPlayground({
   }, [code]);
   useEffect(() => {
     const h = (e: MessageEvent) => {
-      if (e.source !== frame.current?.contentWindow || !e.data?.sl) return;
-      const [level, text] = e.data.sl as [string, string];
-      setLines((p) => [...p, { level, text }]);
+      if (e.source !== frame.current?.contentWindow || !e.data) return;
+      if (e.data.sl) {
+        const [level, text] = e.data.sl as [string, string];
+        setLines((p) => [...p, { level, text }]);
+      } else if (e.data.sp) {
+        // Error yang tidak tertangkap: nomor barisnya relatif ke blok JS
+        const { m, l } = e.data.sp as { m: string; l: number };
+        setProblems((p) => [...p, { id: p.length, file: 'JavaScript', line: l || undefined, message: m }]);
+      } else if (typeof e.data.bd === 'string') {
+        setBody(e.data.bd);
+      }
     };
     addEventListener('message', h);
     return () => removeEventListener('message', h);
@@ -97,6 +111,15 @@ export default function MiniPlayground({
   const mini = { ...settings, lineNumbers: false, keymap: 'default' as const, wrap: true };
   const font = { fontSize: settings.fontSize - 1, fontFamily: FONTS[settings.fontFamily] };
   const current = () => (web ? { html: code.html, css: code.css, js: code.js } : { py: code.py });
+  // Preview ditampilkan kalau ada HTML bawaan, atau kalau JS itu sendiri menggambar isi halaman.
+  const showView = hasView || body !== '';
+  const source = (p: Problem) =>
+    p.line ? code.js.split('\n')[p.line - 1] : undefined;
+  const goProblem = (p: Problem) => {
+    if (!p.line) return;
+    setTab('js');
+    setGoto({ line: p.line, n: Date.now() });
+  };
 
   return (
     <div className="mini" style={themeVars(getTheme(settings.theme))}>
@@ -109,7 +132,10 @@ export default function MiniPlayground({
                 role="tab"
                 className="tab"
                 aria-selected={tab === p}
-                onClick={() => setTab(p)}
+                onClick={() => {
+                  setTab(p);
+                  setGoto(null); // goto lama tidak boleh ikut saat tab diganti manual
+                }}
               >
                 {p.toUpperCase()}
               </button>
@@ -126,6 +152,8 @@ export default function MiniPlayground({
           onClick={() => {
             setCode(initial());
             setLines([]);
+            setProblems([]);
+            setBody('');
             setOut([]);
             if (web) {
               setSrcDoc(build(initial()));
@@ -155,6 +183,7 @@ export default function MiniPlayground({
           value={code[tab]}
           label={'Contoh kode ' + tab}
           settings={mini}
+          goto={goto}
           onChange={(v) => setCode((c) => ({ ...c, [tab]: v }))}
           onRun={run}
         />
@@ -167,16 +196,28 @@ export default function MiniPlayground({
             title="Hasil contoh"
             sandbox="allow-scripts"
             srcDoc={srcDoc}
-            className={hasView ? 'mini-out' : 'hidden'}
+            className={showView ? 'mini-out' : 'hidden'}
           />
           {(lines.length > 0 || !hasView) && (
             <div className="con mini-con" role="log" style={font}>
-              {lines.length === 0 && <span className="d">Console kosong. Tekan Run.</span>}
+              {/* {lines.length === 0 && <span className="d">Console kosong. Tekan Run.</span>} */}
               {lines.map((l, i) => (
                 <div key={i} className={l.level}>
                   {l.text}
                 </div>
               ))}
+            </div>
+          )}
+          {problems.length > 0 && (
+            <div className="mini-prob">
+              <div className="mini-prob-head">Ada masalah ({problems.length})</div>
+              <ProblemList
+                problems={problems}
+                onGo={goProblem}
+                lang="js"
+                source={source}
+                style={font}
+              />
             </div>
           )}
         </>
