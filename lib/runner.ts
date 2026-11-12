@@ -9,6 +9,8 @@ const capture = (jsLine: number) =>
   'console.log=f("log");console.error=f("error");console.warn=f("warn");' +
   'window.onerror=function(m,u,l){var n=l?l-JSL+1:0;if(n<1)n=0;f("error")(m+(n?" (baris "+n+")":""));parent.postMessage({sp:{m:String(m),l:n}},"*");return true};' +
   'addEventListener("unhandledrejection",function(e){var r=e.reason,m="Uncaught (in promise) "+(r&&r.message?(r.name||"Error")+": "+r.message:String(r));f("error")(m);parent.postMessage({sp:{m:m,l:0}},"*")});' +
+  // Submit form di dalam iframe tidak boleh memuat halaman: aksi default dibatalkan, event submit tetap jalan.
+  'document.addEventListener("submit",function(e){e.preventDefault();},true);' +
   'var bd=null;function rep(){var b=document.body;if(!b)return;var c=b.cloneNode(true),q=c.querySelectorAll("script,style");for(var i=0;i<q.length;i++)q[i].remove();var t=(c.textContent||"").replace(/\\s+/g," ").trim();if(t!==bd){bd=t;parent.postMessage({bd:t},"*");}};' +
   'addEventListener("load",function(){rep();try{new MutationObserver(rep).observe(document.body,{childList:true,subtree:true,characterData:true});}catch(e){}});';
 

@@ -194,7 +194,7 @@ export default function MiniPlayground({
             key={runId}
             ref={frame}
             title="Hasil contoh"
-            sandbox="allow-scripts"
+            sandbox="allow-scripts allow-forms"
             srcDoc={srcDoc}
             className={showView ? 'mini-out' : 'hidden'}
           />

@@ -31,7 +31,7 @@ npm run format   # Prettier untuk seluruh project
 | `components/Menu.tsx`, `FileIcon.tsx`, `ProblemList.tsx` | Menu popover, ikon file, dan daftar Problems                                                                                                             |
 | `components/MiniPlayground.tsx`                          | Contoh kode yang bisa diedit dan dijalankan di dalam materi (state lokal, tidak menyentuh editor utama)                                                  |
 | `components/LessonView.tsx`                              | Tampilan satu materi: penjelasan, tip, dan contoh-contoh runnable                                                                                        |
-| `lib/content.ts`                                         | Semua materi (36 topik). Tambah materi dengan `mk(...)`, lihat bagian "Menambah materi"                                                                  |
+| `lib/content.ts`                                         | Semua materi (41 topik). Tambah materi dengan `mk(...)`, lihat bagian "Menambah materi"                                                                  |
 | `lib/pyRunner.ts`                                        | Runner Python bersama untuk contoh di materi (Web Worker terpisah dari workspace)                                                                        |
 | `lib/format.ts`                                          | Prettier di browser (HTML, CSS, JS)                                                                                                                      |
 | `public/py-worker.js`                                    | Web Worker Pyodide (runtime dimuat dari CDN saat Run pertama)                                                                                            |
@@ -40,6 +40,7 @@ npm run format   # Prettier untuk seluruh project
 | `lib/ansi.ts`, `components/TerminalView.tsx`             | Terminal Python: warna ANSI, clear screen, `\r`, dan kolom input inline                                                                                  |
 | `lib/errors.ts`                                          | Penjelasan error (Python dan JavaScript) dalam bahasa Indonesia sederhana untuk tab Problems                                                             |
 | `public/py-lint.py`                                      | Pengumpul error sintaks Python: menemukan semua baris bermasalah sekaligus                                                                               |
+| `public/media/`                                          | Contoh audio dan video lokal (dipakai materi Audio dan Video)                                                                                           |
 
 ## Materi
 
@@ -130,6 +131,12 @@ Font, ukuran huruf, layout (per workspace), tema editor, tema terminal, key bind
 Tiap masalah menampilkan: lokasi (`file:baris`), pesan asli, baris kode yang bermasalah, dan penjelasan singkat dalam bahasa Indonesia tentang apa yang harus dicek. Berlaku untuk Python (error sintaks dan runtime) dan JavaScript. Di Web, error JavaScript dipetakan ke file dan baris aslinya (termasuk file `.js` tambahan), dan klik item akan melompat ke barisnya. `console.error()` yang ditulis sendiri tetap hanya muncul di Console, bukan di Problems.
 
 ## Changelog
+
+### v0.8
+
+- **HTML nambah 5 materi** (total 41 topik, HTML jadi 12): Semantic HTML, Atribut HTML, Form dan Input, Button dan Form Submission, Audio dan Video. Semantik dan Atribut masuk kategori "HTML Dasar", tiga lainnya "HTML Lanjutan".
+- Contoh Audio dan Video memakai file lokal di `public/media/` (bukan tautan luar), jadi tetap jalan tanpa internet.
+- Form di dalam preview bisa dikirim tanpa memuat halaman: sandbox iframe diberi `allow-forms`, dan aksi default `submit` dibatalkan supaya preview nggak terlempar keluar.
 
 ### v0.7
 

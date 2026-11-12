@@ -163,6 +163,209 @@ export const lessons: Lesson[] = [
       },
     ],
   ),
+  mk(
+    'w-semantik',
+    'HTML',
+    'Semantic HTML',
+    'header, nav, main, section, footer',
+    'semantik,semantic,header,nav,main,section,footer,article,aside,struktur,layout,aksesibilitas,seo',
+    `HTML semantik pakai tag yang menjelaskan isinya, bukan cuma kelihatan bagus. header buat bagian atas halaman, nav buat menu navigasi, main buat isi utama, section buat pengelompokan konten, footer buat bagian bawah. Browser, mesin pencari, dan pembaca layar jadi lebih paham bagian-bagian halaman.`,
+    [
+      {
+        t: 'Kerangka halaman',
+        n: 'Bagian-bagian halaman pakai tag-nya masing-masing, bukan div semua.',
+        h: `<header>
+  <h1>Situsku</h1>
+  <nav>
+    <a href="#">Beranda</a>
+    <a href="#">Artikel</a>
+    <a href="#">Kontak</a>
+  </nav>
+</header>
+
+<main>
+  <section>
+    <h2>Artikel terbaru</h2>
+    <p>Bagian ini isinya konten utama halaman.</p>
+  </section>
+  <section>
+    <h2>Kontak</h2>
+    <p>Bagian ini isinya informasi kontak.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Dibuat dengan SICODER</p>
+</footer>`,
+      },
+      {
+        t: 'article dan aside',
+        n: 'article untuk konten yang berdiri sendiri, aside untuk konten sampingan seperti sidebar.',
+        h: `<article>
+  <h2>Belajar HTML semantik</h2>
+  <p>Artikel ini berdiri sendiri, bukan bagian dari artikel lain.</p>
+</article>
+
+<aside>
+  <h3>Baca juga</h3>
+  <ul>
+    <li>Belajar CSS</li>
+    <li>Belajar JavaScript</li>
+  </ul>
+</aside>`,
+      },
+    ],
+    'Pakai tag semantik buat kerangka halaman. Kalau cuma mau bikin kotak, div masih aman.',
+  ),
+  mk(
+    'w-atribut',
+    'HTML',
+    'Atribut HTML',
+    'nilai tambahan di dalam tag',
+    'atribut,attribute,href,src,alt,target,type,id,class,title,lang,value,required,disabled,rel,button,div',
+    `Atribut adalah informasi tambahan yang ditulis di dalam tag pembuka, formatnya nama="nilai". Tiap tag punya atribut sendiri: link pakai href buat alamat tujuan, gambar pakai src buat lokasi file dan alt buat deskripsi, tombol pakai type buat menentukan perilakunya. Ada juga atribut global yang bisa dipakai di tag mana saja, dan atribut boolean yang cukup ditulis namanya saja tanpa tanda sama dengan.`,
+    [
+      {
+        t: 'Atribut pada link dan gambar',
+        n: 'Atribut ditulis di dalam tag pembuka, setelah nama tag.',
+        h: `<a href="https://example.com" target="_blank" rel="noopener">Buka example.com</a>
+
+<img
+  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%232347e8'/%3E%3C/svg%3E"
+  alt="Kotak biru"
+  width="120"
+  height="60"
+>`,
+      },
+      {
+        t: 'Atribut global dan atribut boolean',
+        n: 'required dan disabled cukup ditulis namanya, tanpa tanda sama dengan.',
+        h: `<div id="kartu" class="kotak" title="Kotak contoh" lang="id" data-label="demo">
+  <p>Kotak ini punya id, class, title, lang, dan data-label.</p>
+</div>
+
+<form>
+  <input type="text" placeholder="Nama" required>
+  <input type="text" value="Tidak bisa diedit" disabled>
+  <button type="submit">Kirim</button>
+</form>`,
+      },
+    ],
+    'alt di img itu bukan opsional. Kalau gambar gagal dimuat, alt yang menjelaskan isi gambarnya.',
+  ),
+  mk(
+    'w-form-input',
+    'HTML',
+    'Form dan Input',
+    'form, input, textarea, select',
+    'form,input,textarea,select,option,label,name,required,value,placeholder,email,password,number,date,checkbox,radio,type,button',
+    `Semua isian dikumpulkan di dalam satu tag form. input untuk isian satu baris, textarea buat teks panjang, select buat memilih dari daftar pilihan (satuannya option). Tiap isian butuh name supaya jelas data mana yang dikirim, dan label buat ngasih tahu ke orang yang isi form isian itu buat apa.`,
+    [
+      {
+        t: 'Form lengkap',
+        h: `<form>
+  <label for="nama">Nama</label>
+  <input id="nama" name="nama" type="text" placeholder="Nama lengkap">
+
+  <label for="pesan">Pesan</label>
+  <textarea id="pesan" name="pesan" rows="3" placeholder="Tulis pesanmu"></textarea>
+
+  <label for="jurusan">Jurusan</label>
+  <select id="jurusan" name="jurusan">
+    <option>IPA</option>
+    <option>IPS</option>
+    <option>Bahasa</option>
+  </select>
+
+  <button type="submit">Kirim</button>
+</form>`,
+      },
+      {
+        t: 'Macam-macam tipe input',
+        n: 'Tipe input mengatur tampilan dan cara isian itu diperiksa.',
+        h: `<p>
+  <input type="text" placeholder="teks">
+  <input type="email" placeholder="email">
+  <input type="password" placeholder="password">
+  <input type="number" placeholder="angka">
+  <input type="date">
+</p>
+
+<p>
+  <label><input type="checkbox" checked> Setuju</label>
+  <label><input type="radio" name="pilihan" value="a"> Pilihan A</label>
+  <label><input type="radio" name="pilihan" value="b"> Pilihan B</label>
+</p>`,
+      },
+    ],
+    'Pakai label untuk setiap input. Selain menulis lebih jelas, klik teksnya langsung memcursor ke isian.',
+  ),
+  mk(
+    'w-button-submit',
+    'HTML',
+    'Button dan Form Submission',
+    'jenis tombol dan cara menangkap submit',
+    'button,submit,reset,type,form,action,method,event,addeventlistener,preventdefault,input,formdata',
+    `button punya beberapa type. Yang paling sering dipakai type="submit" buat mengirim form, type="reset" buat mengembalikan isian ke awal, dan type="button" buat tombol biasa yang nggak ngirim apa-apa. Tombol yang nggak di dalam form nggak akan ngirim form, walau type-nya submit. Biar bisa ngolah datanya sendiri, tangkap event submit pakai addEventListener.`,
+    [
+      {
+        t: 'Tiga jenis tombol',
+        n: 'type="submit" mengirim form, type="reset" mengembalikan isian awal, type="button" tidak melakukan apa-apa.',
+        h: `<form id="form-demo">
+  <input type="text" name="nama" value="Sari">
+  <button type="submit">Kirim</button>
+  <button type="reset">Reset</button>
+  <button type="button">Biasanya</button>
+</form>`,
+      },
+      {
+        t: 'Menangkap event submit',
+        n: 'addEventListener("submit", ...) dipanggil tepat saat form mau dikirim, sebelum halamannya berubah.',
+        h: `<form id="form">
+  <input type="text" name="nama" placeholder="Ketik nama">
+  <button type="submit">Kirim</button>
+</form>
+<p id="hasil">Belum ada hasil.</p>`,
+        j: `const form = document.getElementById("form");
+const hasil = document.getElementById("hasil");
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nama = form.elements.nama.value;
+  hasil.textContent = "Halo, " + nama + "! Form kamu tertangkap.";
+  console.log("Data:", Object.fromEntries(new FormData(form)));
+});`,
+      },
+    ],
+    'type="button" buat tombol yang cuma pemicu JavaScript. Kalau dibiarkan submit, form-nya keburu terkirim.',
+  ),
+  mk(
+    'w-audio-video',
+    'HTML',
+    'Audio dan Video',
+    'audio, video, controls',
+    'audio,video,controls,source,autoplay,loop,muted,preload,type,width',
+    `audio buat memutar suara, video buat memutar video. Setelahnya dikasih atribut controls biar muncul tombol play, pause, sama pengatur volume. Kalau formatnya bisa lebih dari satu, taruh beberapa tag source di dalam: browser otomatis pilih yang cocok.`,
+    [
+      {
+        t: 'Pemutar audio',
+        n: 'Atribut controls memunculkan tombol play, pause, dan pengatur volume.',
+        h: `<audio controls src="/media/contoh-audio.wav">
+  Browser kamu belum mendukung pemutar audio.
+</audio>`,
+      },
+      {
+        t: 'Pemutar video dengan beberapa format',
+        n: 'Tag source dipakai supaya browser bisa pilih format yang didukung.',
+        h: `<video controls width="320">
+  <source src="/media/contoh-video.webm" type="video/webm">
+  <source src="/media/contoh-video.mp4" type="video/mp4">
+  Browser kamu belum mendukung pemutar video.
+</video>`,
+      },
+    ],
+    'Taruh video atau audio di server sendiri supaya file-nya nggak hilang.',
+  ),
 
   // ---------- CSS ----------
   mk(
@@ -649,6 +852,11 @@ const CODE_TERMS: Record<string, string[]> = {
   'w-form': ['button', 'input', 'type', 'text', 'number', 'password', 'label'],
   'w-div': ['div', 'span', 'class', 'id'],
   'w-tabel': ['table', 'tr', 'th', 'td'],
+  'w-semantik': ['header', 'nav', 'main', 'section', 'footer', 'article', 'aside'],
+  'w-atribut': ['href', 'src', 'alt', 'target', 'type', 'value', 'required', 'disabled'],
+  'w-form-input': ['form', 'input', 'textarea', 'select', 'option', 'label', 'name', 'required', 'placeholder'],
+  'w-button-submit': ['button', 'submit', 'reset', 'type', 'form', 'action', 'method', 'addEventListener', 'preventDefault'],
+  'w-audio-video': ['audio', 'video', 'controls', 'source', 'autoplay', 'loop', 'muted'],
   'w-selector': ['p', '.nama', '#nama', 'class', 'id'],
   'w-warna': ['color', 'background', 'red', '#2347e8', 'rgb(35, 71, 232)'],
   'w-font': [
@@ -730,6 +938,11 @@ const CATEGORY: Record<string, string> = {
   'w-form': 'HTML Lanjutan',
   'w-div': 'HTML Lanjutan',
   'w-tabel': 'HTML Lanjutan',
+  'w-semantik': 'HTML Dasar',
+  'w-atribut': 'HTML Dasar',
+  'w-form-input': 'HTML Lanjutan',
+  'w-button-submit': 'HTML Lanjutan',
+  'w-audio-video': 'HTML Lanjutan',
   'w-selector': 'CSS Dasar',
   'w-warna': 'CSS Dasar',
   'w-font': 'CSS Dasar',
