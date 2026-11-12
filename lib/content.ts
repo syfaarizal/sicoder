@@ -787,6 +787,121 @@ form.addEventListener("submit", (e) => {
     ],
   ),
   mk(
+    'w-io',
+    'JavaScript Dasar',
+    'Input dan Output',
+    'alert(), prompt(), confirm()',
+    'io,input,output,alert,prompt,confirm,pesan,masukan,kotak isian,jawab',
+    `alert() menampilkan pesan singkat di layar untuk memberi tahu hasil atau kesalahan. prompt() membuka kotak isian dan mengembalikan teks yang diketik pengguna, atau null kalau dibatalkan. confirm() menampilkan tombol Ya dan Tidak, lalu mengembalikan true atau false. Ketiganya enak dipakai di program kecil, tapi untuk tampilan yang lebih rapi hasilnya biasanya ditulis ke halaman.`,
+    [
+      {
+        t: 'alert: menampilkan pesan',
+        n: 'Klik tombolnya, lalu lihat pesan yang muncul di area preview.',
+        h: '<button id="btn-alert">Tampilkan pesan</button>',
+        j: `document.getElementById("btn-alert").addEventListener("click", () => {
+  alert("Halo! Pesan ini muncul lewat alert().");
+});`,
+      },
+      {
+        t: 'prompt: meminta input',
+        n: 'Klik tombolnya, lalu ketik sesuatu di kotak isian yang muncul.',
+        h: '<button id="btn-prompt">Minta nama</button>\n<p id="hasil">Belum ada jawaban.</p>',
+        j: `const tombol = document.getElementById("btn-prompt");
+const hasil = document.getElementById("hasil");
+
+tombol.addEventListener("click", () => {
+  const nama = prompt("Siapa namamu?");
+
+  if (nama === null) {
+    hasil.textContent = "Kamu membatalkan input.";
+  } else {
+    hasil.textContent = "Halo, " + nama + "!";
+  }
+});`,
+      },
+      {
+        t: 'confirm: pilihan Ya atau Tidak',
+        h: '<button id="btn-confirm">Hapus file</button>\n<p id="status">Belum ada keputusan.</p>',
+        j: `const tombol = document.getElementById("btn-confirm");
+const status = document.getElementById("status");
+
+tombol.addEventListener("click", () => {
+  const setuju = confirm("Yakin mau hapus file?");
+
+  if (setuju) {
+    status.textContent = "File dihapus.";
+  } else {
+    status.textContent = "Batal, file tetap aman.";
+  }
+});`,
+      },
+    ],
+    'prompt() mengembalikan null kalau kotak isiannya ditutup, jadi cek dulu sebelum memakainya.',
+  ),
+  mk(
+    'w-banding',
+    'Alur Program',
+    'Operator Perbandingan',
+    '===, !==, >, <, >=, <=',
+    'perbandingan,banding,comparator,sama dengan,lebih besar,lebih kecil,boolean,operator',
+    `Perbandingan membandingkan dua nilai dan hasilnya selalu boolean: true atau false. Operator yang paling sering dipakai: === untuk sama persis termasuk tipenya, !== untuk tidak sama persis, > untuk lebih besar, < untuk lebih kecil, >= untuk lebih besar atau sama, dan <= untuk lebih kecil atau sama. Kalau dibandingkan dengan tanda = biasa, hasilnya true, bukan angka 1 atau 0.`,
+    [
+      {
+        t: 'Sama atau tidak sama',
+        j: `console.log(5 === 5);   // true
+console.log("5" === 5);  // false, tipe datanya beda
+console.log("5" == 5);   // true, ini yang perlu diwaspadai`,
+      },
+      {
+        t: 'Besar dan kecil',
+        j: `const nilai = 78;
+
+console.log(nilai > 70);   // true
+console.log(nilai >= 85);  // false
+console.log(nilai < 100);  // true
+console.log(nilai <= 78);  // true
+console.log(nilai != 78);  // false`,
+      },
+    ],
+    'Selalu pakai === dan !==. Dua tanda sama dengan sering bikin bug yang susah dicari.',
+  ),
+  mk(
+    'w-logika',
+    'Alur Program',
+    'Operator Logika',
+    '&&, ||, dan !',
+    'logika,logical,and,or,not,kondisi,boolean,gabungan',
+    `Operator logika menggabungkan beberapa kondisi. && berarti dan, jadi kedua sisi harus benar. || berarti atau, jadi cukup satu sisi benar. ! berarti bukan, yaitu membalik nilai boolean. Hasilnya juga boolean, jadi true atau false.`,
+    [
+      {
+        t: '&&: dua-duanya harus benar',
+        j: `const umur = 20;
+const punyaKtp = true;
+
+if (umur >= 17 && punyaKtp) {
+  console.log("Boleh masuk.");
+} else {
+  console.log("Belum boleh masuk.");
+}`,
+      },
+      {
+        t: '|| dan !',
+        j: `const username = "";
+const password = "rahasia123";
+
+if (username || password) {
+  console.log("Isi form dulu.");
+} else {
+  console.log("Form masih kosong.");
+}
+
+console.log(!username);   // true, username memang kosong
+console.log(!(20 > 17));  // kebalikan dari hasil perbandingan`,
+      },
+    ],
+    '&& dipakai buat menggabungkan dua syarat yang keduanya wajib terpenuhi.',
+  ),
+  mk(
     'w-if',
     'JavaScript',
     'if / else',
@@ -801,79 +916,396 @@ form.addEventListener("submit", (e) => {
     ],
   ),
   mk(
-    'w-fungsi',
-    'JavaScript',
-    'Fungsi',
-    'Kode yang bisa dipakai berulang',
-    'fungsi,function,return,parameter,argumen,panggil,arrow',
-    `Fungsi itu resep yang diberi nama. Kamu tulis sekali, lalu panggil kapan saja. Fungsi bisa menerima bahan (parameter) dan mengembalikan hasil pakai return.`,
-    [
-      {
-        t: 'Membuat dan memanggil',
-        j: 'function sapa(nama) {\n  return "Halo, " + nama + "!";\n}\n\nconsole.log(sapa("Sari"));\nconsole.log(sapa("Budi"));',
-      },
-      {
-        t: 'Arrow function',
-        n: 'Cara penulisan yang lebih singkat.',
-        j: 'const kali = (a, b) => a * b;\n\nconsole.log(kali(3, 4));',
-      },
-    ],
-  ),
-  mk(
-    'w-array',
-    'JavaScript',
-    'Array (daftar nilai)',
-    'Menyimpan banyak nilai sekaligus',
-    'array,daftar,list,push,length,filter,map,index,urutan,isi',
-    `Array adalah daftar nilai dalam kurung siku. Nomor urutannya (index) mulai dari 0. push menambah item di belakang, length memberi jumlah item, filter menyaring, dan map mengubah tiap item.`,
-    [
-      {
-        t: 'Dasar array',
-        j: 'const buah = ["apel", "jeruk"];\nbuah.push("mangga");\n\nconsole.log(buah[0]);\nconsole.log(buah.length);\nconsole.log(buah);',
-      },
-      {
-        t: 'filter dan map',
-        j: 'const angka = [1, 2, 3, 4, 5];\n\nconsole.log(angka.filter((n) => n > 3));\nconsole.log(angka.map((n) => n * 2));',
-      },
-    ],
-  ),
-  mk(
     'w-loop',
     'JavaScript',
-    'Perulangan (for)',
+    'Perulangan: for dan while',
     'Mengulang kode',
-    'loop,for,perulangan,ulang,while,iterasi,of',
-    `Perulangan menjalankan kode berkali-kali. for klasik punya tiga bagian: awal, syarat lanjut, dan langkah. for...of lebih enak untuk menelusuri isi array.`,
+    'loop,for,perulangan,ulang,while,iterasi,of,break,continue',
+    `Perulangan menjalankan kode berkali-kali. for klasik punya tiga bagian: awal, syarat lanjut, dan langkah. while mengulang selama kondisinya masih benar, dipakai saat banyaknya perulangan tidak diketahui dari awal. for...of lebih enak untuk menelusuri isi array. break menghentikan perulangan, continue melewati sisa badan perulangan lalu lanjut ke giliran berikutnya.`,
     [
       { t: 'for klasik', j: 'for (let i = 0; i < 5; i++) {\n  console.log("Putaran", i);\n}' },
       {
         t: 'for...of pada array',
         j: 'const buah = ["apel", "jeruk", "mangga"];\n\nfor (const b of buah) {\n  console.log(b.toUpperCase());\n}',
       },
+      {
+        t: 'while dan break',
+        n: 'Jaga supaya variabel penghitungnya benar-benar berubah, kalau tidak while akan berjalan selamanya.',
+        j: `let sisa = 3;
+
+while (sisa > 0) {
+  console.log("Sisa " + sisa);
+  sisa = sisa - 1;
+
+  if (sisa === 1) {
+    break;
+  }
+}
+
+console.log("Selesai");`,
+      },
     ],
+    'for untuk jumlah perulangan yang sudah jelas, while untuk yang bergantung pada kondisi.',
+  ),
+  mk(
+    'w-error',
+    'Alur Program',
+    'Error Handling: try dan catch',
+    'Menangani error agar program tidak berhenti',
+    'error,handling,try,catch,finally,throw,exception,galat,kesalahan',
+    `Kalau ada baris kode yang gagal, biasanya program langsung berhenti di situ. try dan catch dipakai untuk menangkap error itu supaya program tetap lanjut. Kode di dalam try dicoba, dan kalau gagal, error-nya ditangkap di catch. finally selalu dijalankan baikpun terjadi error atau tidak. Error juga bisa dibuat sendiri dengan throw.`,
+    [
+      {
+        t: 'Menangkap error',
+        j: `try {
+  const data = JSON.parse("{ ini bukan JSON }");
+  console.log(data);
+} catch (error) {
+  console.log("Gagal membaca data:", error.message);
+}
+
+console.log("Program tetap jalan.");`,
+      },
+      {
+        t: 'finally dan throw',
+        j: `function bagi(a, b) {
+  if (b === 0) {
+    throw new Error("Pembagian dengan nol tidak boleh");
+  }
+  return a / b;
+}
+
+try {
+  console.log(bagi(10, 2));
+  console.log(bagi(10, 0));
+} catch (error) {
+  console.log("Error tertangkap:", error.message);
+} finally {
+  console.log("Blok finally selalu jalan.");
+}`,
+      },
+    ],
+    'Error yang belum tertangkap akan muncul di panel Problems, lengkap dengan nomor barisnya.',
+  ),
+  // ---------- Python ----------
+  mk(
+    'w-fungsi',
+    'JavaScript',
+    'Fungsi: membuat dan memanggil',
+    'Kode yang bisa dipakai berulang',
+    'fungsi,function,panggil,memanggil,arrow,nama,resep',
+    `Fungsi itu resep yang diberi nama. Kamu tulis sekali, lalu panggil kapan saja dengan menulis namanya dan tanda kurung. Topik terpisah membahas dua hal penting dari fungsi: parameter (topik "Parameter dan Argumen") dan return (topik "Return: mengembalikan nilai").`,
+    [
+      {
+        t: 'Membuat dan memanggil',
+        j: 'function sapa() {\n  console.log("Halo!");\n}\n\nsapa();\nsapa();\n\nconst kali = (a, b) => a * b;\nconsole.log(kali(3, 4));',
+      },
+      {
+        t: 'Fungsi sebagai nilai',
+        n: 'Fungsi juga bisa disimpan di variabel atau dikirim sebagai argumen.',
+        j: `function sapa(nama) {
+  return "Halo, " + nama + "!";
+}
+
+const pesan = sapa;   // fungsi disimpan di variabel
+console.log(pesan("Sari"));`,
+      },
+    ],
+    'Arrow function (a, b) => a * b adalah cara penulisan singkat untuk function dengan satu return.',
+  ),
+  mk(
+    'w-parameter',
+    'Fungsi dan Data',
+    'Parameter dan Argumen',
+    'Nilai yang diterima fungsi saat dipanggil',
+    'parameter,argumen,argumen,default,nilai,wajib,fungsi,parameter wajib',
+    `Parameter adalah nama variabel yang ditulis di dalam kurung kurung saat fungsi dibuat. Argumen adalah nilai yang kamu berikan saat fungsi itu dipanggil. Jumlah parameter dan argumen boleh beda: argumen yang kurang akan bernilai undefined, dan argumen yang lebih akan diabaikan. Parameter juga bisa punya nilai bawaan (default) yang dipakai kalau argumennya tidak diberikan.`,
+    [
+      {
+        t: 'Parameter menerima argumen',
+        j: `function sapa(nama, salam) {
+  return salam + ", " + nama + "!";
+}
+
+console.log(sapa("Sari", "Halo"));  // "Halo, Sari!"
+console.log(sapa("Budi"));          // "undefined, Budi!"`,
+      },
+      {
+        t: 'Nilai bawaan (default parameter)',
+        n: 'Kalau argumennya tidak diberikan, yang dipakai adalah nilai bawaannya.',
+        j: `function greet(nama = "Teman") {
+  return "Halo, " + nama + "!";
+}
+
+console.log(greet("Sari"));  // "Halo, Sari!"
+console.log(greet());        // "Halo, Teman!"`,
+      },
+    ],
+    'Beri nilai bawaan untuk parameter yang jarang diisi, supaya pemanggil tidak perlu mengingat urutan argumen.',
+  ),
+  mk(
+    'w-return',
+    'Fungsi dan Data',
+    'Return: mengembalikan nilai',
+    'Nilai yang dikirim balik dari fungsi',
+    'return,mengembalikan,nilai balik,kirim balik,fungsi,hasil',
+    `return dipakai di dalam fungsi untuk mengembalikan nilai ke tempat pemanggil. Begitu return dijalankan, baris kode di bawahnya di fungsi itu dilewati, dan nilai tersebut bisa langsung dipakai untuk perhitungan atau disimpan di variabel. Fungsi yang tidak punya return akan mengembalikan undefined.`,
+    [
+      {
+        t: 'Mengembalikan nilai',
+        j: `function luas(panjang, lebar) {
+  return panjang * lebar;
+}
+
+const luasKamar = luas(4, 5);
+console.log(luasKamar);          // 20
+console.log("Luasnya " + luas(2, 3) + " meter persegi");`,
+      },
+      {
+        t: 'Return menghentikan fungsi',
+        n: 'Kode di bawah return tidak dijalankan.',
+        j: `function cekUmur(umur) {
+  if (umur < 0) {
+    return "Umur tidak valid";
+  }
+  if (umur < 17) {
+    return "Masih anak";
+  }
+  return "Dewasa";
+}
+
+console.log(cekUmur(-1));  // "Umur tidak valid"
+console.log(cekUmur(15));  // "Masih anak"
+console.log(cekUmur(20));  // "Dewasa"`,
+      },
+    ],
+    'Satu fungsi idealnya punya satu jalur return. Kalau butuh beberapa, pisahkan fungsinya.',
+  ),
+  mk(
+    'w-scope',
+    'Fungsi dan Data',
+    'Scope: cakupan variabel',
+    'Global, lokal, dan scope blok',
+    'scope,cakupan,global,lokal,local,blok,block,var,let,const,shadowing,akses',
+    `Scope menentukan di mana sebuah variabel bisa dibaca. Variabel yang dibuat di luar fungsi punya scope global dan bisa diakses dari mana saja. Variabel yang dibuat di dalam fungsi punya scope lokal dan hanya hidup di fungsi itu. Karena itu, fungsi biasanya menulis variabel dengan let atau const di dalam dirinya sendiri, bukan var, supaya tidak menimpa variabel global.`,
+    [
+      {
+        t: 'Global dan lokal',
+        j: `let pengumuman = "Selamat datang";
+
+function tampil() {
+  const pesan = "Ini hanya di dalam fungsi";
+  console.log(pengumuman);  // bisa diakses
+  console.log(pesan);       // juga bisa diakses
+}
+
+tampil();
+console.log(typeof pesan);  // "undefined", di luar fungsi`,
+      },
+      {
+        t: 'Scope blok dengan let',
+        n: 'let di dalam kurung kurawal if atau for hanya hidup di dalam blok itu.',
+        j: `if (true) {
+  let khusus = "hanya di dalam blok";
+  console.log(khusus);
+}
+
+console.log(typeof khusus);  // "undefined", sudah di luar blok`,
+      },
+    ],
+    'Kalau variabel dalam fungsi dan variabel global punya nama sama, yang di dalam fungsi yang menang.',
+  ),
+  mk(
+    'w-array',
+    'JavaScript',
+    'Array: membuat dan mengakses',
+    'Daftar nilai dalam kurung siku',
+    'array,daftar,list,kurung siku,index,indeks,length,urutan,isi,elemen',
+    `Array adalah daftar nilai dalam kurung siku. Nomor urutannya (index) mulai dari 0, jadi elemen pertama dibaca dengan tanda kurung siku dan angka 0. Panjang array dicek dengan length. Array juga bisa berisi nilai campuran, dan nilai di dalam array bisa diubah langsung lewat nomor urutnya.`,
+    [
+      {
+        t: 'Membuat dan mengakses array',
+        j: `const buah = ["apel", "jeruk", "mangga"];
+
+console.log(buah[0]);     // "apel"
+console.log(buah[2]);     // "mangga"
+console.log(buah.length); // 3
+console.log(buah[10]);    // undefined, nomor urutnya tidak ada`,
+      },
+      {
+        t: 'Mengubah isi array',
+        n: 'Nilai di dalam array bisa diganti lewat nomor urutnya.',
+        j: `const angka = [10, 20, 30];
+
+angka[1] = 25;
+console.log(angka);   // [10, 25, 30]
+
+const campuran = ["apel", 5, true, null];
+console.log(campuran[2]);  // true`,
+      },
+    ],
+    'Index dimulai dari 0, jadi elemen terakhir dari array sepanjang 5 ada di index 4.',
+  ),
+  mk(
+    'w-array-lanjut',
+    'Fungsi dan Data',
+    'Array Methods',
+    'push, pop, shift, unshift, slice, splice, find, forEach',
+    'array methods,metode array,push,pop,shift,unshift,slice,splice,find,foreach,includes,join,reverse',
+    `Array punya banyak method bawaan untuk mengolah isinya. push menambah item di belakang, pop mengambil lalu menghapus item terakhir, shift menghapus item pertama, unshift menyisipkan item di depan. slice mengambil potongan array tanpa mengubah aslinya, splice memotong array dan bisa menyisipkan item baru. find mencari satu item pertama yang cocok, forEach menjalankan fungsi untuk tiap item, dan join menggabungkan semua isi array jadi teks.`,
+    [
+      {
+        t: 'Menambah dan menghapus item',
+        j: `const buah = ["apel", "jeruk"];
+
+buah.push("mangga");   // tambah di belakang
+buah.unshift("anggur"); // tambah di depan
+
+console.log(buah);      // ["anggur", "apel", "jeruk", "mangga"]
+console.log(buah.pop()); // "mangga", lalu dihapus dari array
+console.log(buah.shift()); // "anggur", lalu dihapus dari depan
+console.log(buah);      // ["apel", "jeruk"]`,
+      },
+      {
+        t: 'Mencari dan mengolah tiap item',
+        j: `const angka = [3, 8, 12, 5, 20];
+
+console.log(angka.find((n) => n > 10)); // 12
+console.log(angka.includes(8));         // true
+
+const kaliDua = angka.map((n) => n * 2);
+console.log(kaliDua);`,
+      },
+    ],
+    'map, filter, dan forEach selalu mengembalikan array baru, jadi array aslinya tidak berubah.',
+  ),
+  mk(
+    'w-object',
+    'Fungsi dan Data',
+    'Object',
+    'Key-value dan properti objek',
+    'object,objek,kurung kurawal,key,nilai,properti,property,member,this',
+    `Object menyimpan data berpasangan: kunci dan nilainya, ditulis di dalam kurung kurawal. Kalau array memakai nomor urut sebagai kunci, object memakai nama. Properti object bisa dibaca pakai titik (objek.nama) atau kurung siku (objek["nama"]). Nilai di dalam object bisa berupa teks, angka, array, atau object lain, dan object juga bisa punya method, yaitu fungsi yang disimpan sebagai propertinya.`,
+    [
+      {
+        t: 'Membuat dan membaca object',
+        j: `const siswa = {
+  nama: "Sari",
+  umur: 17,
+  hobbi: ["baca", "coding"],
+};
+
+console.log(siswa.nama);        // "Sari"
+console.log(siswa["umur"]);    // 17
+console.log(siswa.hobbi[1]);   // "coding"`,
+      },
+      {
+        t: 'Menambah, mengubah, dan method',
+        j: `const siswa = {
+  nama: "Sari",
+  sapa() {
+    return "Halo, " + this.nama + "!";
+  },
+};
+
+siswa.kelas = "XI";        // menambah properti baru
+siswa.nama = "Putri";      // mengubah nilai properti
+
+console.log(siswa.kelas);
+console.log(siswa.sapa());`,
+      },
+    ],
+    'this di dalam method berarti object itu sendiri, jadi this.nama adalah nilai properti nama.',
   ),
   mk(
     'w-dom',
     'JavaScript',
-    'Mengubah halaman (DOM)',
-    'Mengambil dan mengubah elemen',
-    'dom,getelementbyid,queryselector,textcontent,innerhtml,style,ubah,elemen,halaman',
-    `DOM adalah cara JavaScript melihat halamanmu. Ambil elemen dengan document.getElementById (lewat id), lalu ubah isinya pakai textContent atau gayanya pakai style.`,
+    'DOM: perkenalan',
+    'Cara JavaScript melihat halaman',
+    'dom,document,element,elemen,halaman,node,struktur,pohon',
+    `DOM adalah singkatan dari Document Object Model, yaitu cara JavaScript melihat isi halaman sebagai objek-objek yang bisa diubah. Setiap tag HTML di halaman dianggap satu elemen, dan elemen itu punya properti (teks, atribut, gaya) serta method. document adalah objek yang mewakili seluruh halaman, dan di bawahnya elemen-elemen halaman bisa dicari lalu diubah.`,
     [
       {
-        t: 'Mengubah teks dan warna',
-        h: '<h1 id="judul">Judul lama</h1>',
-        j: 'const judul = document.getElementById("judul");\n\njudul.textContent = "Judul baru!";\njudul.style.color = "tomato";',
+        t: 'Melihat isi halaman dari Console',
+        n: 'Jalankan kodenya, lalu intip panel Console.',
+        h: '<h1 id="judul">Judul halaman</h1>\n<p class="deskripsi">Teks deskripsi.</p>',
+        j: 'console.log(document.title);\nconsole.log(document.querySelectorAll("p").length);\nconsole.log(document.body.innerText);',
       },
     ],
+    'Topik berikutnya membahas cara mencari elemen dan cara mengubah teks, atribut, class, serta gayanya.',
+  ),
+  mk(
+    'w-dom-select',
+    'Interaksi Halaman',
+    'DOM: memilih elemen',
+    'getElementById, querySelector, querySelectorAll',
+    'dom,getelementbyid,queryselector,queryselectorall,memilih,elemen,selector,class,id',
+    `DOM memberi JavaScript cara menemukan elemen di halaman. document.getElementById("nama") mencari elemen berdasarkan id-nya, hasilnya satu elemen. document.querySelector("selector") juga mengembalikan satu elemen, yaitu yang pertama cocok, dan selector-nya bisa nama tag, class, atau id. document.querySelectorAll("selector") mengembalikan semua elemen yang cocok, dan hasilnya berupa array-like yang bisa dilalui pakai forEach.`,
+    [
+      {
+        t: 'getElementById dan querySelector',
+        h: '<p id="salam">Halo</p>\n<p class="catatan">Catatan pertama</p>\n<p class="catatan">Catatan kedua</p>',
+        j: `const salam = document.getElementById("salam");
+console.log(salam.textContent);
+
+const catatan = document.querySelector(".catatan");
+console.log(catatan.textContent);`,
+      },
+      {
+        t: 'querySelectorAll untuk banyak elemen',
+        h: '<ul id="daftar">\n  <li>Apel</li>\n  <li>Jeruk</li>\n  <li>Mangga</li>\n</ul>',
+        j: `const semua = document.querySelectorAll("#daftar li");
+
+console.log(semua.length); // 3
+
+semua.forEach((item, i) => {
+  console.log(i + ": " + item.textContent);
+});`,
+      },
+    ],
+    'Selector querySelectorAll memakai cara penulisan yang sama dengan CSS: tag, .class, atau #id.',
+  ),
+  mk(
+    'w-dom-manipulasi',
+    'Interaksi Halaman',
+    'DOM: mengubah elemen',
+    'Teks, atribut, class, dan style',
+    'dom,textcontent,innerhtml,setattribute,getattribute,classlist,classname,style,mengubah,atribut',
+    `Setelah elemen ketemu, isinya bisa diubah. textContent mengganti isi teks element dan selalu aman karena isinya diperlakukan sebagai teks biasa, sedangkan innerHTML bisa memasukkan HTML baru, jadi jangan dipakai kalau datanya berasal dari pengguna. Atribut diubah dengan setAttribute dan dibaca dengan getAttribute. Untuk class, pakai classList.add dan classList.remove, dan untuk gaya langsung tulis lewat properti style.`,
+    [
+      {
+        t: 'Mengubah teks, atribut, dan class',
+        h: '<h1 id="judul">Judul lama</h1>\n<a id="tautan" href="#" class="aktif">Klik</a>',
+        j: `const judul = document.getElementById("judul");
+judul.textContent = "Judul baru";
+
+const tautan = document.getElementById("tautan");
+tautan.setAttribute("href", "https://example.com");
+tautan.setAttribute("target", "_blank");
+tautan.classList.remove("aktif");
+tautan.classList.add("dinonaktifkan");
+
+console.log(tautan.getAttribute("href"));`,
+      },
+      {
+        t: 'Mengubah style langsung',
+        h: '<div id="kotak">Kotak ini</div>',
+        j: `const kotak = document.getElementById("kotak");
+
+kotak.style.backgroundColor = "lightblue";
+kotak.style.padding = "16px";
+kotak.style.borderRadius = "8px";`,
+      },
+    ],
+    'Kotak yang dibuat JavaScript bisa dihapus dengan remove(), dan ditambahkan ke halaman dengan append().',
   ),
   mk(
     'w-event',
     'JavaScript',
-    'Event click',
+    'Event: addEventListener dasar',
     'Bereaksi saat diklik',
-    'event,click,klik,addeventlistener,tombol,interaktif,listener',
-    `addEventListener membuat elemen menunggu sebuah aksi, misalnya klik, lalu menjalankan fungsi saat aksi itu terjadi.`,
+    'event,click,klik,addeventlistener,tombol,interaktif,listener,menunggu,aksi',
+    `addEventListener membuat elemen menunggu sebuah aksi, misalnya klik, lalu menjalankan fungsi saat aksi itu terjadi. Elemennya dituliskan, nama aksinya, lalu fungsi yang dijalankan saat aksi itu terjadi. Topik berikutnya membahas jenis event lainnya dan objek event.`,
     [
       {
         t: 'Penghitung klik',
@@ -882,9 +1314,48 @@ form.addEventListener("submit", (e) => {
         j: 'const btn = document.getElementById("btn");\nconst out = document.getElementById("out");\nlet n = 0;\n\nbtn.addEventListener("click", () => {\n  n = n + 1;\n  out.textContent = "Diklik " + n + " kali";\n  console.log("klik ke-" + n);\n});',
       },
     ],
+    'Satu elemen bisa punya beberapa listener, satu untuk tiap jenis event.',
   ),
 
-  // ---------- Python ----------
+  mk(
+    'w-event-lanjut',
+    'Interaksi Halaman',
+    'Event: berbagai jenis dan event object',
+    'input, change, keydown, submit, preventDefault',
+    'event,addeventlistener,event object,preventdefault,keydown,input,change,submit,blur,target,currenttarget',
+    `addEventListener bukan cuma untuk klik. Nama event bisa berupa input (setiap ketikan), change (nilai akhirnya berubah), keydown (tombol ditekan), submit (form dikirim), atau focus dan blur. Fungsi yang dibuat bisa menerima satu objek event, isinya antara lain event.target (elemen yang dikenai) dan event.preventDefault() untuk membatalkan perilaku bawaan, misalnya supaya halaman tidak berpindah saat form dikirim. Listener juga bisa dihapus dengan removeEventListener.`,
+    [
+      {
+        t: 'Event input dan keydown',
+        h: '<input id="nama" placeholder="Ketik nama">\n<p id="out">Belum diisi.</p>',
+        j: `const nama = document.getElementById("nama");
+const out = document.getElementById("out");
+
+nama.addEventListener("input", () => {
+  out.textContent = "Halo, " + nama.value + "!";
+});
+
+nama.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    console.log("Kamu menekan Enter");
+  }
+});`,
+      },
+      {
+        t: 'preventDefault pada form',
+        h: '<form id="form">\n  <input type="text" name="nama" placeholder="Nama">\n  <button type="submit">Kirim</button>\n</form>\n<p id="hasil">Belum ada.</p>',
+        j: `const form = document.getElementById("form");
+const hasil = document.getElementById("hasil");
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nama = form.elements.nama.value;
+  hasil.textContent = "Form tertangkap, nama: " + nama;
+});`,
+      },
+    ],
+    'Gunakan e.target.value buat mengambil isi input, dan e.preventDefault() buat menahan submit bawaan.',
+  ),
   mk(
     'p-print',
     'Dasar Python',
@@ -1111,12 +1582,45 @@ const CODE_TERMS: Record<string, string[]> = {
   'w-log': ['console.log()'],
   'w-variabel': ['const', 'let', '='],
   'w-tipe': ['+ - * /', '+', 'true', 'false'],
+  'w-io': ['alert()', 'prompt()', 'confirm()', 'null', 'true', 'false'],
+  'w-banding': ['===', '!==', '>=', '<=', 'true', 'false'],
+  'w-logika': ['&&', '||', '!', 'true', 'false'],
   'w-if': ['if', 'else', '===', '!==', '>=', '<=', '>', '<'],
-  'w-fungsi': ['return'],
-  'w-array': ['push', 'length', 'filter', 'map'],
-  'w-loop': ['for...of', 'for'],
-  'w-dom': ['document.getElementById', 'textContent', 'style', 'id'],
-  'w-event': ['addEventListener'],
+  'w-error': ['try', 'catch', 'finally', 'throw'],
+  'w-fungsi': ['function', 'return'],
+  'w-parameter': ['parameter', 'argumen', 'undefined'],
+  'w-return': ['return', 'undefined'],
+  'w-scope': ['scope', 'global', 'let', 'const'],
+  'w-array': ['length', 'index'],
+  'w-array-lanjut': ['push', 'pop', 'shift', 'unshift', 'slice', 'splice', 'find', 'forEach', 'includes'],
+  'w-object': ['this', 'object'],
+  'w-loop': ['for...of', 'for', 'while', 'break', 'continue'],
+  'w-dom': ['DOM'],
+  'w-dom-select': [
+    'getElementById',
+    'querySelector',
+    'querySelectorAll',
+    'class',
+    'id',
+  ],
+  'w-dom-manipulasi': [
+    'textContent',
+    'innerHTML',
+    'setAttribute',
+    'getAttribute',
+    'classList',
+    'style',
+  ],
+  'w-event': ['addEventListener', 'click'],
+  'w-event-lanjut': [
+    'addEventListener',
+    'preventDefault',
+    'event.target',
+    'input',
+    'change',
+    'keydown',
+    'submit',
+  ],
   'p-print': ['print()', '#'],
   'p-variabel': ['='],
   'p-tipe': ['int', 'float', 'str', 'bool', 'True', 'False', '+ - * /', '**', '//', '%'],
@@ -1196,12 +1700,24 @@ const CATEGORY: Record<string, string> = {
   'w-log': 'JavaScript Dasar',
   'w-variabel': 'JavaScript Dasar',
   'w-tipe': 'JavaScript Dasar',
+  'w-io': 'JavaScript Dasar',
+  'w-banding': 'Alur Program',
+  'w-logika': 'Alur Program',
   'w-if': 'Alur Program',
   'w-loop': 'Alur Program',
+  'w-error': 'Alur Program',
   'w-fungsi': 'Fungsi dan Data',
+  'w-parameter': 'Fungsi dan Data',
+  'w-return': 'Fungsi dan Data',
+  'w-scope': 'Fungsi dan Data',
   'w-array': 'Fungsi dan Data',
+  'w-array-lanjut': 'Fungsi dan Data',
+  'w-object': 'Fungsi dan Data',
   'w-dom': 'Interaksi Halaman',
+  'w-dom-select': 'Interaksi Halaman',
+  'w-dom-manipulasi': 'Interaksi Halaman',
   'w-event': 'Interaksi Halaman',
+  'w-event-lanjut': 'Interaksi Halaman',
   'p-print': 'Dasar Python',
   'p-variabel': 'Dasar Python',
   'p-tipe': 'Dasar Python',

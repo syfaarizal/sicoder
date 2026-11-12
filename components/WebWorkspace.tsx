@@ -249,7 +249,7 @@ export default function WebWorkspace() {
         key={runId}
         ref={frame}
         title="Hasil kode"
-        sandbox="allow-scripts allow-forms"
+        sandbox="allow-scripts allow-forms allow-modals"
         srcDoc={srcDoc}
         className={'min-h-0 w-full flex-1 border-0 bg-white ' + (view === 'out' ? '' : 'hidden')}
       />
