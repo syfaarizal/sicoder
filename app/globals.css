@@ -759,6 +759,7 @@ dialog::backdrop {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 25px;
 }
 .materi-card {
   display: block;
@@ -945,7 +946,7 @@ dialog::backdrop {
   max-width: 100%;
   padding: 0;
   caret-color: currentColor;
-  border-bottom: 1px dashed color-mix(in srgb, var(--cfg) 40%, transparent);
+  caret-shape: block;
 }
 .problem {
   padding: 6px 0;
