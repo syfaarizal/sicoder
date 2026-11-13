@@ -1,3 +1,5 @@
+import { GOALS, LESSON_ORDER, PY_CATEGORIES, PY_LESSONS } from './content-python';
+
 export type Lang = 'web' | 'python';
 export type Snippet = { html?: string; css?: string; js?: string; py?: string };
 export interface Example {
@@ -14,6 +16,7 @@ export interface Lesson {
   keywords: string[];
   text: string;
   tip?: string;
+  goal?: string; // "Setelah ini kamu bisa ...": kemampuan yang dibangun topik ini
   examples: Example[];
   snippet: Snippet; // snippet = contoh pertama
 }
@@ -1498,6 +1501,10 @@ form.addEventListener("submit", (e) => {
   ),
 ];
 
+// Materi Python tambahan ada di lib/content-python.ts
+for (const l of PY_LESSONS)
+  lessons.push(mk(l.id, l.group, l.title, l.desc, l.kw, l.text, l.ex, l.tip));
+
 // Penanda kode di dalam penjelasan: istilah di daftar ini otomatis tampil sebagai `kode` (ditulis {{istilah}}).
 const CODE_TERMS: Record<string, string[]> = {
   'w-struktur': ['<p>', '</p>', '<html>', '<head>', '<body>', '<', '>'],
@@ -1663,7 +1670,7 @@ const CATEGORY_ORDER: Record<Lang, string[]> = {
     'Fungsi dan Data',
     'Interaksi Halaman',
   ],
-  python: ['Dasar Python', 'Alur Program', 'Koleksi Data', 'Fungsi'],
+  python: PY_CATEGORIES,
 };
 const CATEGORY: Record<string, string> = {
   'w-struktur': 'HTML Dasar',
@@ -1722,15 +1729,22 @@ const CATEGORY: Record<string, string> = {
   'p-variabel': 'Dasar Python',
   'p-tipe': 'Dasar Python',
   'p-string': 'Dasar Python',
-  'p-kondisi': 'Alur Program',
-  'p-loop': 'Alur Program',
+  'p-kondisi': 'Operator dan Kondisi',
+  'p-loop': 'Perulangan',
   'p-list': 'Koleksi Data',
   'p-dict': 'Koleksi Data',
   'p-fungsi': 'Fungsi',
 };
 for (const l of lessons) l.group = CATEGORY[l.id] ?? l.group;
 const rank = (l: Lesson) => CATEGORY_ORDER[l.lang].indexOf(l.group);
-lessons.sort((a, b) => (a.lang === b.lang ? rank(a) - rank(b) : a.lang === 'web' ? -1 : 1));
+const ord = (l: Lesson) => {
+  const i = LESSON_ORDER.indexOf(l.id);
+  return i < 0 ? 999 : i;
+};
+lessons.sort((a, b) =>
+  a.lang === b.lang ? rank(a) - rank(b) || ord(a) - ord(b) : a.lang === 'web' ? -1 : 1,
+);
+for (const l of lessons) l.goal = GOALS[l.id];
 export const lessonNo = (l: Lesson) => lessons.filter((x) => x.lang === l.lang).indexOf(l) + 1;
 
 export const getLesson = (id: string | null | undefined) =>
@@ -1760,7 +1774,7 @@ export function searchLessons(lang: Lang, q: string): Lesson[] {
   for (const l of all) {
     const t = norm(l.title),
       k = norm(l.keywords.join(' ')),
-      d = norm(l.desc + ' ' + l.text);
+      d = norm(l.desc + ' ' + l.text + ' ' + (l.goal ?? ''));
     const c = norm(l.examples.map((e) => Object.values(e.snippet).join(' ')).join(' '));
     let sc = 0,
       ok = true;

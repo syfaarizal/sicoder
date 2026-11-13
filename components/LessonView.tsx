@@ -20,6 +20,12 @@ export default function LessonView({
         {lesson.group} · Topik {lessonNo(lesson)}
       </div>
       <h2>{lesson.title}</h2>
+      {lesson.goal && (
+        <p className="goal">
+          <b>Setelah ini kamu bisa </b>
+          {lesson.goal}.
+        </p>
+      )}
       <p>
         <RichText text={lesson.text} />
       </p>

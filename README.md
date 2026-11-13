@@ -31,7 +31,8 @@ npm run format   # Prettier untuk seluruh project
 | `components/Menu.tsx`, `FileIcon.tsx`, `ProblemList.tsx` | Menu popover, ikon file, dan daftar Problems                                                                                                             |
 | `components/MiniPlayground.tsx`                          | Contoh kode yang bisa diedit dan dijalankan di dalam materi (state lokal, tidak menyentuh editor utama)                                                  |
 | `components/LessonView.tsx`                              | Tampilan satu materi: penjelasan, tip, dan contoh-contoh runnable                                                                                        |
-| `lib/content.ts`                                         | Semua materi (41 topik). Tambah materi dengan `mk(...)`, lihat bagian "Menambah materi"                                                                  |
+| `lib/content.ts`                                         | Semua materi (59 topik: 32 Web, 27 Python). Tambah materi dengan `mk(...)`, lihat bagian "Menambah materi"                                                                  |
+| `lib/content-python.ts` | Data materi Python (27 topik), kategori, urutan, dan baris "Setelah ini kamu bisa" untuk semua topik |
 | `lib/pyRunner.ts`                                        | Runner Python bersama untuk contoh di materi (Web Worker terpisah dari workspace)                                                                        |
 | `lib/format.ts`                                          | Prettier di browser (HTML, CSS, JS)                                                                                                                      |
 | `public/py-worker.js`                                    | Web Worker Pyodide (runtime dimuat dari CDN saat Run pertama)                                                                                            |
@@ -51,6 +52,12 @@ npm run format   # Prettier untuk seluruh project
 ### Kategori dan nomor
 
 Topik dikelompokkan per kategori dan diberi nomor berurutan per bahasa (1, 2, 3...). Halaman `/materi` menampilkan daftar isi per kategori, dan tiap topik punya tombol topik sebelumnya/berikutnya. Kategori diatur di `CATEGORY` dan urutannya di `CATEGORY_ORDER` pada `lib/content.ts`.
+
+### Kemampuan yang dibangun
+
+Selain per sintaks, tiap topik punya baris **"Setelah ini kamu bisa ..."** yang menyebut kemampuan yang dibangun (diatur di `GOALS` pada `lib/content-python.ts`). Kategori **Proyek Kecil** mengajarkan lewat membuat sesuatu, bertahap dari Langkah 1 sampai selesai, dengan satu tantangan lanjutan di akhir. Pencarian materi juga mencocokkan isi baris kemampuan ini.
+
+Jalur belajar Python (27 topik): Dasar Python, Input dan Konversi, Operator dan Kondisi, Perulangan, Koleksi Data, Fungsi, Menangani Error, Module, lalu Proyek Kecil. Urutan topik Python diatur di `LESSON_ORDER`.
 
 ### Menambah materi
 
@@ -131,6 +138,15 @@ Font, ukuran huruf, layout (per workspace), tema editor, tema terminal, key bind
 Tiap masalah menampilkan: lokasi (`file:baris`), pesan asli, baris kode yang bermasalah, dan penjelasan singkat dalam bahasa Indonesia tentang apa yang harus dicek. Berlaku untuk Python (error sintaks dan runtime) dan JavaScript. Di Web, error JavaScript dipetakan ke file dan baris aslinya (termasuk file `.js` tambahan), dan klik item akan melompat ke barisnya. `console.error()` yang ditulis sendiri tetap hanya muncul di Console, bukan di Problems.
 
 ## Changelog
+
+### v0.9
+
+- **Python: 9 topik jadi 27.** Tambahan sintaks: Comments, Input, Type conversion, Comparison operators, Logical operators, List methods, Tuple dan set, Dictionary methods, Parameter dan argument, Return value, Scope, Exception handling, Module dan import.
+- **Input dan Type Conversion** punya kategori sendiri ("Input dan Konversi") tepat setelah dasar, supaya pengguna cepat sampai ke program interaktif.
+- **Proyek Kecil (berbasis kemampuan):** program menyapa, kalkulator sederhana, game tebak angka, penghitung rata-rata nilai, dan daftar tugas di terminal. Tiap proyek dibangun bertahap dan ditutup dengan tantangan.
+- Baris **"Setelah ini kamu bisa ..."** di topik Web dan Python (topik baru yang belum terdaftar di `GOALS` tidak menampilkannya), dan kategori Python disusun ulang sesuai jalur belajar.
+- Materi Python baru dipisah ke `lib/content-python.ts` supaya `lib/content.ts` tidak membengkak.
+- Semua contoh Python baru sudah dites berjalan, termasuk yang memakai `input()`.
 
 ### v0.8
 

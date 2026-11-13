@@ -1,0 +1,282 @@
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -31,7 +31,8 @@
+ | `components/Menu.tsx`, `FileIcon.tsx`, `ProblemList.tsx` | Menu popover, ikon file, dan daftar Problems                                                                                                             |
+ | `components/MiniPlayground.tsx`                          | Contoh kode yang bisa diedit dan dijalankan di dalam materi (state lokal, tidak menyentuh editor utama)                                                  |
+ | `components/LessonView.tsx`                              | Tampilan satu materi: penjelasan, tip, dan contoh-contoh runnable                                                                                        |
+-| `lib/content.ts`                                         | Semua materi (41 topik). Tambah materi dengan `mk(...)`, lihat bagian "Menambah materi"                                                                  |
++| `lib/content.ts`                                         | Semua materi (59 topik: 32 Web, 27 Python). Tambah materi dengan `mk(...)`, lihat bagian "Menambah materi"                                                                  |
++| `lib/content-python.ts` | Data materi Python (27 topik), kategori, urutan, dan baris "Setelah ini kamu bisa" untuk semua topik |
+ | `lib/pyRunner.ts`                                        | Runner Python bersama untuk contoh di materi (Web Worker terpisah dari workspace)                                                                        |
+ | `lib/format.ts`                                          | Prettier di browser (HTML, CSS, JS)                                                                                                                      |
+ | `public/py-worker.js`                                    | Web Worker Pyodide (runtime dimuat dari CDN saat Run pertama)                                                                                            |
+@@ -52,6 +53,12 @@
+ 
+ Topik dikelompokkan per kategori dan diberi nomor berurutan per bahasa (1, 2, 3...). Halaman `/materi` menampilkan daftar isi per kategori, dan tiap topik punya tombol topik sebelumnya/berikutnya. Kategori diatur di `CATEGORY` dan urutannya di `CATEGORY_ORDER` pada `lib/content.ts`.
+ 
++### Kemampuan yang dibangun
++
++Selain per sintaks, tiap topik punya baris **"Setelah ini kamu bisa ..."** yang menyebut kemampuan yang dibangun (diatur di `GOALS` pada `lib/content-python.ts`). Kategori **Proyek Kecil** mengajarkan lewat membuat sesuatu, bertahap dari Langkah 1 sampai selesai, dengan satu tantangan lanjutan di akhir. Pencarian materi juga mencocokkan isi baris kemampuan ini.
++
++Jalur belajar Python (27 topik): Dasar Python, Input dan Konversi, Operator dan Kondisi, Perulangan, Koleksi Data, Fungsi, Menangani Error, Module, lalu Proyek Kecil. Urutan topik Python diatur di `LESSON_ORDER`.
++
+ ### Menambah materi
+ 
+ Di `lib/content.ts`, tambahkan satu panggilan `mk(...)` ke array `lessons`:
+@@ -132,6 +139,15 @@
+ 
+ ## Changelog
+ 
++### v0.9
++
++- **Python: 9 topik jadi 27.** Tambahan sintaks: Comments, Input, Type conversion, Comparison operators, Logical operators, List methods, Tuple dan set, Dictionary methods, Parameter dan argument, Return value, Scope, Exception handling, Module dan import.
++- **Input dan Type Conversion** punya kategori sendiri ("Input dan Konversi") tepat setelah dasar, supaya pengguna cepat sampai ke program interaktif.
++- **Proyek Kecil (berbasis kemampuan):** program menyapa, kalkulator sederhana, game tebak angka, penghitung rata-rata nilai, dan daftar tugas di terminal. Tiap proyek dibangun bertahap dan ditutup dengan tantangan.
++- Baris **"Setelah ini kamu bisa ..."** di topik Web dan Python (topik baru yang belum terdaftar di `GOALS` tidak menampilkannya), dan kategori Python disusun ulang sesuai jalur belajar.
++- Materi Python baru dipisah ke `lib/content-python.ts` supaya `lib/content.ts` tidak membengkak.
++- Semua contoh Python baru sudah dites berjalan, termasuk yang memakai `input()`.
++
+ ### v0.8
+ 
+ - **HTML nambah 5 materi** (total 41 topik, HTML jadi 12): Semantic HTML, Atribut HTML, Form dan Input, Button dan Form Submission, Audio dan Video. Semantik dan Atribut masuk kategori "HTML Dasar", tiga lainnya "HTML Lanjutan".
+diff --git a/app/globals.css b/app/globals.css
+index d95b470..583ecde 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -111,10 +111,18 @@ button {
+   z-index: -1;
+   inset: 0 -10vw auto;
+   height: 540px;
+-  background-image: linear-gradient(color-mix(in srgb, var(--line) 28%, transparent) 1px, transparent 1px),
++  background-image:
++    linear-gradient(color-mix(in srgb, var(--line) 28%, transparent) 1px, transparent 1px),
+     linear-gradient(90deg, color-mix(in srgb, var(--line) 28%, transparent) 1px, transparent 1px),
+-    radial-gradient(ellipse at 76% 22%, color-mix(in srgb, #f21d2b 10%, transparent), transparent 42%);
+-  background-size: 36px 36px, 36px 36px, auto;
++    radial-gradient(
++      ellipse at 76% 22%,
++      color-mix(in srgb, #f21d2b 10%, transparent),
++      transparent 42%
++    );
++  background-size:
++    36px 36px,
++    36px 36px,
++    auto;
+   mask-image: linear-gradient(to bottom, black, transparent 86%);
+   content: '';
+   pointer-events: none;
+@@ -215,7 +223,10 @@ button {
+   padding: 20px;
+   box-shadow: 0 12px 30px #080b1210;
+   animation: card-arrive 600ms ease-out backwards;
+-  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
++  transition:
++    transform 220ms ease,
++    border-color 220ms ease,
++    box-shadow 220ms ease;
+ }
+ .track-card:nth-child(2) {
+   animation-delay: 130ms;
+@@ -228,16 +239,22 @@ button {
+   height: 120px;
+   border: 1px solid color-mix(in srgb, #f21d2b 28%, transparent);
+   border-radius: 50%;
+-  box-shadow: 0 0 0 14px color-mix(in srgb, #f21d2b 4%, transparent), 0 0 0 30px color-mix(in srgb, #f21d2b 3%, transparent);
++  box-shadow:
++    0 0 0 14px color-mix(in srgb, #f21d2b 4%, transparent),
++    0 0 0 30px color-mix(in srgb, #f21d2b 3%, transparent);
+   content: '';
+   opacity: 0.65;
+   pointer-events: none;
+-  transition: transform 350ms ease, opacity 220ms ease;
++  transition:
++    transform 350ms ease,
++    opacity 220ms ease;
+ }
+ .track-card:hover {
+   transform: translateY(-5px);
+   border-color: color-mix(in srgb, #f21d2b 55%, var(--line));
+-  box-shadow: 0 20px 42px #080b121c, 0 0 26px color-mix(in srgb, #f21d2b 10%, transparent);
++  box-shadow:
++    0 20px 42px #080b121c,
++    0 0 26px color-mix(in srgb, #f21d2b 10%, transparent);
+ }
+ .track-card:hover::after {
+   transform: scale(1.13);
+@@ -321,25 +338,52 @@ button {
+   font-family: var(--font-mono);
+ }
+ @keyframes home-arrive {
+-  from { opacity: 0; transform: translateY(12px); }
+-  to { opacity: 1; transform: translateY(0); }
++  from {
++    opacity: 0;
++    transform: translateY(12px);
++  }
++  to {
++    opacity: 1;
++    transform: translateY(0);
++  }
+ }
+ @keyframes card-arrive {
+-  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+-  to { opacity: 1; transform: translateY(0) scale(1); }
++  from {
++    opacity: 0;
++    transform: translateY(16px) scale(0.985);
++  }
++  to {
++    opacity: 1;
++    transform: translateY(0) scale(1);
++  }
+ }
+ @keyframes status-pulse {
+-  50% { opacity: 0.5; box-shadow: 0 0 3px #31c87966; }
++  50% {
++    opacity: 0.5;
++    box-shadow: 0 0 3px #31c87966;
++  }
+ }
+ @media (max-width: 540px) {
+-  .home-brand-row { margin-bottom: 38px; }
+-  .home-status { font-size: 9px; }
+-  .home-hero { padding-bottom: 48px; }
+-  .track-count { display: none; }
+-  .track-card { min-height: 225px; }
++  .home-brand-row {
++    margin-bottom: 38px;
++  }
++  .home-status {
++    font-size: 9px;
++  }
++  .home-hero {
++    padding-bottom: 48px;
++  }
++  .track-count {
++    display: none;
++  }
++  .track-card {
++    min-height: 225px;
++  }
+ }
+ @media (prefers-reduced-motion: reduce) {
+-  *, *::before, *::after {
++  *,
++  *::before,
++  *::after {
+     scroll-behavior: auto !important;
+     animation-duration: 0.01ms !important;
+     animation-iteration-count: 1 !important;
+@@ -354,7 +398,8 @@ button {
+   background: var(--bg);
+   color: inherit;
+ }
+-/* workspace: warna mengikuti tema editor lewat --cbg / --cfg */.pane {
++/* workspace: warna mengikuti tema editor lewat --cbg / --cfg */
++.pane {
+   display: flex;
+   flex-direction: column;
+   flex: 1 1 0;
+@@ -918,3 +963,11 @@ dialog::backdrop {
+   font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+   font-size: 0.95em;
+ }
++.lesson .goal {
++  margin: 0 0 12px;
++  color: var(--mute);
++}
++.lesson .goal b {
++  color: var(--ac);
++  font-weight: 600;
++}
+diff --git a/components/LessonView.tsx b/components/LessonView.tsx
+index 21ad86b..ec014ba 100644
+--- a/components/LessonView.tsx
++++ b/components/LessonView.tsx
+@@ -20,6 +20,12 @@ export default function LessonView({
+         {lesson.group} · Topik {lessonNo(lesson)}
+       </div>
+       <h2>{lesson.title}</h2>
++      {lesson.goal && (
++        <p className="goal">
++          <b>Setelah ini kamu bisa </b>
++          {lesson.goal}.
++        </p>
++      )}
+       <p>
+         <RichText text={lesson.text} />
+       </p>
+diff --git a/lib/content.ts b/lib/content.ts
+index 0ec729a..ff3db9d 100644
+--- a/lib/content.ts
++++ b/lib/content.ts
+@@ -1,3 +1,5 @@
++import { GOALS, LESSON_ORDER, PY_CATEGORIES, PY_LESSONS } from './content-python';
++
+ export type Lang = 'web' | 'python';
+ export type Snippet = { html?: string; css?: string; js?: string; py?: string };
+ export interface Example {
+@@ -14,6 +16,7 @@ export interface Lesson {
+   keywords: string[];
+   text: string;
+   tip?: string;
++  goal?: string; // "Setelah ini kamu bisa ...": kemampuan yang dibangun topik ini
+   examples: Example[];
+   snippet: Snippet; // snippet = contoh pertama
+ }
+@@ -640,6 +643,10 @@ export const lessons: Lesson[] = [
+   ),
+ ];
+ 
++// Materi Python tambahan ada di lib/content-python.ts
++for (const l of PY_LESSONS)
++  lessons.push(mk(l.id, l.group, l.title, l.desc, l.kw, l.text, l.ex, l.tip));
++
+ // Penanda kode di dalam penjelasan: istilah di daftar ini otomatis tampil sebagai `kode` (ditulis {{istilah}}).
+ const CODE_TERMS: Record<string, string[]> = {
+   'w-struktur': ['<p>', '</p>', '<html>', '<head>', '<body>', '<', '>'],
+@@ -720,7 +727,7 @@ const CATEGORY_ORDER: Record<Lang, string[]> = {
+     'Fungsi dan Data',
+     'Interaksi Halaman',
+   ],
+-  python: ['Dasar Python', 'Alur Program', 'Koleksi Data', 'Fungsi'],
++  python: PY_CATEGORIES,
+ };
+ const CATEGORY: Record<string, string> = {
+   'w-struktur': 'HTML Dasar',
+@@ -754,15 +761,22 @@ const CATEGORY: Record<string, string> = {
+   'p-variabel': 'Dasar Python',
+   'p-tipe': 'Dasar Python',
+   'p-string': 'Dasar Python',
+-  'p-kondisi': 'Alur Program',
+-  'p-loop': 'Alur Program',
++  'p-kondisi': 'Operator dan Kondisi',
++  'p-loop': 'Perulangan',
+   'p-list': 'Koleksi Data',
+   'p-dict': 'Koleksi Data',
+   'p-fungsi': 'Fungsi',
+ };
+ for (const l of lessons) l.group = CATEGORY[l.id] ?? l.group;
+ const rank = (l: Lesson) => CATEGORY_ORDER[l.lang].indexOf(l.group);
+-lessons.sort((a, b) => (a.lang === b.lang ? rank(a) - rank(b) : a.lang === 'web' ? -1 : 1));
++const ord = (l: Lesson) => {
++  const i = LESSON_ORDER.indexOf(l.id);
++  return i < 0 ? 999 : i;
++};
++lessons.sort((a, b) =>
++  a.lang === b.lang ? rank(a) - rank(b) || ord(a) - ord(b) : a.lang === 'web' ? -1 : 1,
++);
++for (const l of lessons) l.goal = GOALS[l.id];
+ export const lessonNo = (l: Lesson) => lessons.filter((x) => x.lang === l.lang).indexOf(l) + 1;
+ 
+ export const getLesson = (id: string | null | undefined) =>
+@@ -792,7 +806,7 @@ export function searchLessons(lang: Lang, q: string): Lesson[] {
+   for (const l of all) {
+     const t = norm(l.title),
+       k = norm(l.keywords.join(' ')),
+-      d = norm(l.desc + ' ' + l.text);
++      d = norm(l.desc + ' ' + l.text + ' ' + (l.goal ?? ''));
+     const c = norm(l.examples.map((e) => Object.values(e.snippet).join(' ')).join(' '));
+     let sc = 0,
+       ok = true;
