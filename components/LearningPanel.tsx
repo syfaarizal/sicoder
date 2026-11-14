@@ -62,7 +62,7 @@ export default function LearningPanel({
           lesson={active}
           settings={settings}
           onLoad={(s, id) => {
-            if (confirm('Kode di editor utama akan diganti dengan contoh ini. Lanjut?'))
+            if (confirm('Kode di editor utama bakal diganti sama contoh ini. Lanjut?'))
               onLoad(s, id);
           }}
         />
@@ -79,7 +79,7 @@ export default function LearningPanel({
             ))}
           </div>
           {results.length === 0 && (
-            <p className="materi-empty">Belum ada materi untuk &quot;{q}&quot;. Coba kata lain.</p>
+            <p className="materi-empty">Belum nemu materi buat &quot;{q}&quot;. Coba kata lain, siapa tahu lebih cocok.</p>
           )}
         </>
       ) : (

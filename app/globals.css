@@ -1025,3 +1025,43 @@ dialog::backdrop {
   color: var(--ac);
   font-weight: 600;
 }
+/* Analogi: blok "bayangin" */
+.lesson .analogy {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ac) 9%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--ac) 45%, transparent);
+  line-height: 1.65;
+}
+.lesson .analogy-tag {
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ac);
+  background: color-mix(in srgb, var(--ac) 14%, transparent);
+  border-radius: 999px;
+  padding: 3px 9px;
+  margin-top: 2px;
+}
+/* Ilustrasi SVG per topik */
+.lesson .art {
+  margin: 0 0 16px;
+  padding: 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.lesson .art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 420px;
+  margin: 0 auto;
+}

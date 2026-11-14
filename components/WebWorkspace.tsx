@@ -118,7 +118,7 @@ export default function WebWorkspace() {
   };
   const removeFile = (id: string) => {
     const n = id.slice(2);
-    if (!confirm('Hapus ' + n + '? Isinya akan hilang.')) return;
+    if (!confirm('Hapus ' + n + '? Isinya ilang, lho.')) return;
     setCode((c) => ({ ...c, extra: c.extra.filter((f) => f.name !== n) }));
     if (tab === id) setTab('html');
   };

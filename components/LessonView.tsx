@@ -1,5 +1,6 @@
 import MiniPlayground from './MiniPlayground';
 import RichText from './RichText';
+import LessonArt from './art';
 import { lessonNo, type Lesson, type Snippet } from '@/lib/content';
 import type { Settings } from '@/lib/usePersistent';
 
@@ -22,13 +23,20 @@ export default function LessonView({
       <h2>{lesson.title}</h2>
       {lesson.goal && (
         <p className="goal">
-          <b>Setelah ini kamu bisa </b>
+          <b>Setelah baca ini, kamu bisa </b>
           {lesson.goal}.
         </p>
       )}
       <p>
         <RichText text={lesson.text} />
       </p>
+      {lesson.analogy && (
+        <p className="analogy">
+          <span className="analogy-tag">Bayangin</span>
+          <RichText text={lesson.analogy} />
+        </p>
+      )}
+      <LessonArt id={lesson.id} />
       {lesson.tip && (
         <p className="tip">
           <b>Ingat: </b>

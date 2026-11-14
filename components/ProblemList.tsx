@@ -23,7 +23,7 @@ export default function ProblemList({
 }) {
   return (
     <div className="term" role="list" style={style}>
-      {problems.length === 0 && <div className="problem-empty"><span className="problem-empty-icon">✓</span><span>Tidak ada masalah</span></div>}
+      {problems.length === 0 && <div className="problem-empty"><span className="problem-empty-icon">✓</span><span>Nggak ada masalah</span></div>}
       {problems.map((p) => {
         const hint = lang ? explainError(lang, p.message) : undefined;
         const src = source?.(p)?.trimEnd();

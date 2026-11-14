@@ -15,6 +15,7 @@ export interface Lesson {
   desc: string;
   keywords: string[];
   text: string;
+  analogy?: string; // analogi sehari-hari, biar materinya gampang kebayang
   tip?: string;
   goal?: string; // "Setelah ini kamu bisa ...": kemampuan yang dibangun topik ini
   examples: Example[];
@@ -23,6 +24,7 @@ export interface Lesson {
 
 type Ex = { t: string; n?: string; h?: string; c?: string; j?: string; p?: string };
 // Cara menambah materi: panggil mk(...) di bawah. id berawalan "p-" = Python, selain itu Web.
+// Penanda {{kode}} di text/tip/analogy dan catatan contoh ditampilkan sebagai <code>.
 const mk = (
   id: string,
   group: string,
@@ -31,7 +33,7 @@ const mk = (
   kw: string,
   text: string,
   ex: Ex[],
-  tip?: string,
+  opt?: { tip?: string; analogy?: string },
 ): Lesson => {
   const examples = ex.map((e) => ({
     title: e.t,
@@ -46,7 +48,8 @@ const mk = (
     desc,
     keywords: kw.split(',').map((s) => s.trim()),
     text,
-    tip,
+    analogy: opt?.analogy,
+    tip: opt?.tip,
     examples,
     snippet: examples[0].snippet,
   };
@@ -58,92 +61,107 @@ export const lessons: Lesson[] = [
     'w-struktur',
     'HTML',
     'Struktur dasar HTML',
-    'Tag pembuka dan penutup',
-    'html,tag,elemen,dasar,pembuka,penutup,h1,p',
-    `HTML itu kerangka halaman web. Isinya tersusun dari tag yang ditulis pakai tanda < dan >. Kebanyakan tag punya pembuka dan penutup, misalnya <p> sampai </p>. Teks di tengahnya yang tampil di halaman.`,
+    'Tag pembuka + penutup, biar halamannya rapi',
+    'html,tag,elemen,dasar,pembuka,penutup,h1,p,gampang',
+    `HTML itu kerangka halaman web — kayak kerangka rumah, bangunannya dulu baru bisa dihias. Isinya disusun dari tag yang ditulis pakai tanda {{<}} dan {{>}}. Kebanyakan tag berpasangan: pembuka sama penutup, misalnya {{<p>}} sampai {{</p>}}. Teks di tengahnya yang bakal nampil di halaman.`,
     [
       {
-        t: 'Judul dan paragraf',
+        t: 'Judul sama paragraf',
         h: '<h1>Halo, dunia</h1>\n<p>Ini paragraf pertamaku.</p>',
         c: 'body {\n  font-family: sans-serif;\n  padding: 16px;\n}',
         j: '',
       },
       {
-        t: 'Tag di dalam tag',
-        n: 'Tag boleh ditaruh di dalam tag lain. Ini namanya nesting.',
+        t: 'Tag di dalam tag lain',
+        n: 'Boleh kok, tag di dalam tag itu namanya nesting.',
         h: '<div>\n  <h2>Kotak pertama</h2>\n  <p>Aku ada di dalam div.</p>\n</div>',
       },
     ],
-    'Di editor ini kamu cukup menulis isi halaman. Tag <html>, <head>, dan <body> sudah diurus otomatis.',
+    {
+      tip: 'Di editor ini kamu cuma perlu nulis isi halamannya. Tag {{<html>}}, {{<head>}}, sama {{<body>}} udah diurus otomatis.',
+      analogy: 'HTML itu blueprint rumah: yang penting kerangkanya bener dulu, cat dan furnitur bisa belakangan.',
+    },
   ),
   mk(
     'w-teks',
     'HTML',
     'Teks: judul, tebal, miring',
-    'h1 sampai h6, p, strong, em, br',
-    'heading,judul,paragraf,bold,tebal,miring,italic,strong,em,br,baris baru,teks',
-    `Ada 6 tingkat judul: h1 paling besar sampai h6 paling kecil. Untuk teks biasa pakai p. Mau menebalkan pakai strong, mau memiringkan pakai em, mau pindah baris tanpa paragraf baru pakai br.`,
+    'h1 sampai h6 buat judul, strong buat tebal',
+    'heading,judul,paragraf,bold,tebal,miring,italic,strong,em,br,baris baru,teks,gaya',
+    `Butuh judul gede? Pakai {{<h1>}} sampai {{<h6>}}, makin besar angkanya makin kecil. Teks biasa dibungkus {{<p>}}. Mau agak tebal pakai {{<strong>}}, mau miring pakai {{<em>}}, mau pindah baris tanpa paragraf baru tinggal {{<br>}}.`,
     [
       {
         t: 'Judul dan penekanan',
         h: '<h1>Judul utama</h1>\n<h2>Sub judul</h2>\n<p>Kata ini <strong>tebal</strong>, kata ini <em>miring</em>.</p>\n<p>Baris satu<br>Baris dua</p>',
       },
     ],
+    {
+      analogy: 'Kayak nulis di koran: judul besar buat Lead, paragraf buat isi, dan penekanan biar yang penting keliatan.',
+    },
   ),
   mk(
     'w-daftar',
     'HTML',
     'Daftar (list)',
-    'ul, ol, dan li',
-    'list,daftar,ul,ol,li,bullet,nomor,urutan',
-    `ul dibuat untuk daftar bertitik, ol untuk daftar bernomor. Setiap itemnya ditulis pakai li.`,
+    'ul buat bertitik, ol buat bernomor, li per item',
+    'list,daftar,ul,ol,li,bullet,nomor,urutan,item',
+    `Mau bikin daftar? Pakai {{<ul>}} buat yang bertitik, {{<ol>}} buat yang bernomor. Tiap butirnya ditulis pakai {{<li>}}.`,
     [
       {
         t: 'Daftar bertitik dan bernomor',
         h: '<ul>\n  <li>Apel</li>\n  <li>Jeruk</li>\n</ul>\n\n<ol>\n  <li>Bangun tidur</li>\n  <li>Sarapan</li>\n  <li>Coding</li>\n</ol>',
       },
     ],
+    {
+      analogy: 'Kayak daftar belanjaan: ada yang pakai titik, ada yang nomor urut, sama-sama buat nandain butir.',
+    },
   ),
   mk(
     'w-link',
     'HTML',
     'Link dan gambar',
-    'a href dan img src',
-    'link,tautan,a,href,gambar,img,src,alt,target',
-    `Link dibuat pakai a, alamat tujuannya ditulis di href. Gambar pakai img, lokasi gambarnya di src, dan alt berisi deskripsi singkat (berguna kalau gambar gagal tampil).`,
+    'a href buat link, img src buat gambar',
+    'link,tautan,a,href,gambar,img,src,alt,target,alamat',
+    `Link ditulis pakai {{<a>}}, alamat tujuannya ditaruh di {{href}}. Gambar pakai {{<img>}}, file gambarnya di {{src}}, dan {{alt}} berisi deskripsi singkat — kepake banget kalo gambarnya gagal kebuka.`,
     [
       {
         t: 'Link',
         h: '<a href="https://example.com" target="_blank">Buka example.com</a>',
-        n: 'Di preview, link mungkin tidak terbuka. Itu normal, preview ini terisolasi.',
+        n: 'Di preview linknya mungkin nggak kebuka. Itu normal, preview-nya terisolasi.',
       },
       {
         t: 'Gambar',
         h: `<img alt="Kotak biru" width="120" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%232347e8'/%3E%3C/svg%3E">`,
       },
     ],
+    {
+      analogy: 'Kayak nempel stiker di olin: {{href}} itu alamat tujuan, {{alt}} tulisan kecil biar orang ngerti stikernya apa.',
+    },
   ),
   mk(
     'w-form',
     'HTML',
     'Tombol dan input',
-    'button, input, label',
-    'tombol,button,input,form,isian,label,placeholder,type',
-    `button membuat tombol. input membuat kotak isian, jenisnya diatur lewat type (text, number, password, dan lain-lain). label adalah teks penjelas untuk input.`,
+    'button buat diklik, input buat diketik',
+    'tombol,button,input,form,isian,label,placeholder,type,submit',
+    `{{<button>}} bikin tombol, {{<input>}} bikin kotak isian. Jenis isiannya diatur lewat {{type}}, misalnya {{text}}, {{number}}, atau {{password}}. Teks penjelasnya pakai {{<label>}}.`,
     [
       {
         t: 'Isian dan tombol',
         h: '<label>Nama kamu:\n  <input type="text" placeholder="Ketik di sini">\n</label>\n<br><br>\n<button>Kirim</button>',
       },
     ],
+    {
+      analogy: 'Kayak form pelanggan di kantin: ada kotaknya, ada tombolnya, ada tulisan kecil yang jelasin buat apa.',
+    },
   ),
   mk(
     'w-div',
     'HTML',
     'div, span, class, dan id',
-    'Pembungkus dan nama elemen',
-    'div,span,class,id,atribut,pembungkus,container',
-    `div adalah kotak pembungkus (satu baris penuh), span pembungkus kecil di dalam teks. Supaya CSS dan JavaScript bisa menemukan elemen tertentu, kasih nama lewat class (boleh dipakai banyak elemen) atau id (unik, satu elemen saja).`,
+    'Pembungkus elemen + nama biar bisa dipanggil',
+    'div,span,class,id,atribut,pembungkus,container,kotak',
+    `{{<div>}} itu kotak pembungkus yang makan satu baris penuh, {{<span>}} versi kecilnya buat nempel di dalam teks. Supaya CSS dan JavaScript bisa nemu elemen tertentu, kasih nama: {{class}} buat banyak elemen, {{id}} buat satu elemen doang yang unik.`,
     [
       {
         t: 'Class dan id',
@@ -151,20 +169,26 @@ export const lessons: Lesson[] = [
         c: '.kartu {\n  border: 2px solid #2347e8;\n  padding: 8px;\n}\n.penting {\n  background: gold;\n}',
       },
     ],
+    {
+      analogy: 'Kayak nyimpen barang di kardus: {{class}} itu label "kode", {{id}} nomor seri yang cuma satu di dunia.',
+    },
   ),
   mk(
     'w-tabel',
     'HTML',
     'Tabel',
     'table, tr, th, td',
-    'tabel,table,tr,td,th,baris,kolom',
-    `Tabel dibuat dari table. Tiap baris pakai tr, sel judul pakai th, sel biasa pakai td.`,
+    'tabel,table,tr,td,th,baris,kolom,sel',
+    `Tabel dimulai dari {{<table>}}. Tiap baris pakai {{<tr>}}, sel judul kolom pakai {{<th>}}, sel isinya pakai {{<td>}}.`,
     [
       {
         t: 'Tabel sederhana',
         h: '<table border="1">\n  <tr><th>Nama</th><th>Umur</th></tr>\n  <tr><td>Sari</td><td>17</td></tr>\n  <tr><td>Budi</td><td>18</td></tr>\n</table>',
       },
     ],
+    {
+      analogy: 'Kayak jadwal pelajaran: baris = jam, kolom = mapel, sel = pertemuan kamu sama mapel itu.',
+    },
   ),
   mk(
     'w-semantik',
@@ -172,11 +196,11 @@ export const lessons: Lesson[] = [
     'Semantic HTML',
     'header, nav, main, section, footer',
     'semantik,semantic,header,nav,main,section,footer,article,aside,struktur,layout,aksesibilitas,seo',
-    `HTML semantik pakai tag yang menjelaskan isinya, bukan cuma kelihatan bagus. header buat bagian atas halaman, nav buat menu navigasi, main buat isi utama, section buat pengelompokan konten, footer buat bagian bawah. Browser, mesin pencari, dan pembaca layar jadi lebih paham bagian-bagian halaman.`,
+    `HTML semantik pakai tag yang bawa arti, bukan cuma kelihatan bagus. {{<header>}} buat bagian atas, {{<nav>}} buat menu navigasi, {{<main>}} buat isi utama, {{<section>}} buat pengelompokan konten, {{<footer>}} buat bagian bawah. Browser, mesin pencari, dan pembaca layar jadi lebih ngerti bagian-bagian halaman kamu.`,
     [
       {
         t: 'Kerangka halaman',
-        n: 'Bagian-bagian halaman pakai tag-nya masing-masing, bukan div semua.',
+        n: 'Tiap bagian halaman pakai tag-nya sendiri, bukan div semua.',
         h: `<header>
   <h1>Situsku</h1>
   <nav>
@@ -203,7 +227,7 @@ export const lessons: Lesson[] = [
       },
       {
         t: 'article dan aside',
-        n: 'article untuk konten yang berdiri sendiri, aside untuk konten sampingan seperti sidebar.',
+        n: 'article buat konten yang berdiri sendiri, aside buat konten sampingan seperti sidebar.',
         h: `<article>
   <h2>Belajar HTML semantik</h2>
   <p>Artikel ini berdiri sendiri, bukan bagian dari artikel lain.</p>
@@ -218,15 +242,18 @@ export const lessons: Lesson[] = [
 </aside>`,
       },
     ],
-    'Pakai tag semantik buat kerangka halaman. Kalau cuma mau bikin kotak, div masih aman.',
+    {
+      tip: 'Pakai tag semantik buat kerangka halaman. Kalau cuma mau bikin kotak, div masih aman.',
+      analogy: 'Kayak labeli lemari kos: lemari atas buat jaket, lemari bawah buat sepatu — biar nggak salah ambil.',
+    },
   ),
   mk(
     'w-atribut',
     'HTML',
     'Atribut HTML',
-    'nilai tambahan di dalam tag',
-    'atribut,attribute,href,src,alt,target,type,id,class,title,lang,value,required,disabled,rel,button,div',
-    `Atribut adalah informasi tambahan yang ditulis di dalam tag pembuka, formatnya nama="nilai". Tiap tag punya atribut sendiri: link pakai href buat alamat tujuan, gambar pakai src buat lokasi file dan alt buat deskripsi, tombol pakai type buat menentukan perilakunya. Ada juga atribut global yang bisa dipakai di tag mana saja, dan atribut boolean yang cukup ditulis namanya saja tanpa tanda sama dengan.`,
+    'Nilai tambahan di dalam tag pembuka',
+    'atribut,attribute,href,src,alt,target,type,id,class,title,lang,value,required,disabled,rel,button,div,nilai',
+    `Atribut itu informasi tambahan di dalam tag pembuka, formatnya {{nama="nilai"}}. Tiap tag punya atribut sendiri: link pakai {{href}}, gambar pakai {{src}} dan {{alt}}, tombol pakai {{type}}. Ada juga atribut global yang bisa kepake di tag mana aja, dan atribut boolean yang cukup ditulis namanya tanpa tanda sama dengan.`,
     [
       {
         t: 'Atribut pada link dan gambar',
@@ -254,15 +281,18 @@ export const lessons: Lesson[] = [
 </form>`,
       },
     ],
-    'alt di img itu bukan opsional. Kalau gambar gagal dimuat, alt yang menjelaskan isi gambarnya.',
+    {
+      tip: 'alt di img itu bukan opsional. Kalau gambar gagal dimuat, alt yang menjelaskan isi gambarnya.',
+      analogy: 'Kayak properties file di laptop: sama-sama punya nama, tapi tiap tipe file punya isian sendiri yang kepake.',
+    },
   ),
   mk(
     'w-form-input',
     'HTML',
     'Form dan Input',
     'form, input, textarea, select',
-    'form,input,textarea,select,option,label,name,required,value,placeholder,email,password,number,date,checkbox,radio,type,button',
-    `Semua isian dikumpulkan di dalam satu tag form. input untuk isian satu baris, textarea buat teks panjang, select buat memilih dari daftar pilihan (satuannya option). Tiap isian butuh name supaya jelas data mana yang dikirim, dan label buat ngasih tahu ke orang yang isi form isian itu buat apa.`,
+    'form,input,textarea,select,option,label,name,required,value,placeholder,email,password,number,date,checkbox,radio,type,button,isian',
+    `Semua isian diletakkan di dalam satu tag {{<form>}}. {{<input>}} buat isian satu baris, {{<textarea>}} buat teks panjang, {{<select>}} buat milih dari daftar (satuannya {{<option>}}). Tiap isian butuh {{name}} biar jelas data mana yang dikirim, dan {{<label>}} buat ngasih tau isian itu buat apa.`,
     [
       {
         t: 'Form lengkap',
@@ -285,7 +315,7 @@ export const lessons: Lesson[] = [
       },
       {
         t: 'Macam-macam tipe input',
-        n: 'Tipe input mengatur tampilan dan cara isian itu diperiksa.',
+        n: 'Tipe input ngatur tampilan dan cara isian itu diperiksa.',
         h: `<p>
   <input type="text" placeholder="teks">
   <input type="email" placeholder="email">
@@ -301,19 +331,22 @@ export const lessons: Lesson[] = [
 </p>`,
       },
     ],
-    'Pakai label untuk setiap input. Selain menulis lebih jelas, klik teksnya langsung memcursor ke isian.',
+    {
+      tip: 'Pakai label untuk setiap input. Selain menulis lebih jelas, klik teksnya langsung memcursor ke isian.',
+      analogy: 'Kayak formulir pendaftaran: tiap kotak ada labelnya, dan ada nama field supaya datanya nggak ketuker.',
+    },
   ),
   mk(
     'w-button-submit',
     'HTML',
     'Button dan Form Submission',
-    'jenis tombol dan cara menangkap submit',
-    'button,submit,reset,type,form,action,method,event,addeventlistener,preventdefault,input,formdata',
-    `button punya beberapa type. Yang paling sering dipakai type="submit" buat mengirim form, type="reset" buat mengembalikan isian ke awal, dan type="button" buat tombol biasa yang nggak ngirim apa-apa. Tombol yang nggak di dalam form nggak akan ngirim form, walau type-nya submit. Biar bisa ngolah datanya sendiri, tangkap event submit pakai addEventListener.`,
+    'submit, reset, button — bedanya apa',
+    'button,submit,reset,type,form,action,method,event,addeventlistener,preventdefault,input,formdata,kirim',
+    `{{<button>}} punya beberapa {{type}}. Yang paling sering dipakai {{type="submit"}} buat ngirim form, {{type="reset"}} buat balikin isian ke awal, dan {{type="button"}} buat tombol biasa yang nggak ngirim apa-apa. Tombol yang di luar form nggak akan ngirim form, walau tipenya submit. Biar bisa ngelola datanya sendiri, tangkap event submit pakai {{addEventListener}}.`,
     [
       {
         t: 'Tiga jenis tombol',
-        n: 'type="submit" mengirim form, type="reset" mengembalikan isian awal, type="button" tidak melakukan apa-apa.',
+        n: 'submit ngirim form, reset balikin isian awal, button nggak ngapa-ngapain.',
         h: `<form id="form-demo">
   <input type="text" name="nama" value="Sari">
   <button type="submit">Kirim</button>
@@ -323,7 +356,7 @@ export const lessons: Lesson[] = [
       },
       {
         t: 'Menangkap event submit',
-        n: 'addEventListener("submit", ...) dipanggil tepat saat form mau dikirim, sebelum halamannya berubah.',
+        n: 'addEventListener("submit", ...) kepanggil pas form mau dikirim, sebelum halamannya berubah.',
         h: `<form id="form">
   <input type="text" name="nama" placeholder="Ketik nama">
   <button type="submit">Kirim</button>
@@ -340,15 +373,18 @@ form.addEventListener("submit", (e) => {
 });`,
       },
     ],
-    'type="button" buat tombol yang cuma pemicu JavaScript. Kalau dibiarkan submit, form-nya keburu terkirim.',
+    {
+      tip: 'type="button" buat tombol yang cuma pemicu JavaScript. Kalau dibiarkan submit, form-nya keburu terkirim.',
+      analogy: 'Kayak tombol di lift: satu naik, satu turun, dan ada tombol RESET buat mulai dari awal.',
+    },
   ),
   mk(
     'w-audio-video',
     'HTML',
     'Audio dan Video',
     'audio, video, controls',
-    'audio,video,controls,source,autoplay,loop,muted,preload,type,width',
-    `audio buat memutar suara, video buat memutar video. Setelahnya dikasih atribut controls biar muncul tombol play, pause, sama pengatur volume. Kalau formatnya bisa lebih dari satu, taruh beberapa tag source di dalam: browser otomatis pilih yang cocok.`,
+    'audio,video,controls,source,autoplay,loop,muted,preload,type,width,media',
+    `{{<audio>}} buat muter suara, {{<video>}} buat muter video. Setelahnya dikasih atribut {{controls}} biar muncul tombol play, pause, sama pengatur volume. Kalau formatnya bisa lebih dari satu, taruh beberapa tag {{<source>}} di dalam — browser otomatis pilih yang cocok.`,
     [
       {
         t: 'Pemutar audio',
@@ -367,7 +403,10 @@ form.addEventListener("submit", (e) => {
 </video>`,
       },
     ],
-    'Taruh video atau audio di server sendiri supaya file-nya nggak hilang.',
+    {
+      tip: 'Taruh video atau audio di server sendiri supaya file-nya nggak hilang.',
+      analogy: 'Kayak pemutar DVD: pencet play, terus dia sendiri yang pilih format paling cocok di perangkat kamu.',
+    },
   ),
 
   // ---------- CSS ----------
@@ -376,8 +415,8 @@ form.addEventListener("submit", (e) => {
     'CSS',
     'Selector: memilih elemen',
     'Tag, class (.), dan id (#)',
-    'css,selector,class,id,titik,pagar,memilih,target',
-    `CSS bekerja dengan dua bagian: selector (siapa yang dipilih) dan isi di dalam kurung kurawal (apa yang diubah). Pilih berdasarkan nama tag (p), class (.nama), atau id (#nama).`,
+    'css,selector,class,id,titik,pagar,memilih,target,pilih',
+    `CSS kerjanya dua: selector (siapa yang dipilih) sama isi di dalam kurung kurawal (apa yang diubah). Pilih berdasar nama tag ({{p}}), class ({{.nama}}), atau id ({{#nama}}).`,
     [
       {
         t: 'Tiga cara memilih',
@@ -385,14 +424,17 @@ form.addEventListener("submit", (e) => {
         c: 'p {\n  font-size: 20px;\n}\n.biru {\n  color: royalblue;\n}\n#spesial {\n  background: gold;\n}',
       },
     ],
+    {
+      analogy: 'Kayak nyari orang di kelas: sebut nama (id), sebut nama panggilan satu angkatan (class), atau panggil semua yang di kelas itu (tag).',
+    },
   ),
   mk(
     'w-warna',
     'CSS',
     'Warna dan background',
     'color dan background',
-    'warna,color,background,hex,rgb,latar,teks',
-    `color mengubah warna teks, background mengubah warna latar. Warna bisa ditulis pakai nama (red), kode hex (#2347e8), atau rgb(35, 71, 232).`,
+    'warna,color,background,hex,rgb,latar,teks,cat',
+    `{{color}} ngubah warna teks, {{background}} ngubah warna latar. Warnanya bisa ditulis pakai nama ({{red}}), kode hex ({{#2347e8}}), atau {{rgb(35, 71, 232)}}.`,
     [
       {
         t: 'Warna teks dan latar',
@@ -400,14 +442,17 @@ form.addEventListener("submit", (e) => {
         c: 'h1 {\n  color: #2347e8;\n}\np {\n  color: white;\n  background: tomato;\n}',
       },
     ],
+    {
+      analogy: 'Kayak ngecat kamar: warnanya bisa kamu sebut namanya, pakai kode warna, atau campur sendiri dari komponen RGB.',
+    },
   ),
   mk(
     'w-font',
     'CSS',
     'Font dan teks',
     'font-size, font-weight, text-align',
-    'font,ukuran huruf,font-size,font-weight,tebal,text-align,rata,tengah,line-height,huruf',
-    `font-size mengatur ukuran huruf, font-weight ketebalan, font-family jenis huruf, text-align posisi teks (left, center, right), dan line-height jarak antar baris.`,
+    'font,ukuran huruf,font-size,font-weight,tebal,text-align,rata,tengah,line-height,huruf,teks',
+    `{{font-size}} ngatur ukuran huruf, {{font-weight}} ketebalan, {{font-family}} jenis huruf, {{text-align}} posisi teks ({{left}}, {{center}}, {{right}}), dan {{line-height}} jarak antar baris.`,
     [
       {
         t: 'Mengatur teks',
@@ -415,14 +460,17 @@ form.addEventListener("submit", (e) => {
         c: 'h1 {\n  font-size: 40px;\n  text-align: center;\n}\np {\n  font-size: 18px;\n  line-height: 1.8;\n  font-weight: 500;\n}',
       },
     ],
+    {
+      analogy: 'Kayak nge-setel koran: ukuran kertas, tebal tulisan, dan jarak antar baris biar enak dibaca.',
+    },
   ),
   mk(
     'w-unit',
     'CSS Dasar',
     'Satuan CSS (units)',
     'px, %, rem, em, vh, vw',
-    'unit,satuan,px,piksel,persen,rem,em,vh,vw,viewport,ukuran,length,relative,relatif',
-    `Setiap ukuran di CSS perlu satuan: px (piksel, ukuran tetap), % (persen dari induknya), rem (relatif ke ukuran huruf elemen paling atas, yaitu html), em (relatif ke ukuran huruf elemen induknya sendiri), vh dan vw (persen dari tinggi dan lebar area tampilan). Kalau lupa menulis satuan, aturan itu diabaikan.`,
+    'unit,satuan,px,piksel,persen,rem,em,vh,vw,viewport,ukuran,length,relative,relatif,ngukur',
+    `Setiap ukuran di CSS perlu satuan: {{px}} (piksel, ukuran tetap), {{%}} (persen dari induknya), {{rem}} (relatif ke ukuran huruf elemen paling atas), {{em}} (relatif ke ukuran huruf induknya sendiri), {{vh}} dan {{vw}} (persen dari tinggi dan lebar area tampilan). Kalau lupa nulis satuan, aturan itu diabaikan.`,
     [
       {
         t: 'px, persen, dan rem',
@@ -432,43 +480,49 @@ form.addEventListener("submit", (e) => {
       },
       {
         t: 'em, vh, dan vw',
-        n: 'vh dan vw mengikuti ukuran area preview, bukan ukuran monitor. Coba di editor utama lalu perkecil jendela.',
+        n: 'vh dan vw ngikutin ukuran area preview, bukan ukuran monitor. Coba di editor utama lalu perkecil jendela.',
         h: '<div class="induk">Teks induk 20px <span class="anak">anak pakai em</span></div>\n<div class="layar">tinggi 40vh</div>',
         c: '.induk {\n  font-size: 20px;\n}\n.anak {\n  font-size: 1.5em;\n}\n.layar {\n  height: 40vh;\n  background: gold;\n  padding: 8px;\n}',
       },
     ],
-    'Pakai px untuk yang harus pas (tebal garis, ukuran ikon). Pakai rem atau % untuk yang ikut menyesuaikan tampilan.',
+    {
+      tip: 'Pakai px untuk yang harus pas (tebal garis, ukuran ikon). Pakai rem atau % untuk yang ikut menyesuaikan tampilan.',
+      analogy: 'Kayak nyukur panjang: cm itu buat yang fix, "%" buat yang ikut turname, "rem" buat yang ngikutin ukuran huruf body.',
+    },
   ),
   mk(
     'w-specificity',
     'CSS Dasar',
     'Specificity: siapa yang menang',
     'Aturan CSS yang bertabrakan',
-    'specificity,spesifikitas,prioritas,menang,tabrak,bentrok,urutan,important,inline,cascade,id,class',
-    `Semua aturan CSS yang cocok dengan sebuah elemen tetap dikumpulkan, lalu browser memilih satu yang menang. Urutannya dari yang paling kuat: inline style (style="..." di dalam tag HTML), id (#nama), class (.nama), nama tag (p), lalu universal (*). Kalau tingkatnya sama, aturan yang ditulis belakangan yang menang.`,
+    'specificity,spesifikitas,prioritas,menang,tabrak,bentrok,urutan,important,inline,cascade,id,class,tabrakan',
+    `Semua aturan CSS yang cocok dengan sebuah elemen tetap dikumpulkan, terus browser pilih satu yang menang. Urutannya dari yang paling kuat: style inline ({{style="..."}} di dalam tag HTML), id ({{#nama}}), class ({{.nama}}), nama tag ({{p}}), lalu universal ({{*}}). Kalau tingkatnya sama, aturan yang ditulis belakangan yang menang.`,
     [
       {
         t: 'Tiga tingkat aturan',
-        n: 'Hanya aturan dengan id yang benar-benar dipakai. Kelas kalah dari id, dan tag kalah dari kelas.',
+        n: 'Hanya aturan dengan id yang beneran kepake. Kelas kalah dari id, dan tag kalah dari kelas.',
         h: '<p class="teks" id="tunggal">Teks ini punya tiga aturan yang bertabrakan.</p>',
         c: 'p {\n  color: gray;\n}\n.teks {\n  color: teal;\n}\n#tunggal {\n  color: tomato;\n}',
       },
       {
         t: 'Tingkat sama, yang terakhir menang',
-        n: 'Dua aturan dengan class yang sama: urutan penulisan yang menentukan.',
+        n: 'Dua aturan dengan class yang sama: urutan penulisan yang nentuin.',
         h: '<p class="gaya">Warnaku datang dari aturan terakhir.</p>',
         c: '.gaya {\n  color: teal;\n}\n.gaya {\n  color: tomato;\n}',
       },
     ],
-    '!important memaksa sebuah aturan menang apa pun saingannya. Simpan untuk keadaan mendesak saja, karena susah dibalik.',
+    {
+      tip: '!important memaksa sebuah aturan menang apa pun saingannya. Simpan untuk keadaan mendesak saja, karena susah dibalik.',
+      analogy: 'Kayak aturan di kos: nama lengkap (id) lebih ngaku daripada nama panggilan (class), dan lebih ngaku lagi daripada "semua penghuni" (tag).',
+    },
   ),
   mk(
     'w-css-variabel',
     'CSS Dasar',
     'CSS Variables',
-    'Menyimpan nilai dengan --nama lalu dipakai dengan var()',
-    'variabel,variable,custom property,--primary-color,var(),warna,reuse,pakai ulang,nilai',
-    `CSS Variables dipakai untuk menyimpan satu nilai lalu memakainya di banyak tempat. Namanya diawali dua tanda strip (--) dan ditulis di dalam selector :root, lalu dipakai lewat var(). Karena disimpan di satu tempat, mengubah warnanya cukup di satu baris dan semua pemakaian ikut berubah.`,
+    'Simpan nilai pakai --nama, lalu pakai lagi var()',
+    'variabel,variable,custom property,--primary-color,var(),warna,reuse,pakai ulang,nilai,setelan',
+    `CSS Variables dipakai buat nyimpen satu nilai lalu memakainya di banyak tempat. Namanya diawali dua tanda strip ({{--}}) dan ditulis di dalam selector {{:root}}, terus dipakai lewat {{var()}}. Karena nyimpen di satu tempat, ngubah warnanya cukup satu baris dan semua pemakaian ikut berubah.`,
     [
       {
         t: 'Satu warna untuk semua',
@@ -478,20 +532,23 @@ form.addEventListener("submit", (e) => {
       },
       {
         t: 'Variabel dengan nilai cadangan',
-        n: 'Kalau --warna-utama belum ada, var() memakai nilai setelah koma.',
+        n: 'Kalau --warna-utama belum ada, var() pakai nilai setelah koma.',
         h: '<p class="cadangan">Warna ini punya nilai cadangan.</p>',
         c: '.cadangan {\n  color: var(--warna-utama, tomato);\n}',
       },
     ],
-    'Variabel juga bisa dipakai untuk hal lain: {{--jarak: 12px}} lalu dipakai di banyak property {{padding}} dan {{margin}}.',
+    {
+      tip: 'Variabel juga bisa dipakai untuk hal lain: {{--jarak: 12px}} lalu dipakai di banyak property {{padding}} dan {{margin}}.',
+      analogy: 'Kayak setelan warna utama di aplikasi HP: ganti sekali di pengaturan, semua tema ikut berubah.',
+    },
   ),
   mk(
     'w-padding',
     'CSS',
     'Padding (jarak di dalam)',
     'Ruang antara isi dan tepi kotak',
-    'padding,spasi dalam,jarak dalam,ruang,box model,kotak,isi',
-    `Padding itu jarak di DALAM kotak, antara isi (teks) dan tepi kotak. Makin besar padding, makin lega isinya. Warna background ikut melebar sampai area padding, jadi gampang dilihat.`,
+    'padding,spasi dalam,jarak dalam,ruang,box model,kotak,isi,lega',
+    `Padding itu jarak di DALAM kotak, antara isi dan tepinya. Makin gede, makin lega isinya. Warna background ikut melebar sampai area padding, jadi gampang dilihat.`,
     [
       {
         t: 'Tanpa dan dengan padding',
@@ -506,15 +563,18 @@ form.addEventListener("submit", (e) => {
         c: 'p {\n  background: lightgreen;\n}\n.a {\n  padding: 10px 40px;\n}\n.b {\n  padding: 5px 10px 20px 40px;\n}',
       },
     ],
-    'Cara ingat: padding = jarak di DALAM kotak, margin = jarak di LUAR kotak.',
+    {
+      tip: 'Cara ingat: padding = jarak di DALAM kotak, margin = jarak di LUAR kotak.',
+      analogy: 'Kayak bantal kasur: kasurnya isinya, bantalnya yang bikin lega dan nyaman.',
+    },
   ),
   mk(
     'w-margin',
     'CSS',
     'Margin (jarak di luar)',
     'Ruang antara satu kotak dan kotak lain',
-    'margin,jarak luar,spasi luar,auto,tengah,center,kotak',
-    `Margin itu jarak di LUAR kotak, yang memisahkan satu kotak dari kotak lain. Margin tidak ikut berwarna background. Trik populer: margin: 0 auto membuat kotak yang punya lebar tetap berada di tengah.`,
+    'margin,jarak luar,spasi luar,auto,tengah,center,kotak,jarak',
+    `Margin itu jarak di LUAR kotak, yang misahin satu kotak dari kotak lain. Margin nggak ikut berwarna background. Trik populer: {{margin: 0 auto}} bikin kotak yang lebarnya tetap berada di tengah.`,
     [
       {
         t: 'Jarak antar kotak',
@@ -527,14 +587,17 @@ form.addEventListener("submit", (e) => {
         c: '.tengah {\n  width: 200px;\n  background: gold;\n  padding: 12px;\n  margin: 0 auto;\n  text-align: center;\n}',
       },
     ],
+    {
+      analogy: 'Kayak jarak antar meja di kantin: mejanya nggak ikut geser, cuma ruangnya yang dipisah.',
+    },
   ),
   mk(
     'w-border',
     'CSS',
     'Border dan sudut membulat',
     'border dan border-radius',
-    'border,garis tepi,radius,melengkung,membulat,bulat,outline',
-    `border membuat garis di tepi kotak: tebal, jenis garis, lalu warna. border-radius membuat sudutnya membulat. Kalau nilainya 50% pada kotak persegi, hasilnya lingkaran.`,
+    'border,garis tepi,radius,melengkung,membulat,bulat,outline,bingkai',
+    `{{border}} bikin garis di tepi kotak: tebal, jenis garis, terus warna. {{border-radius}} bikin sudutnya melengkung. Kalau nilainya {{50%}} pada kotak persegi, hasilnya lingkaran.`,
     [
       {
         t: 'Garis dan sudut bulat',
@@ -542,14 +605,17 @@ form.addEventListener("submit", (e) => {
         c: '.kartu {\n  border: 3px solid #2347e8;\n  border-radius: 12px;\n  padding: 16px;\n}\n.lingkaran {\n  width: 80px;\n  height: 80px;\n  margin-top: 12px;\n  background: tomato;\n  border-radius: 50%;\n}',
       },
     ],
+    {
+      analogy: 'Kayak bingkai foto: garisnya bisa tebal atau tipis, dan bisa dibikin melengkung biar kekinian.',
+    },
   ),
   mk(
     'w-size',
     'CSS',
     'Lebar dan tinggi',
     'width, height, max-width',
-    'width,height,lebar,tinggi,ukuran,max-width,persen,px',
-    `width mengatur lebar dan height tinggi. Satuannya bisa px (piksel tetap) atau % (persen dari pembungkusnya). max-width berguna supaya kotak tidak lebih lebar dari batas tertentu.`,
+    'width,height,lebar,tinggi,ukuran,max-width,persen,px,ukuran kotak',
+    `{{width}} ngatur lebar, {{height}} tinggi. Satuannya bisa {{px}} (piksel tetap) atau {{%}} (persen dari pembungkusnya). {{max-width}} berguna biar kotak nggak lebih lebar dari batas tertentu.`,
     [
       {
         t: 'Atur ukuran',
@@ -557,14 +623,17 @@ form.addEventListener("submit", (e) => {
         c: 'div {\n  background: lightblue;\n  margin-bottom: 8px;\n}\n.a {\n  width: 200px;\n  height: 80px;\n}\n.b {\n  width: 50%;\n}',
       },
     ],
+    {
+      analogy: 'Kayak ngatur ukuran foto di Canva: ada yang fix 200px, ada yang ikut lebar kanvas.',
+    },
   ),
   mk(
     'w-overflow',
     'Kotak (Box Model)',
     'Overflow: isi yang meluber',
-    'overflow, hidden, auto, scroll',
-    'overflow,hidden,auto,scroll,visible,meluber,klip,gulir,scrollbar,potong',
-    `Kalau isi lebih besar dari kotaknya, isi itu bisa meluber keluar. Ada empat cara mengatur overflow: visible (bawaan, isi boleh keluar), hidden (dipotong, tidak ada scrollbar), auto (scrollbar muncul kalau memang perlu), dan scroll (scrollbar selalu ada). overflow-x dan overflow-y bisa diatur terpisah.`,
+    'hidden, auto, scroll',
+    'overflow,hidden,auto,scroll,visible,meluber,klip,gulir,scrollbar,potong,luapan',
+    `Kalau isinya lebih gede dari kotaknya, isinya bisa meluber keluar. Empat cara ngatur {{overflow}}: {{visible}} (bawaan, boleh keluar), {{hidden}} (dipotong, nggak ada scrollbar), {{auto}} (scrollbar muncul kalau emang perlu), dan {{scroll}} (selalu ada). {{overflow-x}} dan {{overflow-y}} bisa diatur terpisah.`,
     [
       {
         t: 'Tiga cara menangani luapan',
@@ -579,15 +648,18 @@ form.addEventListener("submit", (e) => {
         c: '.lebar {\n  width: 200px;\n  overflow-x: auto;\n  white-space: nowrap;\n  background: lightgreen;\n  padding: 8px;\n}',
       },
     ],
-    'Overflow: hidden sering dipakai bareng border-radius supaya isi tidak keluar dari sudut yang membulat.',
+    {
+      tip: 'Overflow: hidden sering dipakai bareng border-radius supaya isi tidak keluar dari sudut yang membulat.',
+      analogy: 'Kayak aquarium yang airnya meluap: bisa dibohongi, dipotong, atau dibikin ada pasangannya biar bisa dipeluk.',
+    },
   ),
   mk(
     'w-display',
     'CSS',
     'Display: block, inline, none',
     'Cara elemen menempati ruang',
-    'display,block,inline,inline-block,none,sembunyi,hilang',
-    `display menentukan perilaku elemen. block menempati satu baris penuh (contoh: div, p). inline cuma selebar isinya dan sejajar dengan teks (contoh: span). none menyembunyikan elemen sepenuhnya.`,
+    'display,block,inline,inline-block,none,sembunyi,hilang,layout',
+    `{{display}} nentuin perilaku elemen. {{block}} makan satu baris penuh (contoh: {{div}}, {{p}}). {{inline}} cuma selebar isinya dan sejajar sama teks (contoh: {{span}}). {{none}} bikin elemen ilang total.`,
     [
       {
         t: 'Block, inline, none',
@@ -595,14 +667,17 @@ form.addEventListener("submit", (e) => {
         c: '.x {\n  background: gold;\n  padding: 4px;\n}\n.blok {\n  display: block;\n}\n.hilang {\n  display: none;\n}',
       },
     ],
+    {
+      analogy: 'Kayak furnitur kamar: ada yang penuh (kasur), ada yang nempel di pinggir (poster), ada yang dibongkar (none).',
+    },
   ),
   mk(
     'w-flex',
     'CSS',
     'Flexbox: menyusun sejajar',
     'display flex, justify-content, align-items, gap',
-    'flex,flexbox,sejajar,tengah,center,justify-content,align-items,gap,susun,baris,kolom',
-    `Flexbox memudahkan menyusun elemen. Beri display: flex pada pembungkusnya, maka anak-anaknya berjajar. justify-content mengatur arah mendatar, align-items mengatur arah menurun, gap memberi jarak antar item.`,
+    'flex,flexbox,sejajar,tengah,center,justify-content,align-items,gap,susun,baris,kolom,jejer',
+    `Flexbox bikin menyusun elemen jadi gampang. Kasih {{display: flex}} di pembungkusnya, maka anak-anaknya berjajar. {{justify-content}} ngatur arah mendatar, {{align-items}} ngatur arah menurun, {{gap}} kasih jarak antar item.`,
     [
       {
         t: 'Berjajar dengan jarak',
@@ -611,23 +686,26 @@ form.addEventListener("submit", (e) => {
       },
       {
         t: 'Taruh di tengah',
-        n: 'Ini cara paling gampang membuat sesuatu pas di tengah.',
+        n: 'Ini cara paling gampang bikin sesuatu pas di tengah.',
         h: '<div class="box"><div class="isi">Tengah!</div></div>',
         c: '.box {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 140px;\n  background: #eee;\n}\n.isi {\n  background: tomato;\n  color: white;\n  padding: 12px 20px;\n}',
       },
     ],
+    {
+      analogy: 'Kayak antrean di loket: orang-orang dijejer, kamu atur dari kiri ke kanan dan dari atas ke bawah.',
+    },
   ),
   mk(
     'w-flex-lanjut',
     'Layout',
     'Flexbox lanjutan',
     'flex-direction, flex-wrap, flex',
-    'flex,flexbox,lanjutan,direction,wrap,grow,shrink,basis,column,row,reverse,menyebar,memperkecil',
-    `Topik Flexbox dasar memakai display: flex, justify-content, dan align-items. Sekarang kita atur arah dan ukuran itemnya. flex-direction menentukan arah aliran (row mendatar, column menurun, dan versi reverse-nya). flex-wrap menentukan apakah item boleh turun ke baris berikutnya saat tidak cukup ruang. Property flex dipakai sekaligus untuk mengatur grow (tumbuh), shrink (menyusut), dan basis (ukuran dasar).`,
+    'flex,flexbox,lanjutan,direction,wrap,grow,shrink,basis,column,row,reverse,menyebar,memperkecil,lanjutan',
+    `Dasar Flexbox udah kita bahas, sekarang atur arah dan ukuran itemnya. {{flex-direction}} nentuin arah aliran ({{row}} mendatar, {{column}} menurun, plus versi reverse-nya). {{flex-wrap}} nentuin boleh atau nggak item turun ke baris berikutnya. Property {{flex}} dipakai bareng buat ngatur {{grow}} (tumbuh), {{shrink}} (menyusut), dan {{basis}} (ukuran dasar).`,
     [
       {
         t: 'Arah dan pembungkusan',
-        n: 'flex-wrap: wrap membuat item turun ke baris baru, bukan meluber keluar kotak.',
+        n: 'flex-wrap: wrap bikin item turun ke baris baru, bukan meluber keluar kotak.',
         h: '<div class="bungkus">\n  <div class="item">1</div>\n  <div class="item">2</div>\n  <div class="item">3</div>\n  <div class="item">4</div>\n</div>',
         c: '.bungkus {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  background: #eee;\n  padding: 8px;\n}\n.item {\n  flex: 1 1 120px;\n  background: lightblue;\n  padding: 16px;\n  text-align: center;\n}',
       },
@@ -638,19 +716,22 @@ form.addEventListener("submit", (e) => {
         c: '.tumpuk {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n}\n.kotak {\n  background: lightgreen;\n  padding: 16px;\n}',
       },
     ],
-    'flex: 1 artinya grow 1, shrink 1, basis 0. Semua item dengan flex: 1 membagi ruang sama rata.',
+    {
+      tip: 'flex: 1 artinya grow 1, shrink 1, basis 0. Semua item dengan flex: 1 membagi ruang sama rata.',
+      analogy: 'Kayak ngisi kardus: mau ditumpuk ke atas atau dijejer ke samping, dan tiap kardus bisa gum elastis.',
+    },
   ),
   mk(
     'w-grid',
     'Layout',
     'CSS Grid',
     'grid-template-columns, gap, fr',
-    'grid,css grid,grid-template-columns,gap,fr,kolom,baris,template,area,grid-template-rows',
-    `Grid dipakai untuk menyusun elemen dalam baris dan kolom sekaligus. Beri display: grid pada pembungkusnya, lalu tentukan kolomnya dengan grid-template-columns. Satuan fr (fraction) membagi ruang yang tersisa secara proporsional: 1fr 2fr berarti kolom pertama seperempat dan kolom kedua setengah dari ruang yang ada. gap mengatur jarak antar sel.`,
+    'grid,css grid,grid-template-columns,gap,fr,kolom,baris,template,area,grid-template-rows,kisi',
+    `Grid dipakai buat menyusun elemen dalam baris dan kolom sekaligus. Kasih {{display: grid}} di pembungkusnya, terus tentukan kolomnya pakai {{grid-template-columns}}. Satuan {{fr}} bagi ruang yang tersisa secara proporsional: {{1fr 2fr}} berarti kolom pertama seperempat dan kolom kedua setengah dari ruang yang ada. {{gap}} ngatur jarak antar sel.`,
     [
       {
         t: 'Grid tiga kolom',
-        n: 'Ubah 1fr 1fr 1fr jadi 2fr 1fr 1fr untuk melihat perbedaannya.',
+        n: 'Ubah 1fr 1fr 1fr jadi 2fr 1fr 1fr untuk lihat bedanya.',
         h: '<div class="grid">\n  <div>1</div>\n  <div>2</div>\n  <div>3</div>\n  <div>4</div>\n  <div>5</div>\n  <div>6</div>\n</div>',
         c: '.grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr;\n  gap: 8px;\n}\n.grid div {\n  background: lightblue;\n  padding: 20px;\n  text-align: center;\n}',
       },
@@ -661,15 +742,18 @@ form.addEventListener("submit", (e) => {
         c: '.grid2 {\n  display: grid;\n  grid-template-columns: 2fr 1fr;\n  gap: 8px;\n}\n.grid2 div {\n  background: lightgreen;\n  padding: 16px;\n}',
       },
     ],
-    'Butuh jumlah kolom banyak? Tulis {{repeat(3, 1fr)}} sebagai gantinya menulis {{1fr 1fr 1fr}}.',
+    {
+      tip: 'Butuh jumlah kolom banyak? Tulis {{repeat(3, 1fr)}} sebagai gantinya menulis {{1fr 1fr 1fr}}.',
+      analogy: 'Kayak mikirin denah rumah: kamu bagi kamar-kamar dalam baris dan kolom, tiap kamar dapet porsi luas yang beda.',
+    },
   ),
   mk(
     'w-position',
     'CSS',
     'Position',
     'relative dan absolute',
-    'position,relative,absolute,posisi,top,left,right,bottom,tumpuk',
-    `position mengatur cara elemen diposisikan. relative berarti elemen tetap di tempatnya, tapi jadi patokan. absolute berarti elemen dilepas dari alur dan ditaruh pakai top, left, right, bottom relatif terhadap patokan terdekat.`,
+    'position,relative,absolute,posisi,top,left,right,bottom,tumpuk,patokan',
+    `{{position}} ngatur cara elemen diposisikan. {{relative}} berarti elemen tetap di tempatnya, tapi jadi patokan. {{absolute}} berarti elemen dilepas dari alur dan ditaruh pakai {{top}}, {{left}}, {{right}}, {{bottom}} relatif ke patokan terdekat.`,
     [
       {
         t: 'Lencana di pojok',
@@ -677,18 +761,21 @@ form.addEventListener("submit", (e) => {
         c: '.kartu {\n  position: relative;\n  width: 160px;\n  padding: 30px 16px;\n  background: lightblue;\n}\n.lencana {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  background: tomato;\n  color: white;\n  font-size: 12px;\n  padding: 2px 6px;\n}',
       },
     ],
+    {
+      analogy: 'Kayak nempel stiker di jendela: stiker relative nempel di kertas, stiker absolute nempel di kaca depan mobil.',
+    },
   ),
   mk(
     'w-responsive',
     'Layout',
     'Responsive: menyesuaikan layar',
     'Media queries dan breakpoint',
-    'responsive,responsif,media query,media,breakpoint,layar,mobile,desktop,tablet,max-width,min-width,query',
-    `Media query (@media) dipakai untuk menulis aturan CSS yang hanya berlaku pada kondisi tertentu, biasanya ukuran layar. Bentuknya: @media (max-width: 600px) lalu di dalam kurung kurawal ditulis aturan yang hanya berlaku kalau layar selebar 600px atau kurang. Titik ukuran yang dipakai untuk menentukan tata letak disebut breakpoint.`,
+    'responsive,responsif,media query,media,breakpoint,layar,mobile,desktop,tablet,max-width,min-width,query,menyesuaikan',
+    `Media query ({{@media}}) dipakai buat nulis aturan CSS yang cuma berlaku di kondisi tertentu, biasanya ukuran layar. Bentuknya: {{@media (max-width: 600px)}}, terus di dalam kurung kurawal ditulis aturan yang cuma kepake kalau layar selebar 600px atau kurang. Titik ukuran yang dipakai buat nentuin tata letak disebut breakpoint.`,
     [
       {
         t: 'Beralih dari satu kolom ke dua',
-        n: 'Di preview materi lebarnya sempit, jadi aturan max-width ikut berlaku. Coba di editor utama lalu perkecil jendela browsermu.',
+        n: 'Di preview materinya sempit, jadi aturan max-width ikut berlaku. Coba di editor utama lalu perkecil jendela browsermu.',
         h: '<div class="wrap">\n  <div class="kolom">Kiri</div>\n  <div class="kolom">Kanan</div>\n</div>',
         c: '.wrap {\n  display: flex;\n  gap: 12px;\n}\n.kolom {\n  flex: 1;\n  background: lightblue;\n  padding: 16px;\n}\n@media (max-width: 600px) {\n  .wrap {\n    flex-direction: column;\n  }\n}',
       },
@@ -699,31 +786,37 @@ form.addEventListener("submit", (e) => {
         c: '.teks {\n  font-size: 14px;\n}\n@media (min-width: 700px) {\n  .teks {\n    font-size: 28px;\n  }\n}',
       },
     ],
-    'Praktik umum: tulis gaya dasar dulu untuk semua layar, lalu tambahkan @media (min-width: ...) untuk layar besar.',
+    {
+      tip: 'Praktik umum: tulis gaya dasar dulu untuk semua layar, lalu tambahkan {{@media (min-width: ...)}} untuk layar besar.',
+      analogy: 'Kayak tata letak koran: kolomnya berubah jumlah pas halamannya sempit atau lebar.',
+    },
   ),
   mk(
     'w-hover',
     'CSS',
     'Hover dan transition',
     'Efek saat kursor di atas elemen',
-    'hover,transition,animasi,efek,transform,kursor,halus',
-    `:hover dipakai untuk gaya yang aktif saat kursor ada di atas elemen. Tambahkan transition supaya perubahannya halus, bukan loncat. transform dipakai untuk menggeser, memutar, atau membesarkan elemen.`,
+    'hover,transition,animasi,efek,transform,kursor,halus,efek',
+    `{{:hover}} dipakai buat gaya yang aktif pas kursor ada di atas elemen. Tambahin {{transition}} biar perubahannya halus, bukan loncat. {{transform}} dipakai buat ng geser, muter, atau membesarin elemen.`,
     [
       {
         t: 'Tombol yang bereaksi',
-        n: 'Arahkan kursor ke tombol.',
+        n: 'Arahkan kursor ke tombolnya.',
         h: '<button class="tombol">Sentuh aku</button>',
         c: '.tombol {\n  background: #2347e8;\n  color: white;\n  border: 0;\n  padding: 12px 20px;\n  border-radius: 8px;\n  transition: transform 0.2s;\n}\n.tombol:hover {\n  background: tomato;\n  transform: scale(1.1);\n}',
       },
     ],
+    {
+      analogy: 'Kayak tombol elevator yang ngeluarin cahaya pas kamu sentuh — ada feedback, bukan cuma diam.',
+    },
   ),
   mk(
     'w-pseudo-class',
     'Efek dan Animasi',
     'Pseudo-class',
     ':hover, :focus, :active',
-    'pseudo-class,pseudo,hover,focus,active,kursor,fokus,klik,state,keadaan',
-    `Pseudo-class menggabungkan selector dengan tanda titik dua untuk kondisi tertentu: :hover saat kursor ada di atas elemen, :focus saat elemen mendapat fokus (klik atau tekan Tab), :active saat elemen sedang ditekan. Topik "Hover dan transition" sudah membahas :hover dan transform, di sini kita lengkapi dengan :focus dan :active.`,
+    'pseudo-class,pseudo,hover,focus,active,kursor,fokus,klik,state,keadaan,keadaan elemen',
+    `Pseudo-class nggabungin selector sama tanda titik dua buat kondisi tertentu: {{:hover}} pas kursor di atas elemen, {{:focus}} pas elemen dapet fokus (klik atau tekan Tab), {{:active}} pas elemen lagi ditekan. Topik "Hover dan transition" udah bahas {{:hover}} dan transform, di sini kita lengkapi dengan {{:focus}} dan {{:active}}.`,
     [
       {
         t: 'Tombol dengan beberapa kondisi',
@@ -733,12 +826,15 @@ form.addEventListener("submit", (e) => {
       },
       {
         t: 'Status elemen lain',
-        n: ':first-child untuk elemen pertama, :disabled untuk yang tidak bisa dipakai.',
+        n: ':first-child buat elemen pertama, :disabled buat yang nggak bisa dipakai.',
         h: '<ul class="daftar">\n  <li>Yang pertama</li>\n  <li>Yang kedua</li>\n</ul>\n<button class="mati" disabled>Tidak bisa diklik</button>',
         c: '.daftar li:first-child {\n  color: tomato;\n  font-weight: bold;\n}\n.mati:disabled {\n  background: #ddd;\n  color: #888;\n  border: 0;\n  padding: 8px 14px;\n}',
       },
     ],
-    'Pseudo-element (dua tanda titik dua) berbeda: ::before dan ::after menyisipkan isi tiruan, misalnya untuk ikon.',
+    {
+      tip: 'Pseudo-element (dua tanda titik dua) beda: ::before dan ::after menyisipkan isi tiruan, misalnya buat ikon.',
+      analogy: 'Kayak orang yang mukanya berubah sesuai suasana: lagi disorot (hover), lagi fokus ngomong (focus), lagi diteken (active).',
+    },
   ),
 
   // ---------- JavaScript ----------
@@ -747,37 +843,43 @@ form.addEventListener("submit", (e) => {
     'JavaScript',
     'console.log',
     'Mengintip nilai di Console',
-    'console,log,print,tampil,debug,cek,output',
-    `console.log() menampilkan sesuatu di Console, tempat kamu mengintip isi variabel atau mengecek apakah kodemu jalan. Hasilnya tidak muncul di halaman, tapi di panel Console.`,
+    'console,log,print,tampil,debug,cek,output,intip',
+    `{{console.log()}} nampilin sesuatu di Console, tempat kamu ngintip isi variabel atau cek apakah kodemu jalan. Hasilnya nggak muncul di halaman, tapi di panel Console.`,
     [
       {
         t: 'Menulis ke Console',
         j: 'console.log("Halo dari JavaScript");\nconsole.log(2 + 3);\nconsole.log("Umur:", 17);',
       },
     ],
-    'Kalau kodemu terasa tidak jalan, taruh console.log di beberapa tempat untuk melihat nilainya.',
+    {
+      tip: 'Kalau kodemu terasa nggak jalan, taruh console.log di beberapa tempat buat lihat nilainya.',
+      analogy: 'Kayak ngintip isi laci sebelum nutup: bukan buat dipamerin, cuma buat kamu sendiri yang mau cek ada atau nggak.',
+    },
   ),
   mk(
     'w-variabel',
     'JavaScript',
     'Variabel: let dan const',
-    'Menyimpan nilai',
-    'variabel,let,const,var,simpan,nilai,nama',
-    `Variabel adalah wadah bernama untuk menyimpan nilai. Pakai const untuk nilai yang tidak akan diganti, dan let untuk nilai yang bisa berubah. Tanda = berarti simpan nilai di kanan ke nama di kiri.`,
+    'Nyimpen nilai',
+    'variabel,let,const,var,simpan,nilai,nama,wadah',
+    `Variabel itu wadah bernama buat nyimpen nilai. Pakai {{const}} buat nilai yang nggak akan diganti, {{let}} buat nilai yang bisa berubah. Tanda {{=}} artinya simpan nilai di kanan ke nama di kiri.`,
     [
       {
         t: 'const dan let',
         j: 'const nama = "Sari";\nlet umur = 17;\n\numur = umur + 1; // ulang tahun!\n\nconsole.log(nama, "umurnya", umur);',
       },
     ],
+    {
+      analogy: 'Kayak kotak berlabel di lemari: const = isinya selamanya, let = boleh dibongkar dan diisi ulang.',
+    },
   ),
   mk(
     'w-tipe',
     'JavaScript',
     'Tipe data dan operator',
     'String, number, boolean, dan hitung-hitungan',
-    'tipe data,string,number,angka,boolean,operator,tambah,kurang,kali,bagi,typeof,teks,gabung',
-    `Nilai punya jenis. String itu teks (pakai tanda kutip), number itu angka, boolean itu true atau false. Operator + - * / dipakai untuk menghitung. Kalau + dipakai pada teks, hasilnya menggabungkan teks.`,
+    'tipe data,string,number,angka,boolean,operator,tambah,kurang,kali,bagi,typeof,teks,gabung,hitung',
+    `Nilai punya jenis. {{String}} itu teks (pakai tanda kutip), {{number}} itu angka, {{boolean}} itu {{true}} atau {{false}}. Operator {{+ - * /}} dipakai buat ngitung. Kalau {{+}} dipakai pada teks, hasilnya nggabungin teks.`,
     [
       {
         t: 'Jenis-jenis nilai',
@@ -788,17 +890,20 @@ form.addEventListener("submit", (e) => {
         j: 'console.log(10 + 5);\nconsole.log(10 / 4);\nconsole.log("Hai " + "dunia");\nconsole.log("5" + 5);  // hasilnya teks, hati-hati!',
       },
     ],
+    {
+      analogy: 'Kayak pisau di dapur: ada yang buat motong daging, ada yang buat motong kertas. Dicampur-campur hasilnya aneh.',
+    },
   ),
   mk(
     'w-io',
     'JavaScript Dasar',
     'Input dan Output',
     'alert(), prompt(), confirm()',
-    'io,input,output,alert,prompt,confirm,pesan,masukan,kotak isian,jawab',
-    `alert() menampilkan pesan singkat di layar untuk memberi tahu hasil atau kesalahan. prompt() membuka kotak isian dan mengembalikan teks yang diketik pengguna, atau null kalau dibatalkan. confirm() menampilkan tombol Ya dan Tidak, lalu mengembalikan true atau false. Ketiganya enak dipakai di program kecil, tapi untuk tampilan yang lebih rapi hasilnya biasanya ditulis ke halaman.`,
+    'io,input,output,alert,prompt,confirm,pesan,masukan,kotak isian,jawab,kotak dialog',
+    `{{alert()}} nampilin pesan singkat di layar buat kasih tau hasil atau kesalahan. {{prompt()}} buka kotak isian dan balikin teks yang diketik pengguna, atau {{null}} kalau dibatalkan. {{confirm()}} nampilin tombol Ya dan Tidak, lalu balikin {{true}} atau {{false}}. Ketiganya enak buat program kecil, tapi buat tampilan lebih rapi hasilnya biasanya ditulis ke halaman.`,
     [
       {
-        t: 'alert: menampilkan pesan',
+        t: 'alert: nampilin pesan',
         n: 'Klik tombolnya, lalu lihat pesan yang muncul di area preview.',
         h: '<button id="btn-alert">Tampilkan pesan</button>',
         j: `document.getElementById("btn-alert").addEventListener("click", () => {
@@ -806,7 +911,7 @@ form.addEventListener("submit", (e) => {
 });`,
       },
       {
-        t: 'prompt: meminta input',
+        t: 'prompt: minta input',
         n: 'Klik tombolnya, lalu ketik sesuatu di kotak isian yang muncul.',
         h: '<button id="btn-prompt">Minta nama</button>\n<p id="hasil">Belum ada jawaban.</p>',
         j: `const tombol = document.getElementById("btn-prompt");
@@ -839,15 +944,18 @@ tombol.addEventListener("click", () => {
 });`,
       },
     ],
-    'prompt() mengembalikan null kalau kotak isiannya ditutup, jadi cek dulu sebelum memakainya.',
+    {
+      tip: 'prompt() mengembalikan null kalau kotak isiannya ditutup, jadi cek dulu sebelum memakainya.',
+      analogy: 'Kayak kasir nanya: "Mau bayar?" (confirm), "Nama siapa?" (prompt), "Terima kasih!" (alert).',
+    },
   ),
   mk(
     'w-banding',
     'Alur Program',
     'Operator Perbandingan',
     '===, !==, >, <, >=, <=',
-    'perbandingan,banding,comparator,sama dengan,lebih besar,lebih kecil,boolean,operator',
-    `Perbandingan membandingkan dua nilai dan hasilnya selalu boolean: true atau false. Operator yang paling sering dipakai: === untuk sama persis termasuk tipenya, !== untuk tidak sama persis, > untuk lebih besar, < untuk lebih kecil, >= untuk lebih besar atau sama, dan <= untuk lebih kecil atau sama. Kalau dibandingkan dengan tanda = biasa, hasilnya true, bukan angka 1 atau 0.`,
+    'perbandingan,banding,comparator,sama dengan,lebih besar,lebih kecil,boolean,operator,bandingkan',
+    `Perbandingan nbandingin dua nilai dan hasilnya selalu boolean: {{true}} atau {{false}}. Yang paling sering dipakai: {{===}} buat sama persis termasuk tipenya, {{!==}} buat nggak sama persis, {{>}} buat lebih besar, {{<}} buat lebih kecil, {{>=}}, dan {{<=}}. Kalau dibandingkan pakai {{=}} biasa, hasilnya {{true}}, bukan angka 1 atau 0.`,
     [
       {
         t: 'Sama atau tidak sama',
@@ -866,15 +974,18 @@ console.log(nilai <= 78);  // true
 console.log(nilai != 78);  // false`,
       },
     ],
-    'Selalu pakai === dan !==. Dua tanda sama dengan sering bikin bug yang susah dicari.',
+    {
+      tip: 'Selalu pakai === dan !==. Dua tanda sama dengan sering bikin bug yang susah dicari.',
+      analogy: 'Kayak ngecek ID di gerbang: yang sama persis boleh lewat, yang nomornya kebetulan sama tapi beda jenis tetap ditolak.',
+    },
   ),
   mk(
     'w-logika',
     'Alur Program',
     'Operator Logika',
     '&&, ||, dan !',
-    'logika,logical,and,or,not,kondisi,boolean,gabungan',
-    `Operator logika menggabungkan beberapa kondisi. && berarti dan, jadi kedua sisi harus benar. || berarti atau, jadi cukup satu sisi benar. ! berarti bukan, yaitu membalik nilai boolean. Hasilnya juga boolean, jadi true atau false.`,
+    'logika,logical,and,or,not,kondisi,boolean,gabungan,gabung',
+    `Operator logika nggabungin beberapa kondisi. {{&&}} berarti dan, jadi dua-duanya harus benar. {{||}} berarti atau, jadi cukup satu sisi benar. {{!}} berarti bukan, yaitu membalik nilai boolean. Hasilnya juga boolean, jadi {{true}} atau {{false}}.`,
     [
       {
         t: '&&: dua-duanya harus benar',
@@ -902,29 +1013,35 @@ console.log(!username);   // true, username memang kosong
 console.log(!(20 > 17));  // kebalikan dari hasil perbandingan`,
       },
     ],
-    '&& dipakai buat menggabungkan dua syarat yang keduanya wajib terpenuhi.',
+    {
+      tip: '&& dipakai buat menggabungkan dua syarat yang keduanya wajib terpenuhi.',
+      analogy: 'Kayak syarat masuk: dua-duanya harus bener (&&), atau salah satu aja cukup (||).',
+    },
   ),
   mk(
     'w-if',
     'JavaScript',
     'if / else',
     'Mengambil keputusan',
-    'if,else,kondisi,percabangan,keputusan,jika,sama dengan,lebih besar',
-    `if menjalankan kode hanya kalau kondisinya benar. else dijalankan kalau tidak. Perbandingan yang sering dipakai: === (sama persis), !== (tidak sama), >, <, >=, <=.`,
+    'if,else,kondisi,percabangan,keputusan,jika,sama dengan,lebih besar,keputusan',
+    `{{if}} ngejalanin kode cuma kalau kondisinya benar. {{else}} jalan kalau nggak. Perbandingan yang sering dipakai: {{===}}, {{!==}}, {{>}}, {{<}}, {{>=}}, {{<=}}.`,
     [
       {
         t: 'Cek nilai',
         j: 'const nilai = 78;\n\nif (nilai >= 85) {\n  console.log("A");\n} else if (nilai >= 70) {\n  console.log("B");\n} else {\n  console.log("Belajar lagi ya");\n}',
       },
     ],
+    {
+      analogy: 'Kayak ujian: kalau nilainya memenuhi syarat, baru lanjut; kalau nggak, jalur lain yang dipilih.',
+    },
   ),
   mk(
     'w-loop',
     'JavaScript',
     'Perulangan: for dan while',
     'Mengulang kode',
-    'loop,for,perulangan,ulang,while,iterasi,of,break,continue',
-    `Perulangan menjalankan kode berkali-kali. for klasik punya tiga bagian: awal, syarat lanjut, dan langkah. while mengulang selama kondisinya masih benar, dipakai saat banyaknya perulangan tidak diketahui dari awal. for...of lebih enak untuk menelusuri isi array. break menghentikan perulangan, continue melewati sisa badan perulangan lalu lanjut ke giliran berikutnya.`,
+    'loop,for,perulangan,ulang,while,iterasi,of,break,continue,ngulang',
+    `Perulangan ngejalanin kode berkali-kali. {{for}} klasik punya tiga bagian: awal, syarat lanjut, dan langkah. {{while}} ngulang selama kondisinya masih benar, dipakai saat banyaknya perulangan nggak diketahui dari awal. {{for...of}} lebih enak buat nelusuri isi array. {{break}} menghentikan, {{continue}} lewati sisa badan perulangan lalu lanjut giliran berikutnya.`,
     [
       { t: 'for klasik', j: 'for (let i = 0; i < 5; i++) {\n  console.log("Putaran", i);\n}' },
       {
@@ -948,15 +1065,18 @@ while (sisa > 0) {
 console.log("Selesai");`,
       },
     ],
-    'for untuk jumlah perulangan yang sudah jelas, while untuk yang bergantung pada kondisi.',
+    {
+      tip: 'for untuk jumlah perulangan yang sudah jelas, while untuk yang bergantung pada kondisi.',
+      analogy: 'Kayak jalanin ojek online: tiap kali belok kamu cek "masih lanjut nggak?" — ya lanjut, nggak ya berhenti.',
+    },
   ),
   mk(
     'w-error',
     'Alur Program',
     'Error Handling: try dan catch',
-    'Menangani error agar program tidak berhenti',
-    'error,handling,try,catch,finally,throw,exception,galat,kesalahan',
-    `Kalau ada baris kode yang gagal, biasanya program langsung berhenti di situ. try dan catch dipakai untuk menangkap error itu supaya program tetap lanjut. Kode di dalam try dicoba, dan kalau gagal, error-nya ditangkap di catch. finally selalu dijalankan baikpun terjadi error atau tidak. Error juga bisa dibuat sendiri dengan throw.`,
+    'Menangani error biar program nggak berhenti',
+    'error,handling,try,catch,finally,throw,exception,galat,kesalahan,error handling',
+    `Kalau ada baris kode yang gagal, biasanya program langsung berhenti di situ. {{try}} dan {{catch}} dipakai buat nangkap error itu supaya program tetap jalan. Kode di dalam {{try}} dicoba, kalau gagal error-nya ditangkap di {{catch}}. {{finally}} selalu jalan baikpun error atau nggak. Error juga bisa dibuat sendiri pakai {{throw}}.`,
     [
       {
         t: 'Menangkap error',
@@ -988,7 +1108,10 @@ try {
 }`,
       },
     ],
-    'Error yang belum tertangkap akan muncul di panel Problems, lengkap dengan nomor barisnya.',
+    {
+      tip: 'Error yang belum tertangkap akan muncul di panel Problems, lengkap dengan nomor barisnya.',
+      analogy: 'Kayak pasang jaring pengaman: satu kejatuhan nggak bikin seluruh acara kacau.',
+    },
   ),
   // ---------- Python ----------
   mk(
@@ -996,8 +1119,8 @@ try {
     'JavaScript',
     'Fungsi: membuat dan memanggil',
     'Kode yang bisa dipakai berulang',
-    'fungsi,function,panggil,memanggil,arrow,nama,resep',
-    `Fungsi itu resep yang diberi nama. Kamu tulis sekali, lalu panggil kapan saja dengan menulis namanya dan tanda kurung. Topik terpisah membahas dua hal penting dari fungsi: parameter (topik "Parameter dan Argumen") dan return (topik "Return: mengembalikan nilai").`,
+    'fungsi,function,panggil,memanggil,arrow,nama,resep,fungsi dasar',
+    `Fungsi itu resep yang diberi nama. Kamu tulis sekali, terus panggil kapan aja dengan nulis namanya plus tanda kurung. Dua topik terpisah bahas detailnya: parameter (Parameter dan Argumen) sama return (Return: mengembalikan nilai).`,
     [
       {
         t: 'Membuat dan memanggil',
@@ -1014,15 +1137,18 @@ const pesan = sapa;   // fungsi disimpan di variabel
 console.log(pesan("Sari"));`,
       },
     ],
-    'Arrow function (a, b) => a * b adalah cara penulisan singkat untuk function dengan satu return.',
+    {
+      tip: 'Arrow function (a, b) => a * b adalah cara penulisan singkat untuk function dengan satu return.',
+      analogy: 'Kayak resep rahasia: bahan dan langkahnya ditulis sekali, tinggal dieksekusi kapan aja.',
+    },
   ),
   mk(
     'w-parameter',
     'Fungsi dan Data',
     'Parameter dan Argumen',
     'Nilai yang diterima fungsi saat dipanggil',
-    'parameter,argumen,argumen,default,nilai,wajib,fungsi,parameter wajib',
-    `Parameter adalah nama variabel yang ditulis di dalam kurung kurung saat fungsi dibuat. Argumen adalah nilai yang kamu berikan saat fungsi itu dipanggil. Jumlah parameter dan argumen boleh beda: argumen yang kurang akan bernilai undefined, dan argumen yang lebih akan diabaikan. Parameter juga bisa punya nilai bawaan (default) yang dipakai kalau argumennya tidak diberikan.`,
+    'parameter,argumen,argumen,default,nilai,wajib,fungsi,parameter wajib,input fungsi',
+    `Parameter itu nama variabel yang ditulis di dalam kurung kurung waktu fungsi dibuat. Argumen itu nilai yang kamu kasih saat fungsi dipanggil. Jumlahnya boleh beda: argumen yang kurang bernilai {{undefined}}, yang lebih diabaikan. Parameter juga bisa punya nilai bawaan (default) yang dipakai kalau argumennya nggak diberikan.`,
     [
       {
         t: 'Parameter menerima argumen',
@@ -1035,7 +1161,7 @@ console.log(sapa("Budi"));          // "undefined, Budi!"`,
       },
       {
         t: 'Nilai bawaan (default parameter)',
-        n: 'Kalau argumennya tidak diberikan, yang dipakai adalah nilai bawaannya.',
+        n: 'Kalau argumennya nggak diberikan, yang dipakai adalah nilai bawaannya.',
         j: `function greet(nama = "Teman") {
   return "Halo, " + nama + "!";
 }
@@ -1044,15 +1170,18 @@ console.log(greet("Sari"));  // "Halo, Sari!"
 console.log(greet());        // "Halo, Teman!"`,
       },
     ],
-    'Beri nilai bawaan untuk parameter yang jarang diisi, supaya pemanggil tidak perlu mengingat urutan argumen.',
+    {
+      tip: 'Beri nilai bawaan untuk parameter yang jarang diisi, supaya pemanggil tidak perlu mengingat urutan argumen.',
+      analogy: 'Kayak order ojol: parameter itu kolom yang harus diisi (nasi, sambal), argumen isi pesanannya.',
+    },
   ),
   mk(
     'w-return',
     'Fungsi dan Data',
     'Return: mengembalikan nilai',
     'Nilai yang dikirim balik dari fungsi',
-    'return,mengembalikan,nilai balik,kirim balik,fungsi,hasil',
-    `return dipakai di dalam fungsi untuk mengembalikan nilai ke tempat pemanggil. Begitu return dijalankan, baris kode di bawahnya di fungsi itu dilewati, dan nilai tersebut bisa langsung dipakai untuk perhitungan atau disimpan di variabel. Fungsi yang tidak punya return akan mengembalikan undefined.`,
+    'return,mengembalikan,nilai balik,kirim balik,fungsi,hasil,kembalikan',
+    `{{return}} dipakai di dalam fungsi buat ngebalikin nilai ke tempat pemanggil. Begitu {{return}} jalan, baris di bawahnya dilewati, dan nilainya bisa langsung dipakai buat ngitung atau disimpen di variabel. Fungsi yang nggak punya {{return}} bakal balikin {{undefined}}.`,
     [
       {
         t: 'Mengembalikan nilai',
@@ -1066,7 +1195,7 @@ console.log("Luasnya " + luas(2, 3) + " meter persegi");`,
       },
       {
         t: 'Return menghentikan fungsi',
-        n: 'Kode di bawah return tidak dijalankan.',
+        n: 'Kode di bawah return nggak dijalankan.',
         j: `function cekUmur(umur) {
   if (umur < 0) {
     return "Umur tidak valid";
@@ -1082,15 +1211,18 @@ console.log(cekUmur(15));  // "Masih anak"
 console.log(cekUmur(20));  // "Dewasa"`,
       },
     ],
-    'Satu fungsi idealnya punya satu jalur return. Kalau butuh beberapa, pisahkan fungsinya.',
+    {
+      tip: 'Satu fungsi idealnya punya satu jalur return. Kalau butuh beberapa, pisahkan fungsinya.',
+      analogy: 'Kayak ojol yang diantar ke meja: pesanannya udah ketemu, jadi driver nggak perlu jalan lagi.',
+    },
   ),
   mk(
     'w-scope',
     'Fungsi dan Data',
     'Scope: cakupan variabel',
     'Global, lokal, dan scope blok',
-    'scope,cakupan,global,lokal,local,blok,block,var,let,const,shadowing,akses',
-    `Scope menentukan di mana sebuah variabel bisa dibaca. Variabel yang dibuat di luar fungsi punya scope global dan bisa diakses dari mana saja. Variabel yang dibuat di dalam fungsi punya scope lokal dan hanya hidup di fungsi itu. Karena itu, fungsi biasanya menulis variabel dengan let atau const di dalam dirinya sendiri, bukan var, supaya tidak menimpa variabel global.`,
+    'scope,cakupan,global,lokal,local,blok,block,var,let,const,shadowing,akses,lingkungan',
+    `Scope nentuin di mana sebuah variabel bisa dibaca. Variabel yang dibuat di luar fungsi punya scope global, bisa diakses dari mana aja. Yang dibuat di dalam fungsi punya scope lokal dan cuma hidup di fungsi itu. Makanya fungsi biasanya nulis variabel dengan {{let}} atau {{const}} di dalam dirinya sendiri, bukan {{var}}, biar nggak menimpa variabel global.`,
     [
       {
         t: 'Global dan lokal',
@@ -1107,7 +1239,7 @@ console.log(typeof pesan);  // "undefined", di luar fungsi`,
       },
       {
         t: 'Scope blok dengan let',
-        n: 'let di dalam kurung kurawal if atau for hanya hidup di dalam blok itu.',
+        n: 'let di dalam kurung kurawal if atau for cuma hidup di dalam blok itu.',
         j: `if (true) {
   let khusus = "hanya di dalam blok";
   console.log(khusus);
@@ -1116,15 +1248,18 @@ console.log(typeof pesan);  // "undefined", di luar fungsi`,
 console.log(typeof khusus);  // "undefined", sudah di luar blok`,
       },
     ],
-    'Kalau variabel dalam fungsi dan variabel global punya nama sama, yang di dalam fungsi yang menang.',
+    {
+      tip: 'Kalau variabel dalam fungsi dan variabel global punya nama sama, yang di dalam fungsi yang menang.',
+      analogy: 'Kayak obrolan di grup WhatsApp: pesan di grup kecil cuma keliatan di situ, yang di grup besar keliatan semua orang.',
+    },
   ),
   mk(
     'w-array',
     'JavaScript',
     'Array: membuat dan mengakses',
     'Daftar nilai dalam kurung siku',
-    'array,daftar,list,kurung siku,index,indeks,length,urutan,isi,elemen',
-    `Array adalah daftar nilai dalam kurung siku. Nomor urutannya (index) mulai dari 0, jadi elemen pertama dibaca dengan tanda kurung siku dan angka 0. Panjang array dicek dengan length. Array juga bisa berisi nilai campuran, dan nilai di dalam array bisa diubah langsung lewat nomor urutnya.`,
+    'array,daftar,list,kurung siku,index,indeks,length,urutan,isi,elemen,daftar nilai',
+    `Array itu daftar nilai di dalam kurung siku. Nomor urutannya (index) mulai dari 0, jadi elemen pertama dibaca pakai kurung siku dan angka 0. Panjangnya dicek pakai {{length}}. Isinya boleh campuran, dan nilai di dalamnya bisa diubah langsung lewat nomor urutnya.`,
     [
       {
         t: 'Membuat dan mengakses array',
@@ -1147,15 +1282,18 @@ const campuran = ["apel", 5, true, null];
 console.log(campuran[2]);  // true`,
       },
     ],
-    'Index dimulai dari 0, jadi elemen terakhir dari array sepanjang 5 ada di index 4.',
+    {
+      tip: 'Index dimulai dari 0, jadi elemen terakhir dari array sepanjang 5 ada di index 4.',
+      analogy: 'Kayak loker sekolah: nomornya mulai dari 0, jadi loker pertama bukan nomor 1 tapi nomor 0.',
+    },
   ),
   mk(
     'w-array-lanjut',
     'Fungsi dan Data',
     'Array Methods',
     'push, pop, shift, unshift, slice, splice, find, forEach',
-    'array methods,metode array,push,pop,shift,unshift,slice,splice,find,foreach,includes,join,reverse',
-    `Array punya banyak method bawaan untuk mengolah isinya. push menambah item di belakang, pop mengambil lalu menghapus item terakhir, shift menghapus item pertama, unshift menyisipkan item di depan. slice mengambil potongan array tanpa mengubah aslinya, splice memotong array dan bisa menyisipkan item baru. find mencari satu item pertama yang cocok, forEach menjalankan fungsi untuk tiap item, dan join menggabungkan semua isi array jadi teks.`,
+    'array methods,metode array,push,pop,shift,unshift,slice,splice,find,foreach,includes,join,reverse,metode array',
+    `Array punya banyak method bawaan buat ngolah isinya. {{push}} nambah item di belakang, {{pop}} mengambil lalu menghapus item terakhir, {{shift}} menghapus item pertama, {{unshift}} nyisip di depan. {{slice}} ambil potongan tanpa ngubah aslinya, {{splice}} motong array dan bisa nyisip item baru. {{find}} cari satu item pertama yang cocok, {{forEach}} jalanin fungsi buat tiap item, {{join}} gabungin semua isinya jadi teks.`,
     [
       {
         t: 'Menambah dan menghapus item',
@@ -1180,15 +1318,18 @@ const kaliDua = angka.map((n) => n * 2);
 console.log(kaliDua);`,
       },
     ],
-    'map, filter, dan forEach selalu mengembalikan array baru, jadi array aslinya tidak berubah.',
+    {
+      tip: 'map, filter, dan forEach selalu mengembalikan array baru, jadi array aslinya tidak berubah.',
+      analogy: 'Kayak nyusun playlist: tambah lagu di akhir, hapus lagu pertama, atau biarin shuffle nentuin urutannya.',
+    },
   ),
   mk(
     'w-object',
     'Fungsi dan Data',
     'Object',
     'Key-value dan properti objek',
-    'object,objek,kurung kurawal,key,nilai,properti,property,member,this',
-    `Object menyimpan data berpasangan: kunci dan nilainya, ditulis di dalam kurung kurawal. Kalau array memakai nomor urut sebagai kunci, object memakai nama. Properti object bisa dibaca pakai titik (objek.nama) atau kurung siku (objek["nama"]). Nilai di dalam object bisa berupa teks, angka, array, atau object lain, dan object juga bisa punya method, yaitu fungsi yang disimpan sebagai propertinya.`,
+    'object,objek,kurung kurawal,key,nilai,properti,property,member,this,objek data',
+    `Object nyimpen data berpasangan: kunci dan nilainya, ditulis di dalam kurung kurawal. Kalau array pakai nomor urut sebagai kunci, object pakai nama. Properitinya dibaca pakai titik ({{objek.nama}}) atau kurung siku ({{objek["nama"]}}). Isinya bisa teks, angka, array, atau object lain, dan object juga bisa punya method — fungsi yang disimpan sebagai propertinya.`,
     [
       {
         t: 'Membuat dan membaca object',
@@ -1218,15 +1359,18 @@ console.log(siswa.kelas);
 console.log(siswa.sapa());`,
       },
     ],
-    'this di dalam method berarti object itu sendiri, jadi this.nama adalah nilai properti nama.',
+    {
+      tip: 'this di dalam method berarti object itu sendiri, jadi this.nama adalah nilai properti nama.',
+      analogy: 'Kayak kartu identitas: ada nama (kunci) dan ada isinya (nilai), tinggal buka buat lihat.',
+    },
   ),
   mk(
     'w-dom',
     'JavaScript',
     'DOM: perkenalan',
     'Cara JavaScript melihat halaman',
-    'dom,document,element,elemen,halaman,node,struktur,pohon',
-    `DOM adalah singkatan dari Document Object Model, yaitu cara JavaScript melihat isi halaman sebagai objek-objek yang bisa diubah. Setiap tag HTML di halaman dianggap satu elemen, dan elemen itu punya properti (teks, atribut, gaya) serta method. document adalah objek yang mewakili seluruh halaman, dan di bawahnya elemen-elemen halaman bisa dicari lalu diubah.`,
+    'dom,document,element,elemen,halaman,node,struktur,pohon,dom dasar',
+    `DOM itu singkatan dari Document Object Model — cara JavaScript melihat isi halaman sebagai objek-objek yang bisa diubah. Setiap tag HTML dianggap satu elemen, dan elemen itu punya properti (teks, atribut, gaya) plus method. {{document}} adalah objek yang mewakili seluruh halaman, dan di bawahnya elemen-elemennya bisa dicari lalu diubah.`,
     [
       {
         t: 'Melihat isi halaman dari Console',
@@ -1235,15 +1379,18 @@ console.log(siswa.sapa());`,
         j: 'console.log(document.title);\nconsole.log(document.querySelectorAll("p").length);\nconsole.log(document.body.innerText);',
       },
     ],
-    'Topik berikutnya membahas cara mencari elemen dan cara mengubah teks, atribut, class, serta gayanya.',
+    {
+      tip: 'Topik berikutnya membahas cara mencari elemen dan cara mengubah teks, atribut, class, serta gayanya.',
+      analogy: 'Kayak pohon hidup yang bisa kamu sentuh: awalnya cuma gambar di kertas, sekarang bisa dicabut, dipindah, diganti.',
+    },
   ),
   mk(
     'w-dom-select',
     'Interaksi Halaman',
     'DOM: memilih elemen',
     'getElementById, querySelector, querySelectorAll',
-    'dom,getelementbyid,queryselector,queryselectorall,memilih,elemen,selector,class,id',
-    `DOM memberi JavaScript cara menemukan elemen di halaman. document.getElementById("nama") mencari elemen berdasarkan id-nya, hasilnya satu elemen. document.querySelector("selector") juga mengembalikan satu elemen, yaitu yang pertama cocok, dan selector-nya bisa nama tag, class, atau id. document.querySelectorAll("selector") mengembalikan semua elemen yang cocok, dan hasilnya berupa array-like yang bisa dilalui pakai forEach.`,
+    'dom,getelementbyid,queryselector,queryselectorall,memilih,elemen,selector,class,id,mencari elemen',
+    `DOM kasih JavaScript cara nemuin elemen di halaman. {{document.getElementById("nama")}} nyari elemen berdasarkan id, hasilnya satu. {{document.querySelector()}} juga balikin satu elemen, yaitu yang pertama cocok, dan selector-nya bisa nama tag, class, atau id. {{document.querySelectorAll()}} balikin semua yang cocok, hasilnya kayak array yang bisa dilelani pakai {{forEach}}.`,
     [
       {
         t: 'getElementById dan querySelector',
@@ -1266,15 +1413,18 @@ semua.forEach((item, i) => {
 });`,
       },
     ],
-    'Selector querySelectorAll memakai cara penulisan yang sama dengan CSS: tag, .class, atau #id.',
+    {
+      tip: 'Selector querySelectorAll memakai cara penulisan yang sama dengan CSS: tag, .class, atau #id.',
+      analogy: 'Kayak nyari teman di kelas: ada yang dipanggil nama (id), ada yang dicari dari cirinya (class), ada yang dicek semua (querySelectorAll).',
+    },
   ),
   mk(
     'w-dom-manipulasi',
     'Interaksi Halaman',
     'DOM: mengubah elemen',
     'Teks, atribut, class, dan style',
-    'dom,textcontent,innerhtml,setattribute,getattribute,classlist,classname,style,mengubah,atribut',
-    `Setelah elemen ketemu, isinya bisa diubah. textContent mengganti isi teks element dan selalu aman karena isinya diperlakukan sebagai teks biasa, sedangkan innerHTML bisa memasukkan HTML baru, jadi jangan dipakai kalau datanya berasal dari pengguna. Atribut diubah dengan setAttribute dan dibaca dengan getAttribute. Untuk class, pakai classList.add dan classList.remove, dan untuk gaya langsung tulis lewat properti style.`,
+    'dom,textcontent,innerhtml,setattribute,getattribute,classlist,classname,style,mengubah,atribut,mengubah elemen',
+    `Setelah elemen ketemu, isinya bisa diubah. {{textContent}} ganti isi teks dan selalu aman karena isinya dianggap teks biasa, sedangkan {{innerHTML}} bisa masang HTML baru, jadi jangan dipake kalo datanya dari pengguna. Atribut diubah pakai {{setAttribute}} dan dibaca pakai {{getAttribute}}. Buat class, pake {{classList.add}} dan {{classList.remove}}, buat style langsung tulis lewat properti {{style}}.`,
     [
       {
         t: 'Mengubah teks, atribut, dan class',
@@ -1300,15 +1450,18 @@ kotak.style.padding = "16px";
 kotak.style.borderRadius = "8px";`,
       },
     ],
-    'Kotak yang dibuat JavaScript bisa dihapus dengan remove(), dan ditambahkan ke halaman dengan append().',
+    {
+      tip: 'Kotak yang dibuat JavaScript bisa dihapus dengan remove(), dan ditambahkan ke halaman dengan append().',
+      analogy: 'Kayak ngedit naskah: kamu bisa ganti teksnya (textContent) atau benerin format markup-nya (innerHTML) — tapi beware kalau isinya dari orang lain.',
+    },
   ),
   mk(
     'w-event',
     'JavaScript',
     'Event: addEventListener dasar',
     'Bereaksi saat diklik',
-    'event,click,klik,addeventlistener,tombol,interaktif,listener,menunggu,aksi',
-    `addEventListener membuat elemen menunggu sebuah aksi, misalnya klik, lalu menjalankan fungsi saat aksi itu terjadi. Elemennya dituliskan, nama aksinya, lalu fungsi yang dijalankan saat aksi itu terjadi. Topik berikutnya membahas jenis event lainnya dan objek event.`,
+    'event,click,klik,addeventlistener,tombol,interaktif,listener,menunggu,aksi,event dasar',
+    `{{addEventListener}} bikin elemen nungguin sebuah aksi, misalnya klik, terus jalanin fungsi pas aksi itu terjadi. Kamu tulis elemennya, nama aksinya, lalu fungsinya. Topik berikutnya bahas jenis event lain dan objek event.`,
     [
       {
         t: 'Penghitung klik',
@@ -1317,7 +1470,10 @@ kotak.style.borderRadius = "8px";`,
         j: 'const btn = document.getElementById("btn");\nconst out = document.getElementById("out");\nlet n = 0;\n\nbtn.addEventListener("click", () => {\n  n = n + 1;\n  out.textContent = "Diklik " + n + " kali";\n  console.log("klik ke-" + n);\n});',
       },
     ],
-    'Satu elemen bisa punya beberapa listener, satu untuk tiap jenis event.',
+    {
+      tip: 'Satu elemen bisa punya beberapa listener, satu untuk tiap jenis event.',
+      analogy: 'Kayak kasir yang nungguin tombol "bayar": belum ada yang ditekan dia diem, ditekan barus dia gerak.',
+    },
   ),
 
   mk(
@@ -1325,8 +1481,8 @@ kotak.style.borderRadius = "8px";`,
     'Interaksi Halaman',
     'Event: berbagai jenis dan event object',
     'input, change, keydown, submit, preventDefault',
-    'event,addeventlistener,event object,preventdefault,keydown,input,change,submit,blur,target,currenttarget',
-    `addEventListener bukan cuma untuk klik. Nama event bisa berupa input (setiap ketikan), change (nilai akhirnya berubah), keydown (tombol ditekan), submit (form dikirim), atau focus dan blur. Fungsi yang dibuat bisa menerima satu objek event, isinya antara lain event.target (elemen yang dikenai) dan event.preventDefault() untuk membatalkan perilaku bawaan, misalnya supaya halaman tidak berpindah saat form dikirim. Listener juga bisa dihapus dengan removeEventListener.`,
+    'event,addeventlistener,event object,preventdefault,keydown,input,change,submit,blur,target,currenttarget,jenis event',
+    `{{addEventListener}} nggak cuma buat klik. Nama event bisa {{input}} (setiap ketikan), {{change}} (nilai akhirnya berubah), {{keydown}} (tombol ditekan), {{submit}} (form dikirim), atau {{focus}} dan {{blur}}. Fungsinya bisa menerima satu objek event, isinya antara lain {{event.target}} (elemen yang dikenai) dan {{event.preventDefault()}} buat membatalkan perilaku bawaan, misalnya supaya halaman nggak berpindah pas form dikirim. Listener juga bisa dihapus pakai {{removeEventListener}}.`,
     [
       {
         t: 'Event input dan keydown',
@@ -1357,304 +1513,21 @@ form.addEventListener("submit", (e) => {
 });`,
       },
     ],
-    'Gunakan e.target.value buat mengambil isi input, dan e.preventDefault() buat menahan submit bawaan.',
-  ),
-  mk(
-    'p-print',
-    'Dasar Python',
-    'print: menampilkan teks',
-    'Cara paling dasar melihat hasil',
-    'print,tampil,output,cetak,teks,hello,komentar',
-    `print() menampilkan sesuatu ke terminal. Teks ditulis dalam tanda kutip. Baris yang diawali # adalah komentar, diabaikan Python dan dipakai untuk catatan.`,
-    [
-      {
-        t: 'Hello, Python',
-        p: '# ini komentar\nprint("Halo, dunia!")\nprint("Aku belajar Python")\nprint(2 + 3)',
-      },
-    ],
-  ),
-  mk(
-    'p-variabel',
-    'Dasar Python',
-    'Variabel',
-    'Nama yang menunjuk ke nilai',
-    'variabel,nama,simpan,nilai,assign',
-    `Variabel adalah nama yang menunjuk ke sebuah nilai. Tanda = berarti simpan nilai ini, bukan sama dengan seperti di matematika. Nilainya boleh diganti kapan saja.`,
-    [
-      {
-        t: 'Menyimpan nilai',
-        p: 'nama = "Udin"\numur = 10\n\nprint(nama)\nprint(umur)\nprint(nama, "berumur", umur, "tahun")\n\numur = umur + 1\nprint("Setahun lagi:", umur)',
-      },
-    ],
-  ),
-  mk(
-    'p-tipe',
-    'Dasar Python',
-    'Tipe data dan operator',
-    'int, float, str, bool dan hitungan',
-    'tipe data,int,float,str,bool,angka,teks,operator,tambah,bagi,modulo,type,pangkat',
-    `Nilai punya jenis: int (bilangan bulat), float (desimal), str (teks), dan bool (True atau False). Operator hitungnya + - * /, lalu ** untuk pangkat, // untuk bagi bulat, dan % untuk sisa bagi.`,
-    [
-      {
-        t: 'Cek jenis nilai',
-        p: 'print(type(7))\nprint(type(3.14))\nprint(type("halo"))\nprint(type(True))',
-      },
-      {
-        t: 'Hitung-hitungan',
-        p: 'print(10 + 3)\nprint(10 / 4)    # 2.5\nprint(10 // 4)   # 2\nprint(10 % 4)    # 2 (sisa bagi)\nprint(2 ** 5)    # 32',
-      },
-    ],
-  ),
-  mk(
-    'p-string',
-    'Dasar Python',
-    'String dan f-string',
-    'Mengolah teks',
-    'string,teks,f-string,format,upper,lower,len,panjang,gabung,huruf besar',
-    `String adalah teks. Beberapa trik umum: upper() jadi huruf besar, lower() huruf kecil, len() menghitung panjang. f-string (diawali f) membolehkan menyisipkan variabel ke dalam teks dengan kurung kurawal.`,
-    [
-      {
-        t: 'Trik string',
-        p: 'kata = "Python"\nprint(kata.upper())\nprint(kata.lower())\nprint(len(kata))\nprint(kata[0])   # huruf pertama',
-      },
-      { t: 'f-string', p: 'nama = "Sari"\numur = 17\nprint(f"{nama} berumur {umur} tahun")' },
-    ],
-  ),
-  mk(
-    'p-kondisi',
-    'Dasar Python',
-    'if / elif / else',
-    'Mengambil keputusan',
-    'if,elif,else,kondisi,percabangan,jika,indentasi,bandingkan',
-    `Python memeriksa kondisi dari atas ke bawah dan menjalankan blok pertama yang benar. Perhatikan indentasi (geser ke dalam) di blok. Itu bukan hiasan, itu aturan Python.`,
-    [
-      {
-        t: 'Cek nilai',
-        p: 'nilai = 78\n\nif nilai >= 85:\n    print("A")\nelif nilai >= 70:\n    print("B")\nelse:\n    print("Perlu belajar lagi")',
-      },
-    ],
-    'Perbandingan sama dengan ditulis ==, bukan =. Satu = itu untuk menyimpan nilai.',
-  ),
-  mk(
-    'p-list',
-    'Dasar Python',
-    'List',
-    'Daftar nilai',
-    'list,daftar,array,append,len,index,isi,urutan',
-    `List adalah daftar nilai dalam kurung siku. Nomor urutannya (index) mulai dari 0. append menambah item di belakang, len memberi jumlah item.`,
-    [
-      {
-        t: 'Dasar list',
-        p: 'buah = ["apel", "jeruk"]\nbuah.append("mangga")\n\nprint(buah[0])\nprint(len(buah))\nprint(buah)',
-      },
-    ],
-  ),
-  mk(
-    'p-loop',
-    'Dasar Python',
-    'Perulangan for dan while',
-    'Mengulang kode',
-    'for,while,loop,perulangan,range,ulang,iterasi',
-    `for mengulang blok kode untuk setiap item. range(n) menghasilkan angka dari 0 sampai n-1. while mengulang selama kondisinya masih benar.`,
-    [
-      {
-        t: 'for dan range',
-        p: 'for i in range(5):\n    print("Putaran", i)\n\nbuah = ["apel", "jeruk", "mangga"]\nfor b in buah:\n    print(b.upper())',
-      },
-      {
-        t: 'while',
-        p: 'hitung = 3\nwhile hitung > 0:\n    print(hitung)\n    hitung = hitung - 1\nprint("Selesai!")',
-      },
-    ],
-  ),
-  mk(
-    'p-dict',
-    'Dasar Python',
-    'Dictionary',
-    'Data berpasangan kunci dan nilai',
-    'dictionary,dict,kamus,kunci,nilai,key,value,pasangan,kurung kurawal',
-    `Dictionary menyimpan data berpasangan: kunci dan nilainya, ditulis dalam kurung kurawal. Ambil nilai lewat kuncinya, mirip membuka kamus.`,
-    [
-      {
-        t: 'Menyimpan dan membaca',
-        p: 'siswa = {"nama": "Sari", "umur": 17}\n\nprint(siswa["nama"])\nsiswa["kelas"] = "XI"\nprint(siswa)\n\nfor kunci in siswa:\n    print(kunci, "=", siswa[kunci])',
-      },
-    ],
-  ),
-  mk(
-    'p-fungsi',
-    'Dasar Python',
-    'Fungsi (def)',
-    'Kode yang bisa dipakai berulang',
-    'fungsi,def,return,parameter,argumen,panggil,function',
-    `Fungsi itu resep yang diberi nama. Tulis sekali pakai def, panggil kapan saja. Fungsi bisa menerima bahan (parameter) dan mengembalikan hasil lewat return.`,
-    [
-      {
-        t: 'Membuat fungsi',
-        p: 'def sapa(nama):\n    return "Halo, " + nama + "!"\n\nprint(sapa("Sari"))\nprint(sapa("Budi"))',
-      },
-      {
-        t: 'Dua parameter',
-        p: 'def luas(panjang, lebar):\n    return panjang * lebar\n\nprint(luas(4, 5))',
-      },
-    ],
+    {
+      tip: 'Gunakan e.target.value buat mengambil isi input, dan e.preventDefault() buat menahan submit bawaan.',
+      analogy: 'Kayak kasir yang nggak cuma nunggu tombol bayar, tapi juga ngerti orang mau ganti ukuran dulu sebelum bayar.',
+    },
   ),
 ];
 
-// Materi Python tambahan ada di lib/content-python.ts
+// Materi Python ada di lib/content-python.ts
 for (const l of PY_LESSONS)
-  lessons.push(mk(l.id, l.group, l.title, l.desc, l.kw, l.text, l.ex, l.tip));
-
-// Penanda kode di dalam penjelasan: istilah di daftar ini otomatis tampil sebagai `kode` (ditulis {{istilah}}).
-const CODE_TERMS: Record<string, string[]> = {
-  'w-struktur': ['<p>', '</p>', '<html>', '<head>', '<body>', '<', '>'],
-  'w-teks': ['h1', 'h6', 'p', 'strong', 'em', 'br'],
-  'w-daftar': ['ul', 'ol', 'li'],
-  'w-link': ['a', 'href', 'img', 'src', 'alt'],
-  'w-form': ['button', 'input', 'type', 'text', 'number', 'password', 'label'],
-  'w-div': ['div', 'span', 'class', 'id'],
-  'w-tabel': ['table', 'tr', 'th', 'td'],
-  'w-semantik': ['header', 'nav', 'main', 'section', 'footer', 'article', 'aside'],
-  'w-atribut': ['href', 'src', 'alt', 'target', 'type', 'value', 'required', 'disabled'],
-  'w-form-input': ['form', 'input', 'textarea', 'select', 'option', 'label', 'name', 'required', 'placeholder'],
-  'w-button-submit': ['button', 'submit', 'reset', 'type', 'form', 'action', 'method', 'addEventListener', 'preventDefault'],
-  'w-audio-video': ['audio', 'video', 'controls', 'source', 'autoplay', 'loop', 'muted'],
-  'w-selector': ['p', '.nama', '#nama', 'class', 'id'],
-  'w-warna': ['color', 'background', 'red', '#2347e8', 'rgb(35, 71, 232)'],
-  'w-font': [
-    'font-size',
-    'font-weight',
-    'font-family',
-    'text-align',
-    'line-height',
-    'left',
-    'center',
-    'right',
-  ],
-  'w-unit': ['px', '%', 'rem', 'em', 'vh', 'vw', 'font-size', 'html'],
-  'w-specificity': [
-    '!important',
-    'inline style',
-    'id',
-    'class',
-    'universal',
-    'specificity',
-    '#nama',
-    '.nama',
-  ],
-  'w-css-variabel': ['var()', ':root', 'CSS Variables'],
-  'w-padding': ['padding', 'margin', 'background'],
-  'w-margin': ['margin: 0 auto', 'margin', 'background'],
-  'w-border': ['border-radius', 'border', '50%'],
-  'w-size': ['width', 'height', 'max-width', 'px', '%'],
-  'w-overflow': [
-    'overflow',
-    'overflow-x',
-    'overflow-y',
-    'hidden',
-    'auto',
-    'scroll',
-    'visible',
-    'border-radius',
-  ],
-  'w-display': ['display', 'block', 'inline', 'none', 'div', 'p', 'span'],
-  'w-flex': ['display: flex', 'justify-content', 'align-items', 'gap'],
-  'w-flex-lanjut': [
-    'flex-direction',
-    'flex-wrap',
-    'display: flex',
-    'justify-content',
-    'align-items',
-    'flex',
-    'gap',
-    'grow',
-    'shrink',
-    'basis',
-  ],
-  'w-grid': ['grid-template-columns', 'grid-template-rows', 'display: grid', 'gap', 'fr'],
-  'w-responsive': ['@media', 'media query', 'max-width', 'min-width', 'breakpoint'],
-  'w-position': ['position', 'relative', 'absolute', 'top', 'left', 'right', 'bottom'],
-  'w-hover': [':hover', 'transition', 'transform'],
-  'w-pseudo-class': [
-    ':hover',
-    ':focus',
-    ':active',
-    ':first-child',
-    ':disabled',
-    '::before',
-    '::after',
-    'pseudo-class',
-    'pseudo-element',
-  ],
-  'w-log': ['console.log()'],
-  'w-variabel': ['const', 'let', '='],
-  'w-tipe': ['+ - * /', '+', 'true', 'false'],
-  'w-io': ['alert()', 'prompt()', 'confirm()', 'null', 'true', 'false'],
-  'w-banding': ['===', '!==', '>=', '<=', 'true', 'false'],
-  'w-logika': ['&&', '||', '!', 'true', 'false'],
-  'w-if': ['if', 'else', '===', '!==', '>=', '<=', '>', '<'],
-  'w-error': ['try', 'catch', 'finally', 'throw'],
-  'w-fungsi': ['function', 'return'],
-  'w-parameter': ['parameter', 'argumen', 'undefined'],
-  'w-return': ['return', 'undefined'],
-  'w-scope': ['scope', 'global', 'let', 'const'],
-  'w-array': ['length', 'index'],
-  'w-array-lanjut': ['push', 'pop', 'shift', 'unshift', 'slice', 'splice', 'find', 'forEach', 'includes'],
-  'w-object': ['this', 'object'],
-  'w-loop': ['for...of', 'for', 'while', 'break', 'continue'],
-  'w-dom': ['DOM'],
-  'w-dom-select': [
-    'getElementById',
-    'querySelector',
-    'querySelectorAll',
-    'class',
-    'id',
-  ],
-  'w-dom-manipulasi': [
-    'textContent',
-    'innerHTML',
-    'setAttribute',
-    'getAttribute',
-    'classList',
-    'style',
-  ],
-  'w-event': ['addEventListener', 'click'],
-  'w-event-lanjut': [
-    'addEventListener',
-    'preventDefault',
-    'event.target',
-    'input',
-    'change',
-    'keydown',
-    'submit',
-  ],
-  'p-print': ['print()', '#'],
-  'p-variabel': ['='],
-  'p-tipe': ['int', 'float', 'str', 'bool', 'True', 'False', '+ - * /', '**', '//', '%'],
-  'p-string': ['upper()', 'lower()', 'len()', 'f-string', 'f'],
-  'p-kondisi': ['if', 'elif', 'else', '==', '='],
-  'p-list': ['append', 'len'],
-  'p-loop': ['range(n)', 'n-1', 'for', 'while'],
-  'p-fungsi': ['def', 'return'],
-};
-const reEsc = (t: string) => t.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
-function mark(text: string | undefined, terms: string[] = []) {
-  if (!text || !terms.length) return text;
-  const re = new RegExp(
-    '(?<![\\w])(' +
-      [...terms]
-        .sort((a, b) => b.length - a.length)
-        .map(reEsc)
-        .join('|') +
-      ')(?![\\w])',
-    'gi',
+  lessons.push(
+    mk(l.id, l.group, l.title, l.desc, l.kw, l.text, l.ex, {
+      tip: l.tip,
+      analogy: l.analogy,
+    }),
   );
-  return text.replace(re, '{{$1}}');
-}
-for (const l of lessons) {
-  l.text = mark(l.text, CODE_TERMS[l.id])!;
-  l.tip = mark(l.tip, CODE_TERMS[l.id]);
-}
 
 // Kategori tiap topik (urutan kategori mengikuti CATEGORY_ORDER, urutan topik mengikuti urutan array lessons).
 const CATEGORY_ORDER: Record<Lang, string[]> = {
@@ -1725,15 +1598,6 @@ const CATEGORY: Record<string, string> = {
   'w-dom-manipulasi': 'Interaksi Halaman',
   'w-event': 'Interaksi Halaman',
   'w-event-lanjut': 'Interaksi Halaman',
-  'p-print': 'Dasar Python',
-  'p-variabel': 'Dasar Python',
-  'p-tipe': 'Dasar Python',
-  'p-string': 'Dasar Python',
-  'p-kondisi': 'Operator dan Kondisi',
-  'p-loop': 'Perulangan',
-  'p-list': 'Koleksi Data',
-  'p-dict': 'Koleksi Data',
-  'p-fungsi': 'Fungsi',
 };
 for (const l of lessons) l.group = CATEGORY[l.id] ?? l.group;
 const rank = (l: Lesson) => CATEGORY_ORDER[l.lang].indexOf(l.group);

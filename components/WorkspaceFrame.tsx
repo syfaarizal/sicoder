@@ -68,7 +68,7 @@ export default function WorkspaceFrame({
               container={box}
               orientation="vertical"
               className="hidden md:block"
-              label="Ubah lebar panel materi"
+              label="Geser buat ubah lebar panel materi"
               min={40}
               max={80}
               value={100 - pp.pct}

@@ -46,7 +46,7 @@ export default function TerminalView({
       style={style}
       onClick={() => input.current?.focus()}
     >
-      {blank && <div className="term-empty" aria-hidden="true"><span className="term-empty-icon">›_</span><b>Keluaran program tampil di sini</b><span>{empty}</span></div>}
+      {blank && <div className="term-empty" aria-hidden="true"><span className="term-empty-icon">›_</span><b>Hasil program nampil di sini</b><span>{empty}</span></div>}
       {term.lines.map((line, i) => (
         <span key={i}>
           {line.map((sp, j) => (
@@ -58,7 +58,7 @@ export default function TerminalView({
             <input
               ref={input}
               className="term-in"
-              aria-label="Masukan untuk program"
+              aria-label="Ketik jawaban buat program"
               autoComplete="off"
               spellCheck={false}
               onKeyDown={(e) => {

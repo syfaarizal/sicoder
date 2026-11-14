@@ -144,18 +144,18 @@ export default function MateriPage() {
             </div>
           ) : (
             <div className="mx-auto max-w-5xl">
-              <p className="kicker">// PILIH MATERI YANG PENGEN LO BACA</p>
+              <p className="kicker">// PILIH MATERI YANG PENGEN KAMU BACA</p>
               <h1 className="home-title" style={{ fontSize: 'clamp(28px, 5vw, 44px)' }}>
                 Materi {lang === 'web' ? 'Web Development' : 'Python'}
               </h1>
               <p className="home-intro" style={{ marginBottom: 32 }}>
-                Pilih topik. Tiap topik ada penjelasan singkat dan contoh yang bisa langsung kamu
-                ubah dan jalankan.
+                Pilih topik. Tiap topik ada penjelasan singkat, analogi yang gampang dibayangin, dan
+                contoh yang bisa langsung kamu ubah lalu jalankan.
               </p>
               {searching ? (
                 list.length === 0 ? (
                   <p className="materi-empty">
-                    Belum ada materi untuk &quot;{q}&quot;. Coba kata lain.
+                    Belum nemu materi buat &quot;{q}&quot;. Coba kata lain, siapa tahu lebih cocok.
                   </p>
                 ) : (
                   <div className="materi-grid">

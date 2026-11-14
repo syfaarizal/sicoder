@@ -3,7 +3,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'SICODER',
-  description: 'Pahami kode dengan mencobanya. Belajar dan eksperimen coding langsung di browser.',
+  description:
+    'Belajar coding sambil ngobrol santai. Materi lengkap dengan analogi gampang, ilustrasi, dan playground yang bisa langsung dicoba di browser.',
   icons: {
     icon: [
       { url: '/favicon-light.png', media: '(prefers-color-scheme: light)' },

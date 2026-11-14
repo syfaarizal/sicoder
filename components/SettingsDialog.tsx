@@ -83,7 +83,7 @@ export default function SettingsDialog({
   const layoutKey = lang === 'python' ? 'pyLayout' : 'layout';
   const size = (n: number) => set('fontSize', Math.min(28, Math.max(10, n)));
   const fontRow = (
-    <Row label="Font family">
+    <Row label="Jenis huruf">
       <select
         className="inp"
         value={settings.fontFamily}
@@ -98,7 +98,7 @@ export default function SettingsDialog({
     </Row>
   );
   const sizeRow = (
-    <Row label="Font size">
+    <Row label="Ukuran huruf">
       <div className="flex items-center gap-2">
         <button
           className="btn"
@@ -128,7 +128,7 @@ export default function SettingsDialog({
     </Row>
   );
   const keysRow = (
-    <Row label="Key bindings">
+    <Row label="Shortcut">
       <select
         className="inp"
         value={settings.keymap}
@@ -141,9 +141,9 @@ export default function SettingsDialog({
     </Row>
   );
   const sugRow = (
-    <Row label="Suggestions while typing" hint="Mati: tekan Ctrl+Space untuk memanggil saran">
+    <Row label="Saran saat ngetik" hint="Mati: tekan Ctrl+Space kalau mau manggil saran">
       <Toggle
-        label="Suggestions while typing"
+        label="Saran saat ngetik"
         checked={settings.suggestions}
         onChange={(v) => set('suggestions', v)}
       />
@@ -154,11 +154,11 @@ export default function SettingsDialog({
     <dialog ref={ref} onClose={onClose} aria-label="Pengaturan editor">
       {!adv ? (
         <>
-          <h3 style={{ margin: '0 0 6px' }}>Settings</h3>
-          <div className="sec">Appearance</div>
+          <h3 style={{ margin: '0 0 6px' }}>Pengaturan</h3>
+          <div className="sec">Tampilan</div>
           {fontRow}
           {sizeRow}
-          <Row label="Layout">
+          <Row label="Tata letak">
             <div className="seg">
               {LAYOUTS.map(([k, l]) => (
                 <button
@@ -171,7 +171,7 @@ export default function SettingsDialog({
               ))}
             </div>
           </Row>
-          <Row label="Editor theme">
+          <Row label="Tema editor">
             <select
               className="inp"
               value={settings.theme}
@@ -184,26 +184,26 @@ export default function SettingsDialog({
               ))}
             </select>
           </Row>
-          <Row label="Terminal theme" hint="Samakan dengan tema editor">
+          <Row label="Tema terminal" hint="Samakan dengan tema editor">
             <Toggle
-              label="Samakan tema terminal dengan editor"
+              label="Samain tema terminal sama editor"
               checked={settings.matchTerminal}
               onChange={(v) => set('matchTerminal', v)}
             />
           </Row>
-          <div className="sec">Editing</div>
+          <div className="sec">Ngetik</div>
           {keysRow}
           {sugRow}
           <div className="row" style={{ marginTop: 10 }}>
             <button className="btn" onClick={() => setAdv(true)}>
-              Advanced editor settings
+              Pengaturan lanjutan
             </button>
             <div className="flex gap-2">
               <button className="btn" onClick={() => onChange(DEFAULT_SETTINGS)}>
                 Reset
               </button>
               <button className="btn btn-pri" onClick={onClose}>
-                Close
+                Tutup
               </button>
             </div>
           </div>
@@ -211,12 +211,12 @@ export default function SettingsDialog({
       ) : (
         <>
           <div className="row" style={{ paddingTop: 0 }}>
-            <h3 style={{ margin: 0 }}>Advanced editor settings</h3>
+            <h3 style={{ margin: 0 }}>Pengaturan lanjutan</h3>
             <button className="btn" onClick={() => setAdv(false)}>
               Kembali
             </button>
           </div>
-          <div className="sec">Theme &amp; fonts</div>
+          <div className="sec">Tema &amp; huruf</div>
           <div
             style={{
               borderRadius: 10,
@@ -258,7 +258,7 @@ export default function SettingsDialog({
           </div>
           <fieldset style={{ border: 0, padding: 0, margin: '12px 0 0' }}>
             <legend className="sec" style={{ padding: 0 }}>
-              Syntax highlighting theme
+              Tema pewarnaan kode
             </legend>
             <div className="themes">
               {[true, false].map((dark) => (
@@ -269,7 +269,7 @@ export default function SettingsDialog({
                     color: dark ? '#e6eaf2' : '#16202e',
                   }}
                 >
-                  <b>{dark ? 'Dark themes' : 'Light themes'}</b>
+                  <b>{dark ? 'Tema gelap' : 'Tema terang'}</b>
                   {THEMES.filter((t) => t.dark === dark).map((t) => (
                     <label key={t.id}>
                       <input
@@ -287,7 +287,7 @@ export default function SettingsDialog({
           </fieldset>
           {fontRow}
           {sizeRow}
-          <Row label="Line height">
+          <Row label="Tinggi baris">
             <select
               className="inp"
               value={settings.lineHeight}
@@ -298,42 +298,42 @@ export default function SettingsDialog({
               ))}
             </select>
           </Row>
-          <div className="sec">Behavior</div>
-          <Row label="Auto-run (Web)">
+          <div className="sec">Perilaku</div>
+          <Row label="Jalan otomatis (Web)">
             <Toggle
-              label="Auto-run"
+              label="Jalan otomatis"
               checked={settings.autoRun}
               onChange={(v) => set('autoRun', v)}
             />
           </Row>
           {sugRow}
           {keysRow}
-          <Row label="Line numbers">
+          <Row label="Nomor baris">
             <Toggle
               label="Nomor baris"
               checked={settings.lineNumbers}
               onChange={(v) => set('lineNumbers', v)}
             />
           </Row>
-          <Row label="Wrap lines">
-            <Toggle label="Wrap baris" checked={settings.wrap} onChange={(v) => set('wrap', v)} />
+          <Row label="Bungkus baris">
+            <Toggle label="Bungkus baris" checked={settings.wrap} onChange={(v) => set('wrap', v)} />
           </Row>
-          <Row label="Auto-close brackets and quotes">
+          <Row label="Tutup kurung & kutip otomatis">
             <Toggle
-              label="Auto-close"
+              label="Tutup otomatis"
               checked={settings.closeBrackets}
               onChange={(v) => set('closeBrackets', v)}
             />
           </Row>
-          <div className="sec">Code indentation</div>
-          <Row label="Indent with spaces">
+          <div className="sec">Indentasi kode</div>
+          <Row label="Indentasi pakai spasi">
             <Toggle
               label="Indentasi spasi"
               checked={settings.indentSpaces}
               onChange={(v) => set('indentSpaces', v)}
             />
           </Row>
-          <Row label="Indent size">
+          <Row label="Jumlah spasi indentasi">
             <select
               className="inp"
               value={settings.tabSize}
@@ -341,7 +341,7 @@ export default function SettingsDialog({
             >
               {[2, 4, 8].map((n) => (
                 <option key={n} value={n}>
-                  {n} spaces
+                  {n} spasi
                 </option>
               ))}
             </select>
@@ -355,7 +355,7 @@ export default function SettingsDialog({
               Reset
             </button>
             <button className="btn btn-pri" onClick={onClose}>
-              Close
+              Tutup
             </button>
           </div>
         </>

@@ -5,7 +5,7 @@ const envs = [
   {
     id: 'web',
     name: 'Bikin Web',
-    desc: 'Ngulik HTML, CSS, dan JavaScript sambil lihat hasil web lo langsung.',
+    desc: 'Ngulik HTML, CSS, dan JavaScript sambil lihat hasil web kamu langsung.',
   },
   {
     id: 'python',
@@ -22,20 +22,21 @@ export default function Home() {
           <BrandLogo className="logo-home" />
           <span className="home-status"><i /> SIAP MULAI</span>
         </div>
-        <p className="home-kicker">// NGODING PERTAMA LO MULAI DI SINI</p>
+        <p className="home-kicker">// NGODING PERTAMA KAMU MULAI DI SINI</p>
         <h1 className="home-title">
           Belajar coding? <span>Yuk, coba.</span>
         </h1>
         <p className="home-intro">
           Mau bikin web atau ngulik Python? Pilih aja, tulis kode, terus lihat hasilnya langsung.
-          Kalau error, santai—kita belajar bareng.
+          Ada materinya juga, lengkap dengan analogi yang gampang dibayangin. Kalau error,
+          santai—kita belajar bareng.
         </p>
       </section>
 
       <section className="track-section" aria-labelledby="track-title">
         <div className="track-heading">
           <div>
-            <p className="home-kicker">PILIH YANG PENGEN LO COBA</p>
+            <p className="home-kicker">PILIH YANG PENGEN KAMU COBA</p>
             <h2 id="track-title">Mau ngulik apa<span>?</span></h2>
           </div>
           <span className="track-count">2 PILIHAN</span>
@@ -65,7 +66,7 @@ export default function Home() {
       </section>
 
       <p className="home-note">
-        <span aria-hidden="true">[i]</span> Kode lo tersimpan di browser ini. Hapus data browser,
+        <span aria-hidden="true">[i]</span> Kode kamu tersimpan di browser ini. Hapus data browser,
         kodenya ikut ke-reset.
       </p>
     </main>

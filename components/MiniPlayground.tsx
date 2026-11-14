@@ -223,7 +223,7 @@ export default function MiniPlayground({
         </>
       ) : (
         <pre className="term mini-con" role="log" aria-live="polite" style={font}>
-          {out.length === 0 && <span className="d">Tekan Run untuk melihat hasilnya.</span>}
+          {out.length === 0 && <span className="d">Tekan Run buat lihat hasilnya.</span>}
           {out.map((s, i) => (
             <span key={i} className={s.k}>
               {s.t}
