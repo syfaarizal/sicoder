@@ -207,30 +207,17 @@ export default function WebWorkspace() {
   const outPane = (
     <section className="pane" style={termStyle} aria-label="Hasil">
       <div className="tb">
-        <button
-          className="tab"
-          role="tab"
-          aria-selected={view === 'out'}
-          onClick={() => setView('out')}
-        >
-          Hasil
-        </button>
-        <button
-          className="tab"
-          role="tab"
-          aria-selected={view === 'con'}
-          onClick={() => setView('con')}
-        >
-          Console
-        </button>
-        <button
-          className="tab"
-          role="tab"
-          aria-selected={view === 'prob'}
-          onClick={() => setView('prob')}
-        >
-          Problems{problems.length > 0 && <span className="badge">{problems.length}</span>}
-        </button>
+        <div role="tablist" aria-label="Panel hasil" className="flex">
+          <button className="tab tab-up" role="tab" aria-selected={view === 'out'} onClick={() => setView('out')}>
+            Hasil
+          </button>
+          <button className="tab tab-up" role="tab" aria-selected={view === 'con'} onClick={() => setView('con')}>
+            Konsol
+          </button>
+          <button className="tab tab-up" role="tab" aria-selected={view === 'prob'} onClick={() => setView('prob')}>
+            ⚠ Masalah{problems.length > 0 && <span className="badge">{problems.length}</span>}
+          </button>
+        </div>
         <div className="flex-1" />
         <button
           className="btn"
@@ -254,8 +241,8 @@ export default function WebWorkspace() {
         className={'min-h-0 w-full flex-1 border-0 bg-white ' + (view === 'out' ? '' : 'hidden')}
       />
       <div className={'con ' + (view === 'con' ? '' : 'hidden')} role="log" style={termFont}>
-        {lines.length === 0 && (
-          <span className="d">Belum ada output. Coba console.log(&quot;halo&quot;).</span>
+        {lines.length === 0 && view === 'con' && (
+          <div className="term-empty" aria-hidden="true"><span className="term-empty-icon">›_</span><b>Keluaran konsol tampil di sini</b><span>Jalankan kode untuk melihat hasilnya.</span></div>
         )}
         {lines.map((l, i) => (
           <div key={i} className={l.level}>

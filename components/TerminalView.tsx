@@ -46,7 +46,7 @@ export default function TerminalView({
       style={style}
       onClick={() => input.current?.focus()}
     >
-      {blank && <span className="d">{empty}</span>}
+      {blank && <div className="term-empty" aria-hidden="true"><span className="term-empty-icon">›_</span><b>Keluaran program tampil di sini</b><span>{empty}</span></div>}
       {term.lines.map((line, i) => (
         <span key={i}>
           {line.map((sp, j) => (

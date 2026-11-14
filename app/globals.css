@@ -428,6 +428,50 @@ button {
   border-color: var(--ok);
   color: #fff;
 }
+.terminal-action { min-width: 32px; text-align: center; }
+.file-tab-add { display: inline-flex; align-items: center; height: 32px; border-bottom: 2px solid var(--ac); background: color-mix(in srgb, var(--cfg) 8%, var(--cbg)); }
+.file-tab-input { width: 154px; height: 27px; margin: 0 4px; padding: 2px 6px; border: 1px solid var(--ac); border-radius: 4px; outline: none; background: var(--cbg); color: var(--cfg); font: 13px var(--font-mono); }
+.file-tab-input:focus { box-shadow: 0 0 0 2px color-mix(in srgb, var(--ac) 28%, transparent); }
+.file-tab-close { height: 28px; padding: 0 8px; border: 0; background: transparent; color: inherit; font-size: 18px; }
+.file-tab-plus { border: 1px solid var(--cline); border-radius: 5px; font-size: 20px; line-height: 1; }
+/* baris tambah file: muncul di bawah deretan tab */
+.tb-add {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--cline);
+}
+.tb-add .inp {
+  width: 200px;
+  max-width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  border-color: var(--cline);
+  font: 13px var(--font-mono);
+}
+.tb-add .btn {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+.tb-add .btn-add {
+  border-color: var(--ac);
+  color: var(--ac);
+}
+.tb-add .btn-cancel {
+  border-color: transparent;
+  color: color-mix(in srgb, var(--cfg) 60%, var(--cbg));
+}
+.tb-add-err {
+  color: #ff6b6b;
+  font-size: 12px;
+}
 .tab {
   border: 0;
   background: none;
@@ -452,6 +496,15 @@ button {
   white-space: pre-wrap;
   word-break: break-word;
 }
+.term,
+.con { position: relative; }
+.con .term-empty { border: 0; padding: 0; }
+.term-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: color-mix(in srgb, var(--cfg) 65%, var(--cbg)); pointer-events: none; }
+.term-empty b { color: color-mix(in srgb, var(--cfg) 86%, var(--cbg)); font: 600 14px system-ui, sans-serif; }
+.term-empty span:last-child { font: 13px system-ui, sans-serif; }
+.term-empty-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 4px; border-radius: 12px; background: color-mix(in srgb, var(--cfg) 10%, var(--cbg)); font: 700 22px var(--font-mono); }
+.problem-empty { position: sticky; top: 38px; display: flex; flex-direction: column; align-items: center; gap: 10px; color: color-mix(in srgb, var(--cfg) 62%, var(--cbg)); font-size: 13px; }
+.problem-empty-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #54b967; color: #102414; font: 700 24px/1 system-ui, sans-serif; }
 .con div {
   border-bottom: 1px solid var(--cline);
   padding: 2px 0;

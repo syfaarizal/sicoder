@@ -301,7 +301,7 @@ export default function PythonWorkspace() {
             aria-selected={bottom === 'term'}
             onClick={() => setBottom('term')}
           >
-            Terminal
+              Terminal
           </button>
           <button
             role="tab"
@@ -309,7 +309,7 @@ export default function PythonWorkspace() {
             aria-selected={bottom === 'prob'}
             onClick={() => setBottom('prob')}
           >
-            Problems{allProblems.length > 0 && <span className="badge">{allProblems.length}</span>}
+              ⚠ Masalah{allProblems.length > 0 && <span className="badge">{allProblems.length}</span>}
           </button>
         </div>
         <div className="flex-1" />
@@ -324,14 +324,15 @@ export default function PythonWorkspace() {
           Clear
         </button>
         {running ? (
-          <button className="btn" onClick={() => stop('\nDihentikan.\n')}>
-            Stop
+            <button className="btn terminal-action" title="Hentikan program" aria-label="Hentikan program" onClick={() => stop('\nProgram dihentikan.\n')}>
+              ■
           </button>
         ) : (
           <button
             className="btn btn-run"
             onClick={run}
             title="Menjalankan main.py (Ctrl/Cmd+Enter)"
+              aria-label="Jalankan program"
           >
             Run
           </button>
@@ -345,7 +346,7 @@ export default function PythonWorkspace() {
           onSubmit={submitInput}
           boxRef={termBox}
           style={font}
-          empty="Tekan Run untuk menjalankan main.py."
+            empty="Tekan Jalankan atau Ctrl + Enter untuk menjalankan kode."
         />
       ) : (
         <ProblemList
