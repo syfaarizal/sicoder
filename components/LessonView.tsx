@@ -20,7 +20,7 @@ export default function LessonView({
       <div className="cap" style={{ marginTop: 0 }}>
         {lesson.group} · Topik {lessonNo(lesson)}
       </div>
-      <h2>{lesson.title}</h2>
+      <h2><RichText text={lesson.title} /></h2>
       {lesson.goal && (
         <p className="goal">
           <b>Setelah baca ini, kamu bisa </b>
@@ -45,7 +45,7 @@ export default function LessonView({
       )}
       {lesson.examples.map((ex, i) => (
         <section key={lesson.id + i}>
-          <h3 className="ex">{ex.title}</h3>
+          <h3 className="ex"><RichText text={ex.title} /></h3>
           {ex.note && (
             <p className="note">
               <RichText text={ex.note} />

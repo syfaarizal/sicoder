@@ -203,11 +203,11 @@ export const PY_LESSONS: RawLesson[] = [
     analogy: 'nyapu lantai: kamu bolak-balik sampai nggak ada debu lagi. Bedanya, program kamu bolak-balik sampai kondisinya berhenti.',
     ex: [
       {
-        t: 'for plus range',
+        t: '{{for}} plus {{range}}',
         p: 'for i in range(5):\n    print("Putaran", i)\n\nbuah = ["apel", "jeruk", "mangga"]\nfor b in buah:\n    print(b.upper())',
       },
       {
-        t: 'while: ulangi selama masih bener',
+        t: '{{while}}: ulangi selama masih bener',
         p: 'hitung = 3\nwhile hitung > 0:\n    print(hitung)\n    hitung = hitung - 1\nprint("Selesai!")',
       },
     ],

@@ -158,7 +158,7 @@ export const lessons: Lesson[] = [
   mk(
     'w-div',
     'HTML',
-    'div, span, class, dan id',
+    '{{div}}, {{span}}, {{class}}, dan {{id}}',
     'Pembungkus elemen + nama biar bisa dipanggil',
     'div,span,class,id,atribut,pembungkus,container,kotak',
     `{{<div>}} itu kotak pembungkus yang makan satu baris penuh, {{<span>}} versi kecilnya buat nempel di dalam teks. Supaya CSS dan JavaScript bisa nemu elemen tertentu, kasih nama: {{class}} buat banyak elemen, {{id}} buat satu elemen doang yang unik.`,
@@ -177,7 +177,7 @@ export const lessons: Lesson[] = [
     'w-tabel',
     'HTML',
     'Tabel',
-    'table, tr, th, td',
+    '{{<table>}}, {{<tr>}}, {{<th>}}, {{<td>}}',
     'tabel,table,tr,td,th,baris,kolom,sel',
     `Tabel dimulai dari {{<table>}}. Tiap baris pakai {{<tr>}}, sel judul kolom pakai {{<th>}}, sel isinya pakai {{<td>}}.`,
     [

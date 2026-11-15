@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import LessonView from '@/components/LessonView';
+import RichText from '@/components/RichText';
 import {
   getLesson,
   groupsOf,
@@ -43,9 +44,9 @@ export default function MateriPage() {
       onClick={() => open(l)}
     >
       <b>
-        <span className="no">{lessonNo(l)}.</span> {l.title}
+        <span className="no">{lessonNo(l)}.</span> <RichText text={l.title} />
       </b>
-      <small>{l.desc}</small>
+      <small><RichText text={l.desc} /></small>
     </button>
   );
 

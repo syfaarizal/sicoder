@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import LessonView from './LessonView';
+import RichText from './RichText';
 import {
   getLesson,
   groupsOf,
@@ -72,9 +73,9 @@ export default function LearningPanel({
             {results.map((l) => (
               <button key={l.id} className="materi-card" onClick={() => onActive(l.id)}>
                 <b>
-                  <span className="no">{lessonNo(l)}.</span> {l.title}
+                  <span className="no">{lessonNo(l)}.</span> <RichText text={l.title} />
                 </b>
-                <small>{l.desc}</small>
+                <small><RichText text={l.desc} /></small>
               </button>
             ))}
           </div>
@@ -94,9 +95,9 @@ export default function LearningPanel({
                 .map((l) => (
                   <button key={l.id} className="materi-card" onClick={() => onActive(l.id)}>
                     <b>
-                      <span className="no">{lessonNo(l)}.</span> {l.title}
+                      <span className="no">{lessonNo(l)}.</span> <RichText text={l.title} />
                     </b>
-                    <small>{l.desc}</small>
+                    <small><RichText text={l.desc} /></small>
                   </button>
                 ))}
             </div>
