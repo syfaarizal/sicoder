@@ -87,7 +87,7 @@ export const PY_LESSONS: RawLesson[] = [
     title: 'String dan f-string',
     desc: 'Olah teks, selipin variabel di kalimat',
     kw: 'string,teks,f-string,format,upper,lower,len,panjang,gabung,huruf besar,kalimat',
-    text: '{{str}} itu teks. Ada {{upper()}} buat huruf besar, {{lower()}} buat huruf kecil, {{len()}} buat ngitung panjang. f-string (huruf f di depan) lets you selipin variabel ke dalam teks pakai kurung kurawal.',
+    text: '{{str}} itu teks. Ada {{upper()}} buat huruf besar, {{lower()}} buat huruf kecil, {{len()}} buat ngitung panjang. f-string (huruf f di depan) bikin kamu selipin variabel ke dalam teks pakai kurung kurawal.',
     analogy: 'f-string itu stiker nama: kalimatnya kamu nulis sekali, tapi nama yang ditempel bisa beda-bedakan tiap kali.',
     ex: [
       {
@@ -99,6 +99,7 @@ export const PY_LESSONS: RawLesson[] = [
         p: 'nama = "Sari"\numur = 17\nprint(f"{nama} berumur {umur} tahun")',
       },
     ],
+    tip: 'Method string yang lebih lengkap (upper, lower, strip, title, replace) ada di kategori Trik Praktis. Format angka seperti {{f"{nilai:,.2f}"}} juga dibahas di sana.',
   },
   {
     id: 'p-input',
@@ -429,6 +430,118 @@ export const PY_LESSONS: RawLesson[] = [
     tip: 'File .py buatanmu sendiri juga bisa di-import. Di editor utama, buat file baru lewat tombol +, misalnya alat.py, lalu tulis {{import alat}} di main.py.',
   },
   {
+    id: 'p-str-method',
+    group: 'Trik Praktis',
+    title: 'Metode string: upper, lower, strip, title, replace',
+    desc: 'Bikin teks rapi: huruf besar, huruf kecil, buang spasi',
+    kw: 'string method,upper,lower,strip,title,capitalize,replace,trim,spasi,huruf besar,huruf kecil,rapi,bersih,case',
+    text: 'Teks di Python punya banyak method buat ngolah isinya. {{upper()}} jadi huruf besar semua, {{lower()}} huruf kecil semua, {{title()}} huruf awal tiap kata jadi besar, {{strip()}} buang spasi kosong di awal dan akhir, dan {{replace()}} ganti potongan teks. Semua method string nggak mengubah aslinya, tapi ngasih string baru, jadi hasilnya harus kamu simpan atau cetak.',
+    analogy: 'kayak ngetik ulang di keyboard sambil tahan shift: teks aslinya tetap nempel di kertas, kamu cuma nulis versi barunya.',
+    ex: [
+      {
+        t: 'Ubah huruf',
+        p: 'nama = "sARI andriani"\n\nprint(nama.upper())\nprint(nama.lower())\nprint(nama.title())\nprint(nama.capitalize())\n\n# hasil method nggak mengubah teks aslinya\nprint(nama)',
+      },
+      {
+        t: 'Bersihin spasi dan ganti kata',
+        p: 'ketik = "  halo dunia  "\nprint(f"[{ketik}]")\nprint(f"[{ketik.strip()}]")   # spasi tepi dibuang\n\nucapan = "halo, teman"\nprint(ucapan.replace("halo", "hai"))',
+      },
+    ],
+    tip: 'Spasi yang nggak sengaja ikut masuk dari {{input()}} sering bikin program error. Panggil {{.strip()}} dulu sebelum isinya diubah jadi angka.',
+  },
+  {
+    id: 'p-str-split',
+    group: 'Trik Praktis',
+    title: 'split() dan join(): memecah dan menggabungkan teks',
+    desc: 'Pecah kalimat jadi daftar, gabung daftar jadi kalimat',
+    kw: 'split,join,pisah,gabung,pecah,list,kalimat,kata,separator,pemisah,komma,baris',
+    text: '{{split()}} memecah satu string jadi list. Tanpa argumen, pemecahnya spasi; kalau dikasih argumen, misalnya {{split(",")}}, dipecah berdasarkan tanda itu. Sebaliknya {{join()}} menggabungkan list of string jadi satu string, dan pemisahnya ditulis di depan titik: {{", ".join(daftar)}}.',
+    analogy: 'kayak motong kue jadi beberapa bagian, terus nempel lagi baris-baris di piring.',
+    ex: [
+      {
+        t: 'Memecah teks jadi list',
+        p: 'kalimat = "saya belajar python setiap hari"\nkata = kalimat.split()\n\nprint(kata)\nprint(len(kata))\n\ndata = "apel,jeruk,mangga"\nprint(data.split(","))',
+      },
+      {
+        t: 'Menggabungkan list jadi teks',
+        p: 'nama = ["Sari", "Budi", "Putri"]\nprint(", ".join(nama))\nprint(" dan ".join(nama))\n\nbaris = ["nama: Sari", "umur: 17"]\nprint("\\n".join(baris))',
+      },
+    ],
+    tip: '{{split()}} selalu ngasih list, walau teksnya cuma satu kata. Cek dulu isi listnya sebelum dipakai.',
+  },
+  {
+    id: 'p-format',
+    group: 'Trik Praktis',
+    title: 'Format angka: ribuan, desimal, dan perataan',
+    desc: 'Tampilan angka rapi pakai format spec di f-string',
+    kw: 'format,ribuan,thousands,desimal,format spec,perataan,ratakan,kolom,placeholder,kurung kurawal,dua digit,f-string',
+    text: 'f-string bisa dikasih instruksi format di dalam kurung kurawal, ditulis setelah tanda titik dua. Contoh: {{f"{harga:,}"}} buat pemisah ribuan, {{f"{nilai:.2f}"}} buat dua digit di belakang koma, {{f"{nama:>10}"}} buat rata kanan, dan {{f"{nama:<10}"}} buat rata kiri. Instruksi bisa digabung, misalnya {{f"{nilai:,.2f}"}} buat ribuan sekaligus dua desimal.',
+    analogy: 'kayak ngeprint struk: angkanya nggak berubah, tapi merapihin tampilan biar enak dibaca.',
+    ex: [
+      {
+        t: 'Pemisah ribuan',
+        p: 'harga = 1250000\npenghasilan = 3500000\n\nprint(f"Harga: {harga:,}")\nprint(f"Penghasilan: {penghasilan:,} rupiah")\n\n# tanpa format, angkanya panjang banget\nprint(harga)',
+      },
+      {
+        t: 'Desimal dan perataan kolom',
+        p: 'nilai = 87.4567\nprint(f"Nilai: {nilai:.2f}")\nprint(f"Nilai: {nilai:.4f}")\n\nnama = "Sari"\nprint(f"{nama:>10}|")   # rata kanan\nprint(f"{nama:<10}|")   # rata kiri\nprint(f"{nama:^10}|")   # di tengah',
+      },
+      {
+        t: 'Cara lama: format()',
+        p: 'harga = 1250000\nprint("Harga: {:,}".format(harga))\nprint("Harga: {:,.2f}".format(1250000.5))',
+      },
+    ],
+    tip: 'Format ribuan buat desimal juga bisa: {{f"{nilai:,.2f}"}} menghasilkan 1,250,000.50.',
+  },
+  {
+    id: 'p-bulat',
+    group: 'Trik Praktis',
+    title: 'round() dan pembulatan angka',
+    desc: 'Bulatkan angka, plus ceil, floor, dan abs',
+    kw: 'round,pembulatan,membulatkan,bulat,ceil,floor,abs,nilai mutlak,desimal,genap,bulat ke atas,bulat ke bawah',
+    text: '{{round()}} membulatkan angka ke bilangan bulat terdekat, dan bisa diberi jumlah digit: {{round(3.14159, 2)}} hasilnya 3.14. Perhatiin, {{round()}} membulatkan ke angka genap kalau persis di tengah, jadi {{round(2.5)}} = 2 dan {{round(3.5)}} = 4. Kalau mau pasti ke atas atau ke bawah, pakai {{math.ceil()}} dan {{math.floor()}}, sedangkan {{abs()}} mengubah angka jadi nilai mutlak (nggak ada tanda minus).',
+    analogy: 'kayak nyusun dompet: sisa receh dibulatkan biar enak dihitung, dan jumlah uangnya selalu positif.',
+    ex: [
+      {
+        t: 'Membulatkan angka',
+        p: 'print(round(3.7))     # 4\nprint(round(3.2))     # 3\nprint(round(3.14159, 2))   # 3.14\nprint(round(3.14159, 4))   # 3.1416',
+      },
+      {
+        t: 'Ke atas, ke bawah, dan nilai mutlak',
+        p: 'import math\n\nprint(math.ceil(4.2))    # 5, ke atas\nprint(math.floor(4.8))   # 4, ke bawah\nprint(abs(-7))           # 7',
+      },
+      {
+        t: 'Membulatkan hasil rata-rata',
+        p: 'nilai = [80, 90, 75, 85, 83]\nrata = sum(nilai) / len(nilai)\n\nprint(rata)            # 82.6\nprint(round(rata))     # 83\nprint(round(rata, 1))  # 82.6',
+      },
+    ],
+    tip: 'Pembulatan ke genap itu berlaku juga buat nilai rapor: {{round(82.5)}} = 82. Kalau mau selalu ke atas, pakai {{math.floor(x + 0.5)}}.',
+  },
+  {
+    id: 'p-bawaan',
+    group: 'Trik Praktis',
+    title: 'Fungsi bawaan yang jarang dipakai',
+    desc: 'sum, min, max, sorted, any, all',
+    kw: 'sum,min,max,sorted,any,all,bawaan,builtin,fungsi bawaan,agregat,sort,filter,terbesar,terkecil,jumlah,rata rata',
+    text: 'Python punya banyak fungsi bawaan yang bisa langsung dipanggil tanpa import. Yang paling sering kepake: {{sum()}} menjumlahkan isi list, {{min()}} dan {{max()}} cari yang terkecil dan terbesar, {{sorted()}} ngasih list baru yang udah keurutan tanpa mengubah list aslinya, {{any()}} bernilai True kalau ada satu saja isinya benar, dan {{all()}} True kalau semuanya benar. {{len()}} buat ngitung jumlah item sudah kamu kenal.',
+    analogy: 'kayak perkakas di laci kerja: udah tersedia, tinggal ambil, nggak perlu bikin sendiri.',
+    ex: [
+      {
+        t: 'Ringkasan angka',
+        p: 'nilai = [80, 90, 75, 85]\n\nprint(sum(nilai))\nprint(max(nilai))\nprint(min(nilai))\nprint(sum(nilai) / len(nilai))\nprint(sum(nilai, start=100))   # 430, angka 100 ikut dijumlahkan',
+      },
+      {
+        t: 'Mengurutkan tanpa mengubah list asal',
+        p: 'nama = ["Sari", "budi", "Putri", "Andi"]\n\nprint(sorted(nama))\nprint(sorted(nama, key=str.lower))   # abaikan huruf besar kecil\nprint(sorted(nama, key=len))           # urut dari yang terpendek\nprint(nama)                            # list asal tetap sama',
+      },
+      {
+        t: 'any() dan all()',
+        p: 'nilai = [80, 90, 75, 85]\n\nprint(any(n < 80 for n in nilai))   # True, ada yang di bawah 80\nprint(all(n >= 70 for n in nilai))  # True, semua di atas 70\nprint(all(n >= 80 for n in nilai))  # False, ada yang 75',
+      },
+    ],
+    tip: '{{sorted()}} ngasih list baru, list aslinya nggak berubah. Kalau mau list asal ikut keurut, pakai {{daftar.sort()}}.',
+  },
+  {
     id: 'p-proj-sapa',
     group: 'Proyek Kecil',
     title: 'Proyek: program nyapa',
@@ -543,6 +656,7 @@ export const PY_CATEGORIES = [
   'Fungsi',
   'Menangani Error',
   'Module',
+  'Trik Praktis',
   'Proyek Kecil',
 ];
 
@@ -570,6 +684,11 @@ export const LESSON_ORDER = [
   'p-scope',
   'p-except',
   'p-module',
+  'p-str-method',
+  'p-str-split',
+  'p-format',
+  'p-bulat',
+  'p-bawaan',
   'p-proj-sapa',
   'p-proj-kalkulator',
   'p-proj-tebak',
@@ -601,6 +720,11 @@ export const GOALS: Record<string, string> = {
   'p-scope': 'tahu di mana sebuah variabel bisa dipakai',
   'p-except': 'membuat programmu tidak berhenti total saat ada input yang salah',
   'p-module': 'memakai fungsi siap pakai dari module, termasuk file buatanmu sendiri',
+  'p-str-method': 'mengolah teks: mengubah huruf besar-kecil, membuang spasi, dan mengganti kata',
+  'p-str-split': 'memecah teks jadi daftar dan menggabungkan daftar jadi teks',
+  'p-format': 'menampilkan angka dan teks dengan format rapi: ribuan, desimal, dan perataan kolom',
+  'p-bulat': 'membulatkan angka dan membedakan pembulatan ke atas, ke bawah, dan ke genap',
+  'p-bawaan': 'meringkas data dengan fungsi bawaan: jumlah, terbesar, terkecil, dan pengurutan',
   'p-proj-sapa': 'membuat program interaktif pertama yang bertanya lalu menanggapi jawabanmu',
   'p-proj-kalkulator': 'membuat kalkulator yang menerima angka dan operator dari pengguna',
   'p-proj-tebak': 'membuat game kecil dengan perulangan, angka acak, dan petunjuk',

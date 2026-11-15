@@ -375,6 +375,113 @@ export const ART_PY: Record<string, ArtFn> = {
     </svg>
   ),
 
+  'p-str-method': () => (
+    <svg viewBox="0 0 320 180" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>Metode string mengubah huruf dan membuang spasi</title>
+      <text x="22" y="40" fontFamily="var(--font-mono)" fontSize={12} fill="var(--mute)">"  sARI andriani  "</text>
+      <path d="M89 52 V66" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" />
+      <polyline points="82,59 89,67 96,59" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M231 52 V66" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" />
+      <polyline points="224,59 231,67 238,59" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="34" y="76" width="110" height="30" rx="5" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="89" y="96" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">.upper()</text>
+      <rect x="176" y="76" width="110" height="30" rx="5" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="231" y="96" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">.strip()</text>
+      <text x="89" y="130" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--mute)">SARI ANDRIANI</text>
+      <text x="231" y="130" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--mute)">sARI andriani</text>
+      <text x="160" y="158" textAnchor="middle" fontFamily="inherit" fontSize={11} fill="var(--mute)">hasil baru, teks asal tetap</text>
+    </svg>
+  ),
+
+  'p-str-split': () => (
+    <svg viewBox="0 0 320 180" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>Teks dipecah jadi list lalu digabung lagi</title>
+      <text x="22" y="36" fontFamily="var(--font-mono)" fontSize={11} fill="var(--mute)">"saya belajar python"</text>
+      <path d="M110 48 V64" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" />
+      <polyline points="103,57 110,65 117,57" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <text x="126" y="62" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">split()</text>
+      <rect x="22" y="76" width="86" height="28" rx="5" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="65" y="95" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} fill="var(--ac)">saya</text>
+      <rect x="118" y="76" width="86" height="28" rx="5" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="161" y="95" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} fill="var(--ac)">belajar</text>
+      <rect x="214" y="76" width="86" height="28" rx="5" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="257" y="95" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} fill="var(--ac)">python</text>
+      <path d="M65 108 V132" stroke="var(--line)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <path d="M161 108 V132" stroke="var(--line)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <path d="M257 108 V132" stroke="var(--line)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <path d="M65 132 C65 150 120 150 160 150 C200 150 257 150 257 132" stroke="var(--ac)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <polyline points="164,145 160,152 156,145" stroke="var(--ac)" strokeWidth={1.5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <text x="238" y="168" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">join()</text>
+    </svg>
+  ),
+
+  'p-format': () => (
+    <svg viewBox="0 0 320 180" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>Angka mentah diformat jadi ribuan dan desimal</title>
+      <rect x="22" y="46" width="112" height="44" rx="6" stroke="var(--line)" strokeWidth={1.5} fill="none" />
+      <text x="78" y="74" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={13} fill="var(--mute)">1250000</text>
+      <path d="M138 68 H182" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" />
+      <polyline points="175,61 183,68 175,75" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <text x="160" y="54" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">{'{:,}'}</text>
+      <rect x="186" y="46" width="112" height="44" rx="6" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="242" y="74" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={13} fill="var(--ac)">1,250,000</text>
+      <rect x="22" y="108" width="112" height="40" rx="6" stroke="var(--line)" strokeWidth={1.5} fill="none" />
+      <text x="78" y="133" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={13} fill="var(--mute)">87.4567</text>
+      <path d="M138 128 H182" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" />
+      <polyline points="175,121 183,128 175,135" stroke="var(--ac)" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <text x="160" y="114" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">{'{:.2f}'}</text>
+      <rect x="186" y="108" width="112" height="40" rx="6" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="242" y="133" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={13} fill="var(--ac)">87.46</text>
+      <text x="160" y="168" textAnchor="middle" fontFamily="inherit" fontSize={11} fill="var(--mute)">angka sama, tampilan rapi</text>
+    </svg>
+  ),
+
+  'p-bulat': () => (
+    <svg viewBox="0 0 320 180" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>Angka desimal dibulatkan ke bilangan bulat terdekat</title>
+      <text x="22" y="42" fontFamily="var(--font-mono)" fontSize={13} fill="var(--mute)">3.7</text>
+      <path d="M58 50 C82 74 96 74 120 62" stroke="var(--ac)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <polyline points="112,60 122,62 118,70" stroke="var(--ac)" strokeWidth={1.5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="124" y="42" width="60" height="34" rx="6" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="154" y="64" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={14} fill="var(--ac)">4</text>
+      <text x="154" y="92" textAnchor="middle" fontFamily="inherit" fontSize={11} fill="var(--mute)">round(3.7)</text>
+      <text x="22" y="122" fontFamily="var(--font-mono)" fontSize={13} fill="var(--mute)">2.5</text>
+      <path d="M58 114 C82 138 96 138 120 126" stroke="var(--ac)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <polyline points="112,124 122,126 118,134" stroke="var(--ac)" strokeWidth={1.5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="124" y="106" width="60" height="34" rx="6" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="154" y="128" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={14} fill="var(--ac)">2</text>
+      <text x="154" y="156" textAnchor="middle" fontFamily="inherit" fontSize={11} fill="var(--mute)">round(2.5) = 2, ke genap</text>
+      <text x="222" y="64" fontFamily="inherit" fontSize={11} fill="var(--mute)">ceil: ke atas</text>
+      <text x="222" y="128" fontFamily="inherit" fontSize={11} fill="var(--mute)">floor: ke bawah</text>
+    </svg>
+  ),
+
+  'p-bawaan': () => (
+    <svg viewBox="0 0 320 180" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>Daftar angka diringkas dengan fungsi bawaan</title>
+      <text x="22" y="34" fontFamily="inherit" fontSize={11} fill="var(--mute)">nilai</text>
+      <rect x="22" y="44" width="72" height="26" rx="5" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="58" y="62" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">80</text>
+      <rect x="22" y="76" width="72" height="26" rx="5" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="58" y="94" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">90</text>
+      <rect x="22" y="108" width="72" height="26" rx="5" fill="var(--ac)" fillOpacity={0.12} stroke="var(--ac)" strokeWidth={1.5} />
+      <text x="58" y="126" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--ac)">75</text>
+      <path d="M98 56 H138" stroke="var(--line)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <path d="M98 90 H138" stroke="var(--line)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <path d="M98 122 H138" stroke="var(--line)" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+      <rect x="142" y="42" width="76" height="28" rx="6" stroke="var(--line)" strokeWidth={1.5} fill="none" />
+      <text x="180" y="61" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--mute)">sum()</text>
+      <text x="228" y="61" fontFamily="inherit" fontSize={11} fill="var(--ac)">245</text>
+      <rect x="142" y="76" width="76" height="28" rx="6" stroke="var(--line)" strokeWidth={1.5} fill="none" />
+      <text x="180" y="95" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--mute)">max()</text>
+      <text x="228" y="95" fontFamily="inherit" fontSize={11} fill="var(--ac)">90</text>
+      <rect x="142" y="110" width="76" height="28" rx="6" stroke="var(--line)" strokeWidth={1.5} fill="none" />
+      <text x="180" y="129" textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} fill="var(--mute)">min()</text>
+      <text x="228" y="129" fontFamily="inherit" fontSize={11} fill="var(--ac)">75</text>
+      <text x="22" y="164" fontFamily="inherit" fontSize={11} fill="var(--mute)">satu baris, langsung dapat jawaban</text>
+    </svg>
+  ),
+
   'p-proj-sapa': () => (
     <svg viewBox="0 0 320 180" role="img" xmlns="http://www.w3.org/2000/svg">
       <title>Aplikasi sapa menampilkan sapaan</title>
